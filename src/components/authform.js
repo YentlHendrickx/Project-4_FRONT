@@ -1,7 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./authform.css";
 
-function AuthForm() {
+import { useNavigate } from "react-router-dom";
+
+import axios from 'axios';
+
+function AuthForm({ forLogin, setIsLoggedIn }) {
+  const navigate = useNavigate();
+
   const [isLogin, setIsLogin] = useState(true);
   const [formErrors, setFormErrors] = useState({
     email: "",
@@ -14,6 +20,14 @@ function AuthForm() {
     password: "",
     passwordConfirm: "",
   });
+
+  useEffect(() => {
+    if (forLogin) {
+      setIsLogin(true);
+    } else {
+      setIsLogin(false);
+    }
+  }, [forLogin]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -63,6 +77,19 @@ function AuthForm() {
     }
 
     // Handle login with azure
+
+    const { email, password } =  formData;
+    localStorage.setItem('isLoggedIn', true);
+    setIsLoggedIn(true);
+    navigate('/');
+    
+
+    // axios.post('/api/login', {email, password})
+    //   .then(res => {
+    //     console.log(res);
+    //   }).catch(err => {
+    //     setFormErrors({...formErrors, login: 'Invalid email or password'});
+    //   });
   }
 
   // Handle registration of user
@@ -73,9 +100,16 @@ function AuthForm() {
     if (!valid) {
       return;
     }
-
+    localStorage.setItem('isLoggedIn', true);
+    setIsLoggedIn(true);
+    navigate('/');
     // Handle registration with azure
-
+    // axios.post('/api/register', {email, password})
+    //   .then(res => {
+    //     console.log(res);
+    //   }).catch(err => {
+    //     setFormErrors({...formErrors, login: 'Invalid email or password'});
+    //   });
   }
 
   function validate() {
