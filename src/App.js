@@ -1,12 +1,12 @@
 import logo from './logo.svg';
 import './App.css';
 
-import Login from './components/login';
+import AuthForm from './components/authform';
 
 function App() {
   return (
     <div className="App">
-      <Login />
+      <AuthForm />
     </div>
   );
 }
