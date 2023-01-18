@@ -10,6 +10,7 @@ import { Routes, Route, BrowserRouter, NavLink } from 'react-router-dom';
 
 
 import { useState, useEffect } from 'react';
+import { SideBar } from './components/sidebar';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
@@ -53,7 +54,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Header />
+      <SideBar />
       <Main />    
     </BrowserRouter>
   );
