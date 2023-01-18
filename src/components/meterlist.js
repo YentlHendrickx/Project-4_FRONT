@@ -66,7 +66,7 @@ function MeterList() {
               <td>{row.RpId}</td>
               <td>{row.MeterId}</td>
               <td>{row.address}</td>
-              <td className="actions ">
+              <td className="actions">
                 {editing && indexBeingEdited === index ? (
                   <form onSubmit={handleSubmit}>
                     <input

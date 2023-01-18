@@ -45,7 +45,7 @@ function App() {
 
   function Main() {
     return (
-      <div>
+      <div className="ml-[153px]">
         <Routes>
           <Route path={'/'} element={ <Home/> }/>
           <Route path={'/login'} element={ <AuthForm forLogin={true} setIsLoggedIn={setIsLoggedIn} /> }/>
@@ -59,7 +59,7 @@ function App() {
   return (
     <BrowserRouter>
       <SideBar />
-      <Main />    
+      <Main /> 
     </BrowserRouter>
   );
 }
