@@ -27,8 +27,6 @@ function Link(props){
     else{
         return <NavLink to="login" className={({isActive}) => isActive ? "active" : undefined}>{props.children}</NavLink>    
     }
-    
-
 }
 
 export function SideBar(){
