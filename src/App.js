@@ -4,6 +4,8 @@ import './App.css';
 // Components
 import AuthForm from './components/authform';
 import Home from './components/home';
+import MeterList from './components/meterlist';
+
 
 // Navigation
 import { Routes, Route, BrowserRouter, NavLink } from 'react-router-dom';
@@ -34,7 +36,8 @@ function App() {
         <ul>
           <li><NavLink end to="" className={({isActive}) => isActive ? "active" : undefined}>Home</NavLink></li>
           <li><NavLink to="/login" className={({isActive}) => isActive ? "active" : undefined}>Login</NavLink></li>
-          <li><NavLink to="Register" className={({isActive}) => isActive ? "active" : undefined}>Register</NavLink></li>
+          <li><NavLink to="/register" className={({isActive}) => isActive ? "active" : undefined}>Register</NavLink></li>
+          <li><NavLink to="/meters" className={({isActive}) => isActive ? "active" : undefined}>Meters</NavLink></li>
         </ul>
       </div>
     );
@@ -47,6 +50,7 @@ function App() {
           <Route path={'/'} element={ <Home/> }/>
           <Route path={'/login'} element={ <AuthForm forLogin={true} setIsLoggedIn={setIsLoggedIn} /> }/>
           <Route path={'/register'} element={ <AuthForm forLogin={false} setIsLoggedIn={setIsLoggedIn}/> }/>
+          <Route path={'/meters'} element={<MeterList />} />
         </Routes>
       </div>
     )
