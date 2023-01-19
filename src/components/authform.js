@@ -5,8 +5,16 @@ import { useNavigate } from "react-router-dom";
 
 import axios from 'axios';
 
-function AuthForm({ forLogin, setIsLoggedIn }) {
+function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
   const navigate = useNavigate();
+
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      // Show already logged in, and option to log out
+      navigate(-1);
+    }
+  }, [isLoggedIn]);
 
   const [isLogin, setIsLogin] = useState(true);
   const [formErrors, setFormErrors] = useState({

@@ -12,20 +12,16 @@ function Card({color, line1, line2, line3}){
 
     }
 
-
     return(
         <div style={CardStyle}>
                 <p className="text-4xl pb-5">{line1}</p>
                 <p className="text-6xl py-5">{line2}</p>
                 <p className="text-4xl pt-5">{line3}</p>
         </div>
-    )
-
+    );
 }
 
 function Home() {
-
-
     return(
         <div>
             <h1 className="p-5 text-4xl">Uw Verbruik</h1>
@@ -37,7 +33,7 @@ function Home() {
                 <Card color={'#93032E'} line1={'Hoogste uur verbruik'} line2={'12 kWh'} line3={'17/01/2023 14:00'}/>
             </div>
         </div>
-        )
+    );
 }
 
 export default Home;
