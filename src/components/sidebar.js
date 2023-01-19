@@ -1,48 +1,49 @@
+import { IconButton } from "@mui/material";
 import { NavLink } from "react-router-dom"
-import HandymanIcon from '@mui/icons-material/Handyman';
-import HandymanOutlinedIcon from '@mui/icons-material/HandymanOutlined';
-
-const icons = {
-    "handyman"          : HandymanIcon,
-    "handymanOutline"   : HandymanOutlinedIcon,
-}
+import { icons } from "../icons";
 
 function AccountCirkel({initials, handleLogout}){
     return(
-        <div className="flex rounded-full bg-uiLight min-w-[5rem] min-h-[5rem] justify-center items-center font-bold mt-2">
+        <div className="flex rounded-full bg-uiLight min-w-[5rem] min-h-[5rem] justify-center items-center font-bold">
             <p className="text-4xl">{initials}</p>
         </div>
     )
 }
 
-function Link({link, icon, iconOutline}){
+function Link({link, icon}){
+
     return (
-        <NavLink to={link}>
+        <NavLink to={link} className="my-8 scale-[2]">
         {({isActive}) => isActive ?
         (
-            <span className="material-symbols-outlined text-2xl text-uiLight">
-                {icon}
+            <span className="w-fit h-fit">    
+                {icons[icons.findIndex(i => i.name === icon)].icon}
             </span>
         ) : (
-            <span className="material-symbols-outlined text-2xl text-uiLight">
-                {iconOutline}
+            <span>
+                {icons[icons.findIndex(i => i.name === (icon + "Outlined"))].icon}
             </span>
         )}
         </NavLink>
     );
 }
 
-export function SideBar(){
+export function SideBar({handleLogout}){
     return(
-        <div className="flex flex-col min-w-[7rem] max-w-[40%] h-full fixed left-0 top-0 bg-uiNav justify-between items-center">
-            <AccountCirkel initials={"TL"}/>
-            <div className="flex flex-col text-4xl">
-                <Link link={'/meters'} icon={'handyman'} iconOutline={'handymanOutline'}/>
-                <Link link={'/'} icon={'home'}/>
-                <Link link={'/'} icon={'monitoring'}/>
-            </div>
+        <div className="w-[7rem] h-full fixed left-0 top-0 bg-uiNav">
+            <div className="flex flex-col h-full w-full justify-between items-center mt-2 pb-8">
+                <AccountCirkel initials={"TL"}/>
 
-            <Link link={'/'} icon={'logout'}/>
+                <div className="flex flex-col text-uiLight">
+                    <Link link={'/meters'} icon={'handyman'}/>
+                    <Link link={'/'} icon={'home'}/>
+                    <Link link={'/graphs'} icon={'monitoring'}/>
+                </div>
+
+                <IconButton color="secondary" className="scale-[1.75]" onClick={handleLogout}>
+                    {icons[icons.findIndex(i => i.name === "logout")].icon}
+                </IconButton>
+            </div>
         </div>
     )
 }
