@@ -40,8 +40,6 @@ function Link({link, icon}){
                     </span>            
                 </NavLink>    
     // }
-    
-
 }
 
 export function SideBar(){
