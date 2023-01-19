@@ -46,9 +46,6 @@ function App() {
   }
 
   function Main() {
-    const Style = {
-      
-    }
     return (
       <div className="ml-[153px]">
         <Routes>

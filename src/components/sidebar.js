@@ -1,77 +1,48 @@
 import { NavLink } from "react-router-dom"
+import HandymanIcon from '@mui/icons-material/Handyman';
+import HandymanOutlinedIcon from '@mui/icons-material/HandymanOutlined';
 
-function AccountCirkel({initials}){
-    const AccountCirkel={
-            display:'flex',
-            borderRadius: '100%',
-            backgroundColor:"#DADFF7",
-            width:'100px',
-            height: '100px',
-            margin: '10px 26px 10px 26px',
-            justifyContent:'center',
-            alignItems: 'center',
-            color: '#010400',
-            fontWeight: 'bold'
-    }
+const icons = {
+    "handyman"          : HandymanIcon,
+    "handymanOutline"   : HandymanOutlinedIcon,
+}
 
+function AccountCirkel({initials, handleLogout}){
     return(
-            <div style={AccountCirkel}>
-                <p className="text-4xl">{initials}</p>
-            </div>
+        <div className="flex rounded-full bg-uiLight min-w-[5rem] min-h-[5rem] justify-center items-center font-bold mt-2">
+            <p className="text-4xl">{initials}</p>
+        </div>
     )
 }
 
-function Link({link, icon}){
-    const Icon ={
-        color: '#DADFF7'
-    }
-
-    if(link == ''){
-        return <NavLink end to="" className={({isActive}) => isActive ? "active" : undefined}>
-                    <span style={Icon} className="material-symbols-outlined text-7xl">
-                        {icon}
-                    </span>
-                </NavLink>
-    }
-    else{
-        return <NavLink to={link} className={({isActive}) => isActive ? "active" : undefined}>
-                    <span style={Icon} className="material-symbols-outlined text-7xl">
-                        {icon}
-                    </span>            
-                </NavLink>    
-    }
-    
-
+function Link({link, icon, iconOutline}){
+    return (
+        <NavLink to={link}>
+        {({isActive}) => isActive ?
+        (
+            <span className="material-symbols-outlined text-2xl text-uiLight">
+                {icon}
+            </span>
+        ) : (
+            <span className="material-symbols-outlined text-2xl text-uiLight">
+                {iconOutline}
+            </span>
+        )}
+        </NavLink>
+    );
 }
 
 export function SideBar(){
-    const SideBarStyle = {
-        display: 'flex',
-        flexDirection: 'column',
-        width:'153px',
-        height:'100%',
-        position: 'fixed',
-        left:'0',
-        top:'0',
-        backgroundColor:'#477998',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-    }
-    const Icons = {
-        display: 'flex',
-        flexDirection: 'column',
-        fontSize: '35px'
-    }
-
     return(
-        <div style={SideBarStyle}>
+        <div className="flex flex-col min-w-[7rem] max-w-[40%] h-full fixed left-0 top-0 bg-uiNav justify-between items-center">
             <AccountCirkel initials={"TL"}/>
-            <div style={Icons}>
-                <Link link={''} icon={'handyman'}/>
-                <Link link={''} icon={'home'}/>
-                <Link link={''} icon={'monitoring'}/>
+            <div className="flex flex-col text-4xl">
+                <Link link={'/meters'} icon={'handyman'} iconOutline={'handymanOutline'}/>
+                <Link link={'/'} icon={'home'}/>
+                <Link link={'/'} icon={'monitoring'}/>
             </div>
-            <Link link={'login'} icon={'logout'}/>
+
+            <Link link={'/'} icon={'logout'}/>
         </div>
     )
 }
