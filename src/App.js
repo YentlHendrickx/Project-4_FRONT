@@ -62,10 +62,9 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
-      <SideBar />
-      <Main />    
-      <Home />
+    <BrowserRouter >
+      <SideBar/>
+      <Main />
     </BrowserRouter>
   );
 }
