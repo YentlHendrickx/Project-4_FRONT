@@ -34,7 +34,7 @@ function App() {
       <div>
         <h1>Project 4.0</h1>
         <ul>
-          <li><NavLink end to="" className={({isActive}) => isActive ? "active" : undefined}>Home</NavLink></li>
+          <li><NavLink end to="/" className={({isActive}) => isActive ? "active" : undefined}>Home</NavLink></li>
           <li><NavLink to="/login" className={({isActive}) => isActive ? "active" : undefined}>Login</NavLink></li>
           <li><NavLink to="/register" className={({isActive}) => isActive ? "active" : undefined}>Register</NavLink></li>
           <li><NavLink to="/meters" className={({isActive}) => isActive ? "active" : undefined}>Meters</NavLink></li>
@@ -44,6 +44,9 @@ function App() {
   }
 
   function Main() {
+    const Style = {
+      
+    }
     return (
       <div className="ml-[153px]">
         <Routes>
@@ -59,7 +62,8 @@ function App() {
   return (
     <BrowserRouter>
       <SideBar />
-      <Main /> 
+      <Main />    
+      <Home />
     </BrowserRouter>
   );
 }

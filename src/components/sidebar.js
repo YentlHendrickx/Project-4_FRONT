@@ -20,13 +20,26 @@ function AccountCirkel({initials}){
     )
 }
 
-function Link(props){
-    if(props.link === ''){
-        return <NavLink end to="" className={({isActive}) => isActive ? "active" : undefined}>{props.children}</NavLink>
+function Link({link, icon}){
+    const Icon ={
+        fontSize: '5rem',
+        color: '#DADFF7'
     }
-    else{
-        return <NavLink to="login" className={({isActive}) => isActive ? "active" : undefined}>{props.children}</NavLink>    
-    }
+
+    // if(link == '/'){
+        // return <NavLink end to="" className={({isActive}) => isActive ? "active" : undefined}>
+        //             <span style={Icon} class="material-symbols-outlined">
+        //                 {icon}
+        //             </span>
+        //         </NavLink>
+    // }
+    // else{
+        return <NavLink to={link} className={({isActive}) => isActive ? "active" : undefined}>
+                    <span style={Icon} class="material-symbols-outlined">
+                        {icon}
+                    </span>            
+                </NavLink>    
+    // }
 }
 
 export function SideBar(){
@@ -47,36 +60,16 @@ export function SideBar(){
         flexDirection: 'column',
         fontSize: '35px'
     }
-    const Icon ={
-        fontSize: '5rem',
-        color: '#DADFF7'
-    }
+
     return(
         <div style={SideBarStyle}>
             <AccountCirkel initials={"TL"}/>
             <div style={Icons}>
-                <Link link={''}>
-                    <span style={Icon} class="material-symbols-outlined">
-                        handyman
-                    </span>
-                </Link>
-                <Link link={''}>
-                    <span style={Icon} class="material-symbols-outlined">
-                        home
-                    </span>
-                </Link>
-                <Link link={''}>
-                    <span style={Icon} class="material-symbols-outlined">
-                        monitoring
-                    </span>
-                </Link>
+                <Link link={'register'} icon={'handyman'}/>
+                <Link link={'/'} icon={'home'}/>
+                <Link link={''} icon={'monitoring'}/>
             </div>
-            <Link link={'login'}>
-                <span  style={Icon} class="material-symbols-outlined">
-                    logout
-                </span>
-            </Link>
-
+            <Link link={'login'} icon={'logout'}/>
         </div>
     )
 }
