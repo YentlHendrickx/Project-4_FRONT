@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import './table.css';
 
 
@@ -11,6 +11,7 @@ function MeterList() {
 
   const [editing, setEditing] = useState(false);
   const [indexBeingEdited, setIndexBeingEdited] = useState(-1);
+  const [creating, setCreating] = useState(false)
 
   function handleEdit(index) {
     setEditing(true);
@@ -46,7 +47,15 @@ function MeterList() {
         address: event.target.address.value
     });
 
+    
+
     setData(newData);
+  }
+
+  function handleCancel(event){
+    setCreating(false)
+    setEditing(false)
+    setIndexBeingEdited(-1)
   }
 
   return (
@@ -103,14 +112,14 @@ function MeterList() {
           ))}
         </tbody>
       </table>
-      <button className="create-new" onClick={() => setEditing(true)}>Create New</button>
-      {editing && (
+      <button className="create-new" onClick={() => setCreating(true)}>Create New</button>
+      {creating && (
         <form className="create-form" onSubmit={handleCreate}>
           <input type="number" name="RpId" placeholder="RpId" />
           <input type="number" name="MeterId" placeholder="MeterId" />
           <input type="text" name="address" placeholder="Address" />
           <button type="submit">Save</button>
-          <button type="button" onClick={() => setEditing(false)}>Cancel</button>
+          <button type="button" onClick={() => handleCancel()}>Cancel</button>
         </form>
       )}
     </div>

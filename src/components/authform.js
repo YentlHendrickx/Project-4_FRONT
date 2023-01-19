@@ -3,7 +3,6 @@ import "./authform.css";
 
 import { useNavigate } from "react-router-dom";
 
-import axios from 'axios';
 
 function AuthForm({ forLogin, setIsLoggedIn }) {
   const navigate = useNavigate();

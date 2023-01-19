@@ -26,7 +26,7 @@ function Link({link, icon}){
         color: '#DADFF7'
     }
 
-    if(link == ''){
+    if(link === ''){
         return <NavLink end to="" className={({isActive}) => isActive ? "active" : undefined}>
                     <span style={Icon} className="material-symbols-outlined text-7xl">
                         {icon}
@@ -67,7 +67,7 @@ export function SideBar(){
         <div style={SideBarStyle}>
             <AccountCirkel initials={"TL"}/>
             <div style={Icons}>
-                <Link link={''} icon={'handyman'}/>
+                <Link link={'/meters'} icon={'handyman'}/>
                 <Link link={''} icon={'home'}/>
                 <Link link={''} icon={'monitoring'}/>
             </div>
