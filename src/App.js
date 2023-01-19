@@ -48,7 +48,7 @@ function App() {
       
     }
     return (
-      <div>
+      <div className="ml-[153px]">
         <Routes>
           <Route path={'/'} element={ <Home/> }/>
           <Route path={'/login'} element={ <AuthForm forLogin={true} setIsLoggedIn={setIsLoggedIn} /> }/>
