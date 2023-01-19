@@ -25,12 +25,9 @@ function Card({color, line1, line2, line3}){
 
 function Home() {
 
-    const HomeStyle = {
-        marginLeft: '153px',
-    }
 
     return(
-        <div style={HomeStyle}>
+        <div>
             <h1 className="p-5 text-4xl">Uw Verbruik</h1>
             <h2 className="px-5 text-2xl">Deze week</h2>
             <div className="grid sm:grid-cols-1  lg:grid-cols-2 gap-6 p-10">
