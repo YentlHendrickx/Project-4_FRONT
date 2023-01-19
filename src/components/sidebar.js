@@ -10,36 +10,36 @@ function AccountCirkel({initials}){
             margin: '10px 26px 10px 26px',
             justifyContent:'center',
             alignItems: 'center',
-            color: '#010400'
+            color: '#010400',
+            fontWeight: 'bold'
     }
 
     return(
             <div style={AccountCirkel}>
-                <h1>{initials}</h1>
+                <p className="text-4xl">{initials}</p>
             </div>
     )
 }
 
 function Link({link, icon}){
     const Icon ={
-        fontSize: '5rem',
         color: '#DADFF7'
     }
 
-    // if(link == '/'){
-        // return <NavLink end to="" className={({isActive}) => isActive ? "active" : undefined}>
-        //             <span style={Icon} class="material-symbols-outlined">
-        //                 {icon}
-        //             </span>
-        //         </NavLink>
-    // }
-    // else{
+    if(link == ''){
+        return <NavLink end to="" className={({isActive}) => isActive ? "active" : undefined}>
+                    <span style={Icon} className="material-symbols-outlined text-7xl">
+                        {icon}
+                    </span>
+                </NavLink>
+    }
+    else{
         return <NavLink to={link} className={({isActive}) => isActive ? "active" : undefined}>
-                    <span style={Icon} class="material-symbols-outlined">
+                    <span style={Icon} className="material-symbols-outlined text-7xl">
                         {icon}
                     </span>            
                 </NavLink>    
-    // }
+    }
     
 
 }
@@ -67,8 +67,8 @@ export function SideBar(){
         <div style={SideBarStyle}>
             <AccountCirkel initials={"TL"}/>
             <div style={Icons}>
-                <Link link={'register'} icon={'handyman'}/>
-                <Link link={'/'} icon={'home'}/>
+                <Link link={''} icon={'handyman'}/>
+                <Link link={''} icon={'home'}/>
                 <Link link={''} icon={'monitoring'}/>
             </div>
             <Link link={'login'} icon={'logout'}/>
