@@ -6,14 +6,17 @@ import axios from 'axios';
 import { useSetRecoilState } from "recoil";
 import { initialsState } from "../store";
 
-import "./authform.css";
 import { getAuthImage } from "../authImages";
+import { async } from "q";
 
 function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
   const navigate = useNavigate();
 
   // Set initials
   const setInitials = useSetRecoilState(initialsState)
+  
+  const [image, setImage] = useState(process.env.PUBLIC_URL + getAuthImage());
+
   const [formErrors, setFormErrors] = useState({
     email: "",
     password: "",
@@ -30,18 +33,17 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
     lastName: "",
   });
 
-
-  // useEffect(() => {
-  //   if (isLoggedIn) {
-  //     // Show already logged in, and option to log out
-  //     navigate(-1);
-  //   }
-  // }, [isLoggedIn]);
-
-  function switchLoginRegister() {
+  function switchLoginRegister(event) {
+    event.preventDefault();
     if (forLogin) {
       navigate('/register');
     } else {
+      let errors = formErrors;
+      errors.passwordConfirm = "";
+      errors.firstName = "";
+      errors.lastName = "";
+
+      setFormErrors(errors);
       navigate('/login');
     }
   }
@@ -59,9 +61,12 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
         : 'Invalid email address';
         break;
       case 'password':
-        errors.password = value.length < 8 ? 'Password must be at least 8 characters long' : '';
 
-        errors.passwordConfirm = value !== formData.passwordConfirm  ? 'Passwords do not match' : '';
+        if (!forLogin) {
+          errors.passwordConfirm = value !== formData.passwordConfirm  ? 'Passwords do not match' : '';
+        }
+
+        errors.password = value.length < 8 ? 'Password must be at least 8 characters long' : '';
         break;
       case 'passwordConfirm':
         errors.passwordConfirm = formData.password !== value ? 'Passwords do not match' : '';
@@ -246,25 +251,28 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
                   )}
 
                   <div>
-                    <span className="text-slate-500">{forLogin ? "Don't have an account? " : "Already have an account? "}<button onClick={() => switchLoginRegister()} 
+                    <span className="text-slate-500">{forLogin ? "Don't have an account? " : "Already have an account? "}<button onClick={(event) => switchLoginRegister(event)} 
                       className="text-blue-400 hover:text-blue-500">{forLogin ? "Sign Up" : "Sign In"}</button></span>
                   </div>
 
-                  <div>
-                    {formErrors.email.length > 0 && <p className="error-message">{formErrors.email}</p>}
-                    {formErrors.password.length         > 0 && <p className="error-message">{formErrors.password}</p>}
-                    {!forLogin && <>
-                      {formErrors.firstName.length        > 0 && <p className="error-message">{formErrors.firstName}</p>}
-                      {formErrors.lastName.length         > 0 && <p className="error-message">{formErrors.lastName}</p>}
-                      {formErrors.passwordConfirm.length  > 0 && <p className="error-message">{formErrors.passwordConfirm}</p>}
-                    </>}
-                    
-                      {formErrors.login !== undefined && 
-                      <>
-                        {formErrors.login ? <div className="bg-red-500 text-white p-3 rounded-lg">{formErrors.login}</div> : null}
-                      </>
-                    }
-                  </div>
+                  
+                  {Object.values(formErrors).every(x => x === undefined || x === '') === false &&
+                    <div className="bg-red-400 p-2 mt-2 rounded-md text-uiLight">
+                        {formErrors.email.length > 0 && <p className="error-message">{formErrors.email}</p>}
+                        {formErrors.password.length         > 0 && <p className="error-message">{formErrors.password}</p>}
+                      {!forLogin && <>
+                        {formErrors.firstName.length        > 0 && <p className="error-message">{formErrors.firstName}</p>}
+                        {formErrors.lastName.length         > 0 && <p className="error-message">{formErrors.lastName}</p>}
+                        {formErrors.passwordConfirm.length  > 0 && <p className="error-message">{formErrors.passwordConfirm}</p>}
+                      </>}
+                      
+                        {formErrors.login !== undefined && 
+                        <>
+                          {formErrors.login ? <div className="bg-red-500 text-white p-3 rounded-lg">{formErrors.login}</div> : null}
+                        </>
+                      }
+                    </div>
+                  }
 
 
                   <button className="mt-4 text-white font-bold hover:bg-uiSecondaryLight bg-uiSecondary transition-colors rounded-md py-2" type="submit">
@@ -274,7 +282,7 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
             </form>
           </div>
       </div>
-      <img className="w-[45%] object-cover" src={process.env.PUBLIC_URL + getAuthImage()} alt="Electricity"/> 
+      <img className="w-[45%] object-cover" src={image} alt="Electricity"/> 
     </div>
   );
 }
