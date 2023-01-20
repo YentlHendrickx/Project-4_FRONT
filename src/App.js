@@ -13,6 +13,7 @@ import { Routes, Route, BrowserRouter, Navigate, useNavigate } from 'react-route
 import { useState, useEffect } from 'react';
 import { SideBar } from './components/sidebar';
 import Graphs from './components/graphs';
+import { RecoilRoot } from 'recoil';
 
 const theme = createTheme({
   palette: {
@@ -86,11 +87,13 @@ function App() {
   }
 
   return (
-    <BrowserRouter >
-      <ThemeProvider theme={theme}>
-        <Main />
-      </ThemeProvider>
-    </BrowserRouter>
+    <RecoilRoot>
+      <BrowserRouter >
+        <ThemeProvider theme={theme}>
+          <Main />
+        </ThemeProvider>
+      </BrowserRouter>
+    </RecoilRoot>
   );
 }
 

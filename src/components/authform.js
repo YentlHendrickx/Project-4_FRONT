@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from "react";
-import "./authform.css";
-
 import { useNavigate } from "react-router-dom";
-
 import axios from 'axios';
+
+// Recoil
+import { useRecoilState } from "recoil";
+import { initialsState } from "../store";
+
+import "./authform.css";
 
 function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
   const navigate = useNavigate();
+
+  const [initials, setInitials] = useRecoilState(initialsState)
 
 
   useEffect(() => {
@@ -90,9 +95,12 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
 
     axios.post(process.env.REACT_APP_API_URL + 'User/login', {email, password})
       .then(res => {
-        console.log(res);
         localStorage.setItem('token', res.data.token);
         localStorage.setItem('isLoggedIn', true);
+
+        const initals = res.data.userDto.firstName.charAt(0) + res.data.userDto.lastName.charAt(0);
+        setInitials(initals);
+
         setIsLoggedIn(true);
         navigate('/');
       }).catch(err => {
