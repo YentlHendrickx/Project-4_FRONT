@@ -5,16 +5,25 @@ import AuthForm from './components/authform';
 import Home from './components/home';
 import MeterList from './components/meterlist';
 
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 // Navigation
-import { Routes, Route, BrowserRouter } from 'react-router-dom';
-
+import { Routes, Route, BrowserRouter, Navigate, useNavigate } from 'react-router-dom';
 
 import { useState, useEffect } from 'react';
 import { SideBar } from './components/sidebar';
+import Graphs from './components/graphs';
+
+const theme = createTheme({
+  palette: {
+    secondary: {
+      main: '#f1faeeff',
+    }
+  }
+});
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const loggedIn = localStorage.getItem('isLoggedIn');
@@ -23,29 +32,64 @@ function App() {
     }
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem('isLoggedIn');
-    setIsLoggedIn(false);
-  }
-
   function Main() {
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+      if (isLoggedIn) {
+        setIsLoggedIn(false);
+    
+        localStorage.removeItem('token');
+        localStorage.removeItem('isLoggedIn');
+    
+        navigate('/login');
+      }
+    }
+
+    const PrivateRoute = ({ children }) => {
+      return isLoggedIn ? children :  <Navigate to="/login" />;
+    };
 
     return (
-      <div className="ml-[153px]">
-        <Routes>
-          <Route path={'/'} element={ <Home/> }/>
-          <Route path={'/login'} element={ <AuthForm forLogin={true} setIsLoggedIn={setIsLoggedIn} /> }/>
-          <Route path={'/register'} element={ <AuthForm forLogin={false} setIsLoggedIn={setIsLoggedIn}/> }/>
-          <Route path={'/meters'} element={<MeterList />} />
-        </Routes>
+      <div>
+        <SideBar handleLogout={handleLogout}/>
+        <div className="ml-[8rem]">
+          <Routes>
+              <Route 
+                path={'/'} 
+                element={ 
+                  <PrivateRoute>
+                    <Home />
+                  </PrivateRoute> 
+                }/>
+              <Route 
+                path={'/meters'} 
+                element={ 
+                  <PrivateRoute>
+                    <MeterList />
+                  </PrivateRoute> 
+                }/>
+              <Route 
+                path={'/graphs'} 
+                element={ 
+                  <PrivateRoute>
+                    <Graphs />
+                  </PrivateRoute> 
+                }/>
+
+              <Route path={'/login'} element={ <AuthForm forLogin={true} setIsLoggedIn={setIsLoggedIn} isLoggedIn={isLoggedIn}/> }/>
+              <Route path={'/register'} element={ <AuthForm forLogin={false} setIsLoggedIn={setIsLoggedIn} isLoggedIn={isLoggedIn}/> }/>
+          </Routes>
+        </div>
       </div>
     )
   }
 
   return (
     <BrowserRouter >
-      <SideBar/>
-      <Main />
+      <ThemeProvider theme={theme}>
+        <Main />
+      </ThemeProvider>
     </BrowserRouter>
   );
 }

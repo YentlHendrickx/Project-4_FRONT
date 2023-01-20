@@ -4,8 +4,16 @@ import "./authform.css";
 import { useNavigate } from "react-router-dom";
 
 
-function AuthForm({ forLogin, setIsLoggedIn }) {
+function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
   const navigate = useNavigate();
+
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      // Show already logged in, and option to log out
+      navigate(-1);
+    }
+  }, [isLoggedIn]);
 
   const [isLogin, setIsLogin] = useState(true);
   const [formErrors, setFormErrors] = useState({
@@ -68,7 +76,7 @@ function AuthForm({ forLogin, setIsLoggedIn }) {
   };
 
   // Handle login of user
-  function handleLogin() {
+  async function handleLogin() {
     // Validate inputs
     let valid = validate();
     if (!valid) {
@@ -78,17 +86,17 @@ function AuthForm({ forLogin, setIsLoggedIn }) {
     // Handle login with azure
 
     const { email, password } =  formData;
-    localStorage.setItem('isLoggedIn', true);
-    setIsLoggedIn(true);
-    navigate('/');
-    
 
-    // axios.post('/api/login', {email, password})
-    //   .then(res => {
-    //     console.log(res);
-    //   }).catch(err => {
-    //     setFormErrors({...formErrors, login: 'Invalid email or password'});
-    //   });
+    axios.post(process.env.REACT_APP_API_URL + 'User/login', {email, password})
+      .then(res => {
+        console.log(res);
+        localStorage.setItem('token', res.data.token);
+        localStorage.setItem('isLoggedIn', true);
+        setIsLoggedIn(true);
+        navigate('/');
+      }).catch(err => {
+        setFormErrors({...formErrors, login: 'Invalid email or password'});
+      });
   }
 
   // Handle registration of user
@@ -99,16 +107,21 @@ function AuthForm({ forLogin, setIsLoggedIn }) {
     if (!valid) {
       return;
     }
-    localStorage.setItem('isLoggedIn', true);
-    setIsLoggedIn(true);
-    navigate('/');
+
+    const { email, password } =  formData;
+
     // Handle registration with azure
-    // axios.post('/api/register', {email, password})
-    //   .then(res => {
-    //     console.log(res);
-    //   }).catch(err => {
-    //     setFormErrors({...formErrors, login: 'Invalid email or password'});
-    //   });
+    axios.post(process.env.REACT_APP_API_URL + 'User', {email, password})
+      .then(res => {
+        // console.log(res);
+
+        navigate('/login');
+        setIsLogin(true);
+        setFormData({email: formData.email, password: "", passwordConfirm: ""});
+
+      }).catch(err => {
+        setFormErrors({...formErrors, login: 'Invalid email or password'});
+      });
   }
 
   function validate() {
@@ -182,10 +195,12 @@ function AuthForm({ forLogin, setIsLoggedIn }) {
           </>
         )}
 
+        {formErrors.login ? <div className="bg-red-500 text-white p-3 rounded-lg">{formErrors.login}</div> : null}
         <button className="login-button" type="submit">
           {isLogin ? "Login" : "Register"}
         </button>
       </form>
+      
       <button className="login-button" onClick={() => setIsLogin(!isLogin)}>
         {isLogin ? "Switch to Registration" : "Switch to Login"}
       </button>
