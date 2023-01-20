@@ -7,6 +7,7 @@ import { useSetRecoilState } from "recoil";
 import { initialsState } from "../store";
 
 import "./authform.css";
+import { getAuthImage } from "../authImages";
 
 function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
   const navigate = useNavigate();
@@ -251,12 +252,18 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
 
                   <div>
                     {formErrors.email.length > 0 && <p className="error-message">{formErrors.email}</p>}
-                    {formErrors.firstName.length        > 0 && <p className="error-message">{formErrors.firstName}</p>}
-                    {formErrors.lastName.length         > 0 && <p className="error-message">{formErrors.lastName}</p>}
                     {formErrors.password.length         > 0 && <p className="error-message">{formErrors.password}</p>}
-                    {formErrors.passwordConfirm.length  > 0 && <p className="error-message">{formErrors.passwordConfirm}</p>}
-
-                    {formErrors.login ? <div className="bg-red-500 text-white p-3 rounded-lg">{formErrors.login}</div> : null}
+                    {!forLogin && <>
+                      {formErrors.firstName.length        > 0 && <p className="error-message">{formErrors.firstName}</p>}
+                      {formErrors.lastName.length         > 0 && <p className="error-message">{formErrors.lastName}</p>}
+                      {formErrors.passwordConfirm.length  > 0 && <p className="error-message">{formErrors.passwordConfirm}</p>}
+                    </>}
+                    
+                      {formErrors.login !== undefined && 
+                      <>
+                        {formErrors.login ? <div className="bg-red-500 text-white p-3 rounded-lg">{formErrors.login}</div> : null}
+                      </>
+                    }
                   </div>
 
 
@@ -267,7 +274,7 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
             </form>
           </div>
       </div>
-      <img className="w-[45%] object-cover" src={process.env.PUBLIC_URL + "auth.jpg"} alt="Electricity"/> 
+      <img className="w-[45%] object-cover" src={process.env.PUBLIC_URL + getAuthImage()} alt="Electricity"/> 
     </div>
   );
 }
