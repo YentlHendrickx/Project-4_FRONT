@@ -53,7 +53,9 @@ function App() {
 
     return (
       <div>
-        <SideBar handleLogout={handleLogout}/>
+        {isLoggedIn && 
+          <SideBar handleLogout={handleLogout}/>
+        }
         <div className="ml-[8rem]">
           <Routes>
               <Route 
