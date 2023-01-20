@@ -1,9 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {icons} from "../icons";
+import axios from 'axios';
 // import './table.css';
 
 
 function MeterList() {
+
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await axios.get(process.env.REACT_APP_API_URL + "Meter" );
+      console.log(result.data)
+    }
+
+    fetchData();
+
+   }, []);
+ 
+
+  
   const [data, setData] = useState([
     { RpId: 1, MeterId: 1001, address: '123 Main St' },
     { RpId: 2, MeterId: 1002, address: '456 Park Ave' },
@@ -61,7 +76,7 @@ function MeterList() {
 
   return (
     <div className="m-10 flex flex-col items-center">
-      <table className="w-[90%] ">
+      <table className="w-[90%]">
         <thead className="bg-uiNav text-uiLight">
           <tr className="border border-uiNav">
             <th >RpId</th>
@@ -70,13 +85,13 @@ function MeterList() {
             <th>Actions</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody >
           {data.map((row, index) => (
             <tr key={row.RpId} className="border border-uiNav">
-              <td className="items-center justify-center">{row.RpId}</td>
-              <td>{row.MeterId}</td>
-              <td>{row.address}</td>
-              <td className="actions">
+              <td className="text-center">{row.RpId}</td>
+              <td className="text-center">{row.MeterId}</td>
+              <td className="text-center">{row.address}</td>
+              <td className="text-center">
                 {editing && indexBeingEdited === index ? (
                   <form onSubmit={handleSubmit}>
                     <input
