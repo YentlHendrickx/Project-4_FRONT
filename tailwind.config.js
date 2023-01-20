@@ -11,6 +11,8 @@ module.exports = {
       'uiLight'       : '#f1faeeff', // Honeydew
       'uiLight2'      : '#A8DADC',   // Powder Blue
       'uiNav'         : '#1D3557',   // Prussian Blue
+      'edit'          : '#0A8754',   // Prussian Blue
+      'delete'        : '#93032E',   // Prussian Blue
 
     },
     extend: {},

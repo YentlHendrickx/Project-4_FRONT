@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import './table.css';
+import {icons} from "../icons";
+// import './table.css';
 
 
 function MeterList() {
@@ -59,11 +60,11 @@ function MeterList() {
   }
 
   return (
-    <div>
-      <table>
-        <thead>
-          <tr>
-            <th>RpId</th>
+    <div className="m-10 flex flex-col items-center">
+      <table className="w-[90%] ">
+        <thead className="bg-uiNav text-uiLight">
+          <tr className="border border-uiNav">
+            <th >RpId</th>
             <th>MeterId</th>
             <th>Address</th>
             <th>Actions</th>
@@ -71,8 +72,8 @@ function MeterList() {
         </thead>
         <tbody>
           {data.map((row, index) => (
-            <tr key={row.RpId}>
-              <td>{row.RpId}</td>
+            <tr key={row.RpId} className="border border-uiNav">
+              <td className="items-center justify-center">{row.RpId}</td>
               <td>{row.MeterId}</td>
               <td>{row.address}</td>
               <td className="actions">
@@ -103,8 +104,8 @@ function MeterList() {
                   </form>
                 ) : (
                   <>
-                    <button onClick={() => handleEdit(index)}>Edit</button>
-                    <button onClick={() => handleDelete(index)}>Delete</button>
+                    <button className="text-edit" onClick={() => handleEdit(index)}>{icons[8].icon}</button>
+                    <button className="text-delete" onClick={() => handleDelete(index)}>{icons[9].icon}</button>
                   </>
                 )}
               </td>
@@ -112,7 +113,7 @@ function MeterList() {
           ))}
         </tbody>
       </table>
-      <button className="create-new" onClick={() => setCreating(true)}>Create New</button>
+      <button className="bg-uiNav text-uiLight rounded-3xl  p-3 my-4 mx-auto" onClick={() => setCreating(true)}>Create New</button>
       {creating && (
         <form className="create-form" onSubmit={handleCreate}>
           <input type="number" name="RpId" placeholder="RpId" />
