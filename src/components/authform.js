@@ -1,40 +1,50 @@
 import React, { useState, useEffect } from "react";
-import "./authform.css";
-
 import { useNavigate } from "react-router-dom";
 
+import axios from 'axios';
+
+// Recoil
+import { useSetRecoilState } from "recoil";
+import { initialsState } from "../store";
+
+import "./authform.css";
 
 function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
   const navigate = useNavigate();
 
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      // Show already logged in, and option to log out
-      navigate(-1);
-    }
-  }, [isLoggedIn]);
-
-  const [isLogin, setIsLogin] = useState(true);
+  // Set initials
+  const setInitials = useSetRecoilState(initialsState)
   const [formErrors, setFormErrors] = useState({
     email: "",
     password: "",
-    passwordConfirm: ""
+    passwordConfirm: "",
+    firstName: "",
+    lastName: "",
   });
 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
     passwordConfirm: "",
+    firstName: "",
+    lastName: "",
   });
 
-  useEffect(() => {
+
+  // useEffect(() => {
+  //   if (isLoggedIn) {
+  //     // Show already logged in, and option to log out
+  //     navigate(-1);
+  //   }
+  // }, [isLoggedIn]);
+
+  function switchLoginRegister() {
     if (forLogin) {
-      setIsLogin(true);
+      navigate('/register');
     } else {
-      setIsLogin(false);
+      navigate('/login');
     }
-  }, [forLogin]);
+  }
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -59,6 +69,12 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
           errors.passwordConfirm = value.length < 8 ? 'Password must be at least 8 characters long' : '';
         }
         break;
+      case 'firstName':
+        errors.firstName = value.length === 0 ? 'First name is required' : '';
+        break;
+      case 'lastName':
+        errors.lastName = value.length === 0 ? 'Last name is required' : '';
+        break;
       default:
         break;
     }
@@ -66,14 +82,33 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
     setFormErrors({
       email: errors.email,
       password: errors.password,
-      passwordConfirm: errors.passwordConfirm
+      passwordConfirm: errors.passwordConfirm,
+      firstName: errors.firstName,
+      lastName: errors.lastName,
     });
 
     setFormData({
       ...formData,
       [event.target.name]: event.target.value,
     });
-  };
+  }
+
+  function validate() {
+    let valid = true;
+    let errors = formErrors; 
+
+    // When login we don't need passwordConfirm, firstname or lastname
+    if (forLogin) {
+      delete errors.passwordConfirm;
+      delete errors.firstName;
+      delete errors.lastName;
+    }
+  
+    // Check for any errors strings
+    Object.values(errors).forEach(val => val.length > 0 && (valid = false));
+    
+    return valid;
+  }
 
   // Handle login of user
   async function handleLogin() {
@@ -89,9 +124,12 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
 
     axios.post(process.env.REACT_APP_API_URL + 'User/login', {email, password})
       .then(res => {
-        console.log(res);
         localStorage.setItem('token', res.data.token);
         localStorage.setItem('isLoggedIn', true);
+
+        const initals = res.data.userDto.firstName.charAt(0) + res.data.userDto.lastName.charAt(0);
+        setInitials(initals);
+
         setIsLoggedIn(true);
         navigate('/');
       }).catch(err => {
@@ -100,7 +138,7 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
   }
 
   // Handle registration of user
-  function handleRegister() {
+  async function handleRegister() {
     // Validate inputs
     let valid = validate();
 
@@ -108,42 +146,22 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
       return;
     }
 
-    const { email, password } =  formData;
+    const { email, password, firstName, lastName } =  formData;
 
     // Handle registration with azure
-    axios.post(process.env.REACT_APP_API_URL + 'User', {email, password})
+    axios.post(process.env.REACT_APP_API_URL + 'User', {email, password, firstName, lastName})
       .then(res => {
-        // console.log(res);
-
         navigate('/login');
-        setIsLogin(true);
-        setFormData({email: formData.email, password: "", passwordConfirm: ""});
-
       }).catch(err => {
         setFormErrors({...formErrors, login: 'Invalid email or password'});
       });
   }
 
-  function validate() {
-    let valid = true;
-    let errors = formErrors; 
-
-    // When login we don't need passwordConfirm to be filled in
-    if (isLogin) {
-      delete errors.passwordConfirm;
-    }
-  
-    // Check for any errors strings
-    Object.values(errors).forEach(val => val.length > 0 && (valid = false));
-    
-    return valid;
-  }
-
   function handleSubmit (event) {
     event.preventDefault();
-    // Perform login or registration here, depending on the value of `isLogin`
 
-    if (isLogin) {
+    // Perform login or registration here, depending on the value of `isLogin`
+    if (forLogin) {
       // Login
       handleLogin();
     } else {
@@ -153,57 +171,104 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
   };
 
   return (
-    <div className="login-container">
-      <form className="login-form" onSubmit={handleSubmit}>
-        <label htmlFor="email" className="form-label">Email</label>
-        <input
-          className={`login-input ${formErrors.email.length > 0 ? "error" : ''}`}
-          type="email"
-          name="email"
-          id="email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-          />
-          {formErrors.email.length > 0 && <p className="error-message">{formErrors.email}</p>}
+    <div className="w-screen h-screen bg-[#eee] flex">
+      <div className="w-[55%] h-full flex justify-center">
+          <div className="mt-[15%]">
+            <h3 className="text-3xl text-left font-bold">Elek3city Monitor</h3>
+            <p className="font-light text-slate-500 text-left max-w-[24rem]">Want to monitor your electricity usage? You've come to the right place.</p>
+            <form className="" onSubmit={handleSubmit}>
+              <div className="flex flex-col max-w-[24rem] mt-2 ml-1 relative">
+                {!forLogin && (
+                    <>
+                        <input
+                          className="mt-0 mb-0 pb-0 rounded-t-md h-16 border-b-0 focus:outline-none"
+                          type="text"
+                          name="firstName"
+                          id="firstName"
+                          value={formData.firstName}
+                          onChange={handleChange}
+                          placeholder="First Name"
+                          required
+                          />
 
-        <label htmlFor="password" className="form-label">Password</label>
-        <input
-          className={`login-input ${formErrors.password.length > 0 ? "error" : ''}`}
-          type="password"
-          name="password"
-          id="password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-          />
-          {formErrors.password.length > 0 && <p className="error-message">{formErrors.password}</p>}
+                        <input
+                          className="mt-0 mb-0 pb-0 h-16 border-b-0 focus:outline-none"
+                          type="text"
+                          name="lastName"
+                          id="lastName"
+                          value={formData.lastName}
+                          onChange={handleChange}
+                          placeholder="Last Name"
+                          required
+                          />
+                    </>
+                  )}
 
-        {!isLogin && (
-          <>
-            <label htmlFor="passwordConfirm" className="form-label">Confirm Password</label>
-            <input
-              className={`login-input ${formErrors.passwordConfirm.length > 0 ? "error" : ''}`}
-              type="password"
-              name="passwordConfirm"
-              id="passwordConfirm"
-              value={formData.passwordConfirm}
-              onChange={handleChange}
-              required
-              />
-              {formErrors.passwordConfirm.length > 0 && <p className="error-message">{formErrors.passwordConfirm}</p>}
-          </>
-        )}
+                <input
+                  className={`mt-0 mb-0 pb-0 h-16 border-b-0 focus:outline-none ${forLogin ? 'rounded-t-md' : ''}`}
+                  type="email"
+                  name="email"
+                  id="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="Email"
+                  required
+                  />
 
-        {formErrors.login ? <div className="bg-red-500 text-white p-3 rounded-lg">{formErrors.login}</div> : null}
-        <button className="login-button" type="submit">
-          {isLogin ? "Login" : "Register"}
-        </button>
-      </form>
-      
-      <button className="login-button" onClick={() => setIsLogin(!isLogin)}>
-        {isLogin ? "Switch to Registration" : "Switch to Login"}
-      </button>
+                <input
+                  className={`mt-0 pt-0 mb-0 pb-0 h-16 focus:outline-none ${forLogin ? 'rounded-b-md' : 'border-b-0'}`}
+                  type="password"
+                  name="password"
+                  id="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Password"
+                  required
+                  />
+
+                  {forLogin && (         
+                    <button className="underline font-light text-slate-500 hover:text-slate-400 text-right">Forgot Password</button>
+                  )}
+
+                  {!forLogin && (
+                    <>
+                      <input
+                        className="mt-0 pt-0 pb-0 rounded-b-md h-16 focus:outline-none"
+                        type="password"
+                        name="passwordConfirm"
+                        id="passwordConfirm"
+                        value={formData.passwordConfirm}
+                        onChange={handleChange}
+                        placeholder="Confirm Password"
+                        required
+                        />
+                    </>
+                  )}
+
+                  <div>
+                    <span className="text-slate-500">{forLogin ? "Don't have an account? " : "Already have an account? "}<button onClick={() => switchLoginRegister()} 
+                      className="text-blue-400 hover:text-blue-500">{forLogin ? "Sign Up" : "Sign In"}</button></span>
+                  </div>
+
+                  <div>
+                    {formErrors.email.length > 0 && <p className="error-message">{formErrors.email}</p>}
+                    {formErrors.firstName.length        > 0 && <p className="error-message">{formErrors.firstName}</p>}
+                    {formErrors.lastName.length         > 0 && <p className="error-message">{formErrors.lastName}</p>}
+                    {formErrors.password.length         > 0 && <p className="error-message">{formErrors.password}</p>}
+                    {formErrors.passwordConfirm.length  > 0 && <p className="error-message">{formErrors.passwordConfirm}</p>}
+
+                    {formErrors.login ? <div className="bg-red-500 text-white p-3 rounded-lg">{formErrors.login}</div> : null}
+                  </div>
+
+
+                  <button className="mt-4 text-white font-bold hover:bg-uiSecondaryLight bg-uiSecondary transition-colors rounded-md py-2" type="submit">
+                    {forLogin ? "Log In" : "Register"}
+                  </button>
+              </div>
+            </form>
+          </div>
+      </div>
+      <img className="w-[45%] object-cover" src={process.env.PUBLIC_URL + "auth.jpg"} alt="Electricity"/> 
     </div>
   );
 }

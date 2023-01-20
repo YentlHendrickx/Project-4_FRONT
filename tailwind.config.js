@@ -5,6 +5,7 @@ module.exports = {
     "./src/components/*.{js,jsx,ts,tsx}"
   ],
   theme: {
+
     colors: {
       'uiPrimary'     : '#e63946ff', // Imperial Red
       'uiSecondary'   : '#457B9D',   // Celadon Blue
@@ -16,6 +17,7 @@ module.exports = {
 
     },
     extend: {},
+
   },
   plugins: [],
 }

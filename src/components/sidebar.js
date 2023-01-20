@@ -1,8 +1,10 @@
 import { IconButton } from "@mui/material";
 import { NavLink } from "react-router-dom"
 import { icons } from "../icons";
-import {useEffect, useState} from "react";
-import axios from "axios";
+
+// Recoil
+import { useRecoilValue } from "recoil";
+import { initialsState } from "../store";
 
 function AccountCirkel({initials, handleLogout}){
     return(
@@ -12,9 +14,7 @@ function AccountCirkel({initials, handleLogout}){
     )
 }
 
-
 function Link({link, icon}){
-
     return (
         <NavLink to={link} className="my-8 scale-[2]">
         {({isActive}) => isActive ?
@@ -32,24 +32,12 @@ function Link({link, icon}){
 }
 
 export function SideBar({handleLogout}){
-    const [initials, setInitials] = useState("");
-
-    useEffect(() => {
-        axios.get("https://meterapiproject4.azurewebsites.net/api/user/1")
-            .then(response => {
-                const user = response.data;
-                const userInitials = user.lastName[0] + user.firstName[0] ;
-                setInitials(userInitials);
-            })
-            .catch(error => {
-                console.log(error);
-            });
-    }, []);
+    const initals = useRecoilValue(initialsState);
 
     return(
         <div className="w-[7rem] h-full fixed left-0 top-0 bg-uiNav">
             <div className="flex flex-col h-full w-full justify-between items-center mt-2 pb-8">
-                <AccountCirkel initials={initials} handleLogout={handleLogout}/>
+                <AccountCirkel initials={initals} handleLogout={handleLogout}/>
 
                 <div className="flex flex-col text-uiLight">
                     <Link link={'/meters'} icon={'handyman'}/>

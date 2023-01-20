@@ -13,6 +13,7 @@ import { Routes, Route, BrowserRouter, Navigate, useNavigate } from 'react-route
 import { useState, useEffect } from 'react';
 import { SideBar } from './components/sidebar';
 import Graphs from './components/graphs';
+import { RecoilRoot } from 'recoil';
 
 const theme = createTheme({
   palette: {
@@ -52,8 +53,10 @@ function App() {
 
     return (
       <div>
-        <SideBar handleLogout={handleLogout}/>
-        <div className="ml-[8rem]">
+        {isLoggedIn && 
+          <SideBar handleLogout={handleLogout}/>
+        }
+        <div className={`${isLoggedIn ? "ml-[8rem]" : ''}`}>
           <Routes>
               <Route 
                 path={'/'} 
@@ -86,11 +89,13 @@ function App() {
   }
 
   return (
-    <BrowserRouter >
-      <ThemeProvider theme={theme}>
-        <Main />
-      </ThemeProvider>
-    </BrowserRouter>
+    <RecoilRoot>
+      <BrowserRouter >
+        <ThemeProvider theme={theme}>
+          <Main />
+        </ThemeProvider>
+      </BrowserRouter>
+    </RecoilRoot>
   );
 }
 
