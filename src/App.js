@@ -56,7 +56,7 @@ function App() {
         {isLoggedIn && 
           <SideBar handleLogout={handleLogout}/>
         }
-        <div className="ml-[8rem]">
+        <div className={`${isLoggedIn ? "ml-[8rem]" : ''}`}>
           <Routes>
               <Route 
                 path={'/'} 

@@ -1,8 +1,6 @@
 import { IconButton } from "@mui/material";
 import { NavLink } from "react-router-dom"
 import { icons } from "../icons";
-import {useEffect, useState} from "react";
-import axios from "axios";
 
 // Recoil
 import { useRecoilValue } from "recoil";
@@ -15,7 +13,6 @@ function AccountCirkel({initials, handleLogout}){
         </div>
     )
 }
-
 
 function Link({link, icon}){
     return (
