@@ -68,9 +68,9 @@ function App() {
               <Route 
                 path={'/meters'} 
                 element={ 
-                  // <PrivateRoute>
+                  <PrivateRoute>
                     <MeterList />
-                 // </PrivateRoute> 
+                 </PrivateRoute> 
                 }/>
               <Route 
                 path={'/graphs'} 
