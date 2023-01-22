@@ -187,7 +187,7 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
                 {!forLogin && (
                     <>
                         <input
-                          className="mt-0 mb-0 pb-0 rounded-t-md h-16 border-b-0 focus:outline-none"
+                          className="mt-0 pl-2 mb-0 pb-0 rounded-t-md h-16 border-2 border-b-0 focus:outline-none"
                           type="text"
                           name="firstName"
                           id="firstName"
@@ -198,7 +198,7 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
                           />
 
                         <input
-                          className="mt-0 mb-0 pb-0 h-16 border-b-0 focus:outline-none"
+                          className="mt-0 pl-2 mb-0 pb-0 h-16 border-x-2 border-t-2 focus:outline-none"
                           type="text"
                           name="lastName"
                           id="lastName"
@@ -211,7 +211,7 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
                   )}
 
                 <input
-                  className={`mt-0 mb-0 pb-0 h-16 border-b-0 focus:outline-none ${forLogin ? 'rounded-t-md' : ''}`}
+                  className={`mt-0 pl-2 mb-0 pb-0 h-16 border-x-2 border-t-2 focus:outline-none ${forLogin ? 'rounded-t-md' : ''}`}
                   type="email"
                   name="email"
                   id="email"
@@ -222,7 +222,7 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
                   />
 
                 <input
-                  className={`mt-0 pt-0 mb-0 pb-0 h-16 focus:outline-none ${forLogin ? 'rounded-b-md' : 'border-b-0'}`}
+                  className={`mt-0 pt-0 pl-2 mb-0 pb-0 h-16 focus:outline-none border-2 ${forLogin ? 'rounded-b-md' : 'border-b-0'}`}
                   type="password"
                   name="password"
                   id="password"
@@ -239,7 +239,7 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
                   {!forLogin && (
                     <>
                       <input
-                        className="mt-0 pt-0 pb-0 rounded-b-md h-16 focus:outline-none"
+                        className="mt-0 pl-2 pt-0 pb-0 rounded-b-md h-16 border-2 focus:outline-none"
                         type="password"
                         name="passwordConfirm"
                         id="passwordConfirm"
