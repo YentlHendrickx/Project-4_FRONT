@@ -1,7 +1,7 @@
 import { 
     Handyman, HandymanOutlined, Home, 
     HomeOutlined, InsertChart, InsertChartOutlined,
-    Logout, LogoutOutlined, Edit, Delete
+    Logout, LogoutOutlined, Edit, Delete, Save, Cancel
  } from '@mui/icons-material';
 
 export const icons = [
@@ -15,4 +15,6 @@ export const icons = [
     {icon: <LogoutOutlined          />,     name: "logoutOutlined" },
     {icon: <Edit                    />,     name: "edit" },
     {icon: <Delete                  />,     name: "delete" },
+    {icon: <Save                    />,     name: "save"},
+    {icon: <Cancel                  />,     name: "cancel"}
 ]
