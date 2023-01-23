@@ -187,7 +187,7 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
                 {!forLogin && (
                     <>
                         <input
-                          className="mt-0 mb-0 pb-0 rounded-t-md h-16 border-b-0 focus:outline-none"
+                          className="mt-0 mb-0 pb-0 pl-2 rounded-t-md h-16 border-[1px] border-slate-400 border-b-0 focus:outline-none"
                           type="text"
                           name="firstName"
                           id="firstName"
@@ -198,7 +198,7 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
                           />
 
                         <input
-                          className="mt-0 mb-0 pb-0 h-16 border-b-0 focus:outline-none"
+                          className="mt-0 mb-0 pb-0 pl-2 h-16 border-[1px] border-slate-400 border-b-0 focus:outline-none"
                           type="text"
                           name="lastName"
                           id="lastName"
@@ -211,7 +211,7 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
                   )}
 
                 <input
-                  className={`mt-0 mb-0 pb-0 h-16 border-b-0 focus:outline-none ${forLogin ? 'rounded-t-md' : ''}`}
+                  className={`mt-0 mb-0 pb-0 h-16 pl-2 focus:outline-none border-[1px] border-slate-400 border-b-0 ${forLogin ? 'rounded-t-md' : ''}`}
                   type="email"
                   name="email"
                   id="email"
@@ -222,7 +222,7 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
                   />
 
                 <input
-                  className={`mt-0 pt-0 mb-0 pb-0 h-16 focus:outline-none ${forLogin ? 'rounded-b-md' : 'border-b-0'}`}
+                  className={`mt-0 pt-0 mb-0 pb-0 h-16  pl-2 focus:outline-none border-[1px] border-slate-400 ${forLogin ? 'rounded-b-md' : 'border-b-0'}`}
                   type="password"
                   name="password"
                   id="password"
@@ -233,13 +233,13 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
                   />
 
                   {forLogin && (         
-                    <button className="underline font-light text-slate-500 hover:text-slate-400 text-right">Forgot Password</button>
+                    <button className="underline font-light text-slate-500 hover:text-slate-300 text-right">Forgot Password</button>
                   )}
 
                   {!forLogin && (
                     <>
                       <input
-                        className="mt-0 pt-0 pb-0 rounded-b-md h-16 focus:outline-none"
+                        className="mt-0 pt-0 pb-0 pl-2 rounded-b-md border-[1px] border-slate-400 h-16 focus:outline-none"
                         type="password"
                         name="passwordConfirm"
                         id="passwordConfirm"
