@@ -1,29 +1,54 @@
 import React, { useEffect, useState } from "react";
 import {icons} from "../icons";
 import axios from 'axios';
-// import './table.css';
 
+// Recoil
+import { useRecoilValue } from "recoil";
+import { userDataState } from "../store";
 
 function MeterList() {
 
-  
+  const userData = useRecoilValue(userDataState);
+
+  const [data, setData] = useState([
+  ]);
+
+  useEffect(() => {
+
+    const fetchUserData = async () => {
+      const result = await axios.get(process.env.REACT_APP_API_URL + "User/" + userData.userId);
+
+      console.log(result.data.userMeters);
+
+      let meterData = []
+
+      result.data.userMeters.map((meter) => {
+          const meterObject = {
+            rpId:     meter.rpId,
+            meterId:  meter.meterDeviceId,
+            address:  meter.address
+          }
+
+          meterData.push(meterObject);
+      });
+
+      setData(meterData);
+    }
+
+    if (userData.userId !== -1 && userData.userId !== undefined) {      
+      fetchUserData();
+    }
+  }, [userData]);
+
   useEffect(() => {
     const fetchData = async () => {
       const result = await axios.get(process.env.REACT_APP_API_URL + "Meter" );
-      console.log(result.data)
+
     }
 
     fetchData();
 
    }, []);
- 
-
-  
-  const [data, setData] = useState([
-    { RpId: 1, MeterId: 1001, address: '123 Main St' },
-    { RpId: 2, MeterId: 1002, address: '456 Park Ave' },
-    { RpId: 3, MeterId: 1003, address: '789 Elm St' }
-  ]);
 
   const [editing, setEditing] = useState(false);
   const [indexBeingEdited, setIndexBeingEdited] = useState(-1);
@@ -87,9 +112,9 @@ function MeterList() {
         </thead>
         <tbody >
           {data.map((row, index) => (
-            <tr key={row.RpId} className="border border-uiNav">
-              <td className="text-center">{row.RpId}</td>
-              <td className="text-center">{row.MeterId}</td>
+            <tr key={row.rpId} className="border border-uiNav">
+              <td className="text-center">{row.rpId}</td>
+              <td className="text-center">{row.meterId}</td>
               <td className="text-center">{row.address}</td>
               <td className="text-center">
                 {editing && indexBeingEdited === index ? (

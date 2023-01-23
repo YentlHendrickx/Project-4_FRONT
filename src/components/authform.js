@@ -4,8 +4,9 @@ import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
 // Recoil
-import { useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { initialsState } from "../store";
+import { userDataState } from "../store";
 
 import { getAuthImage } from "../authImages";
 import { async } from "q";
@@ -14,7 +15,8 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
   const navigate = useNavigate();
 
   // Set initials
-  const setInitials = useSetRecoilState(initialsState)
+  const [initials, setInitials] = useRecoilState(initialsState)
+  const [userData, setUserData] = useRecoilState(userDataState);
   
   const [image, setImage] = useState(process.env.PUBLIC_URL + getAuthImage());
 
@@ -133,8 +135,18 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
         localStorage.setItem('token', res.data.token);
         localStorage.setItem('isLoggedIn', true);
 
-        const initals = res.data.userDto.firstName.charAt(0) + res.data.userDto.lastName.charAt(0);
-        setInitials(initals);
+        const uInitials = res.data.userDto.firstName.charAt(0) + res.data.userDto.lastName.charAt(0);
+        setInitials(uInitials);
+
+        const userDataDto = {
+          firstName: res.data.userDto.firstName,
+          lastName: res.data.userDto.lastName,
+          userId: res.data.userDto.id
+        }
+        setUserData(userDataDto);
+
+        localStorage.setItem('userDataState', JSON.stringify(userDataDto));
+        localStorage.setItem('initialsState', JSON.stringify(uInitials));
 
         setIsLoggedIn(true);
         navigate('/');
