@@ -16,7 +16,7 @@ export const icons = [
     {icon: <Edit                    />,     name: "edit" },
     {icon: <Delete                  />,     name: "delete" },
     {icon: <CheckCircle             />,     name: "check" },
-    {icon: <Error                   />,     name: "error" }
+    {icon: <Error                   />,     name: "error" },
     {icon: <Save                    />,     name: "save"},
     {icon: <Cancel                  />,     name: "cancel"}
 ]
