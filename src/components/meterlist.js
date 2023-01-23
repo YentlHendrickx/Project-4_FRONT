@@ -28,6 +28,13 @@ function MeterList() {
   // Effect for getting data from API
   useEffect(() => {
     const fetchUserData = async () => {
+      // const client = axios.create({
+      //   baseURL: process.env.REACT_APP_API_URL,
+      //   headers: {
+      //     Authorization: `Bearer ${localStorage.getItem('token')}`
+      //   }
+      // })
+
       const result = await axios.get(process.env.REACT_APP_API_URL + "User/" + userData.userId);
 
       let meterData = []
@@ -53,6 +60,7 @@ function MeterList() {
 
 
   function handleEdit(index) {
+    setCreating(false);
     setEditing(true);
     setIndexBeingEdited(index);
   }
@@ -140,50 +148,64 @@ function MeterList() {
   }
 
   return (
-    
     <div className="w-full">
       <table className="min-w-full">
-        <thead className="border-b bg-uiSecondaryLight">
+        <thead className="border-b bg-gray-600">
           <tr>
-            <th className="text-sm font-medium text-white px-6 py-4 text-left">RpId</th>
-            <th className="text-sm font-medium text-white px-6 py-4 text-left">MeterId</th>
-            <th className="text-sm font-medium text-white px-6 py-4 text-left">Address</th>
-            <th className="text-sm font-medium text-white px-6 py-4 text-left">Actions</th>
+            <th className="text-md font-bold text-white px-6 py-6 text-left">Raspberry ID</th>
+            <th className="text-md font-bold text-white px-6 py-6 text-left">Meter ID</th>
+            <th className="text-md font-bold text-white px-6 py-6 text-left">Address</th>
+            <th className="text-md font-bold text-white px-6 py-6 text-left">Actions</th>
           </tr>
         </thead>
         <tbody >
           {metersList.map((row, index) => (
             <tr key={row.rpId} className="bg-white border-b">
-              <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">{row.rpId}</td>
-              <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">{row.meterId}</td>
-              <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">{row.address}</td>
-              <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                {editing && indexBeingEdited === index ? (
-                  <form onSubmit={handleSubmit}>
-                    <input
-                      type="number"
-                      name="RpId"
-                      defaultValue={row.RpId}
-                    />
-                    <input
-                      type="number"
-                      name="MeterId"
-                      defaultValue={row.MeterId}
-                    />
+
+              {editing && indexBeingEdited === index ? (
+                <>
+                  <td>
                     <input
                       type="text"
-                      name="address"
-                      defaultValue={row.address}
+                      name="RpId"
+                      placeholder="Raspberry ID"
+                      defaultValue={formData.rpId}
                     />
-                    <button type="submit">Save</button>
-                    <button
-                      type="button"
-                      onClick={() => setEditing(false)}
-                    >
-                      Cancel
-                    </button>
-                  </form>
-                ) : (
+                  </td>
+                  <td>
+                    <input
+                      
+                        type="text"
+                        name="MeterId"
+                        placeholder="Meter ID"
+                        defaultValue={formData.meterId}
+                      />
+                  </td>
+                  <td>
+                    <input
+                        type="text"
+                        name="address"
+                        placeholder="Address"
+                        defaultValue={formData.address}
+                      />
+                  </td>
+                  <td>
+                    <div className="self-end mt-2 mr-4 flex gap-2">
+                      <button className="bg-delete text-uiLight rounded-md w-[4rem] h-[2.5rem]" type="button" onClick={(event) => setEditing(false)}>Cancel</button>
+                      <button className="bg-save text-uiLight rounded-md w-[4rem] h-[2.5rem]" type="submit">Save</button>
+                    </div>
+                  </td>
+                </>
+              ) : (
+                <>
+                  <td className="text-md text-gray-900 font-light px-6 py-4 whitespace-nowrap">{row.rpId}</td>
+                  <td className="text-md text-gray-900 font-light px-6 py-4 whitespace-nowrap">{row.meterId}</td>
+                  <td className="text-md text-gray-900 font-light px-6 py-4 whitespace-nowrap">{row.address}</td>
+                </>
+              )}
+
+              <td className="text-md text-gray-900 font-light px-6 py-4">
+                {!editing && (
                   <>
                     <button className="text-edit" onClick={() => handleEdit(index)}>{icons[icons.findIndex(i => i.name === "edit")].icon}</button>
                     <button className="text-delete" onClick={() => handleDelete(index)}>{icons[icons.findIndex(i => i.name === "delete")].icon}</button>
@@ -194,14 +216,31 @@ function MeterList() {
           ))}
         </tbody>
       </table>
-      <button className="bg-uiPrimary text-uiLight rounded-md  p-3 my-4 mx-auto" onClick={() => setCreating(true)}>Create New</button>
+      {!creating && !editing && (
+        <div className="flex flex-col w-full">
+          <button className="bg-create text-uiLight rounded-md p-2 self-end mr-4" onClick={() => setCreating(true)}>Create New</button>
+        </div>
+      )}
       {creating && (
-        <form className="create-form" onSubmit={handleCreate}>
-          <input type="text" name="RpId" placeholder="RpId" defaultValue={formData.rpId}/>
-          <input type="text" name="MeterId" placeholder="MeterId" defaultValue={formData.meterId} />
-          <input type="text" name="address" placeholder="Address" defaultValue={formData.addres} />
-          <button type="submit">Save</button>
-          <button type="button" onClick={(event) => handleCancel(event)}>Cancel</button>
+        <form className="mt-5 flex flex-col" onSubmit={handleCreate}>
+          <label className="mx-4">Address</label>
+          <input className="mx-2 text-sm p-2 mb-1" type="text" name="address" placeholder="Address" defaultValue={formData.addres} />
+
+          <div className="grid mx-2 grid-cols-6 gap-2">
+            <div className="w-full text-sm col-span-4">
+              <label className="mx-2 text-base">Raspberry ID</label>
+              <input className="w-full p-2" type="text" name="RpId" placeholder="Raspberry ID" defaultValue={formData.rpId}/>
+            </div>
+            <div className="w-full text-sm col-span-2">
+              <label className="mx-2 text-base">Meter ID</label>
+              <input className="w-full p-2" type="text" name="MeterId" placeholder="Meter ID" defaultValue={formData.meterId} />
+            </div>
+          </div>
+
+          <div className="self-end mt-2 mr-4 flex gap-2">
+            <button className="bg-delete text-uiLight rounded-md w-[4rem] h-[2.5rem]" type="button" onClick={(event) => handleCancel(event)}>Cancel</button>
+            <button className="bg-save text-uiLight rounded-md w-[4rem] h-[2.5rem]" type="submit">Create</button>
+          </div>
         </form>
       )}
     </div>
