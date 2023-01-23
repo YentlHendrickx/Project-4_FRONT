@@ -4,6 +4,7 @@ import './App.css';
 import AuthForm from './components/authform';
 import Home from './components/home';
 import MeterList from './components/meterlist';
+import Verification from './components/verification'
 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
@@ -82,6 +83,7 @@ function App() {
 
               <Route path={'/login'} element={ <AuthForm forLogin={true} setIsLoggedIn={setIsLoggedIn} isLoggedIn={isLoggedIn}/> }/>
               <Route path={'/register'} element={ <AuthForm forLogin={false} setIsLoggedIn={setIsLoggedIn} isLoggedIn={isLoggedIn}/> }/>
+              <Route path={'/verify'} element={<Verification/>}/>
           </Routes>
         </div>
       </div>
