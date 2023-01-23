@@ -14,8 +14,11 @@ module.exports = {
         'uiLight2'      : '#A8DADC',   // Powder Blue
         'uiNav'         : '#1D3557',   // Prussian Blue
         'edit'          : '#0A8754',   // Green
-        'delete'        : '#93032E',   // Red
-  
+        'delete'        : '#c70000',   // Red
+        'deleteHover'   : '#e90000',
+        'create'        : '#3b83f6',
+        'save'          : '#00ab66',
+        'saveHover'     : '#00cd88',
       },
     },
   },

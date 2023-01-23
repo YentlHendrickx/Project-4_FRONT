@@ -14,7 +14,13 @@ import { Routes, Route, BrowserRouter, Navigate, useNavigate } from 'react-route
 import { useState, useEffect } from 'react';
 import { SideBar } from './components/sidebar';
 import Graphs from './components/graphs';
+
+
+// Recoil 
 import { RecoilRoot } from 'recoil';
+import { useRecoilState } from 'recoil';
+import { initialsState } from './store';
+import { userDataState } from './store';
 
 const theme = createTheme({
   palette: {
@@ -33,9 +39,11 @@ function App() {
       setIsLoggedIn(true);
     }
   }, []);
-
+  
   function Main() {
     const navigate = useNavigate();
+    const [initals, setInitials] = useRecoilState(initialsState);
+    const [userData, setUserData] = useRecoilState(userDataState);
 
     const handleLogout = () => {
       if (isLoggedIn) {
@@ -43,13 +51,31 @@ function App() {
     
         localStorage.removeItem('token');
         localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('initialsState');
+        localStorage.removeItem('userDataState');
     
         navigate('/login');
       }
     }
 
+    useEffect(() => {
+
+      const initialsState = localStorage.getItem('initialsState');
+      const userDataState = localStorage.getItem('userDataState');
+
+      if (initialsState) {
+        setInitials(JSON.parse(initialsState));
+      }
+
+      if (userDataState) {
+        setUserData(JSON.parse(userDataState));
+      }
+      
+    }, []);
+    
     const PrivateRoute = ({ children }) => {
-      return isLoggedIn ? children :  <Navigate to="/login" />;
+      const loggedIn = localStorage.getItem('isLoggedIn');
+      return loggedIn ? children :  <Navigate to="/login" />;
     };
 
     return (
@@ -57,7 +83,7 @@ function App() {
         {isLoggedIn && 
           <SideBar handleLogout={handleLogout}/>
         }
-        <div className={`${isLoggedIn ? "ml-[8rem]" : ''}`}>
+        <div className={`${isLoggedIn ? "ml-[7rem]" : ''}`}>
           <Routes>
               <Route 
                 path={'/'} 
