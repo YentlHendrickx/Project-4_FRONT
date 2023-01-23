@@ -21,9 +21,9 @@ function MeterList() {
   const [formData, setFormData] = useState({
     rpId: "",
     meterId: "",
-    addres: ""
+    address: "",
+    id: ""
   });
-
 
   // Effect for getting data from API
   useEffect(() => {
@@ -59,7 +59,36 @@ function MeterList() {
   }, [userData]);
 
 
-  function handleEdit(index) {
+  async function handleEdit(event) {
+    event.preventDefault();
+
+    // Check if meter with these id's exists
+    const meterResponse = await axios.get(process.env.REACT_APP_API_URL + "Meter");
+
+    const foundMeter = meterResponse.data.find((meter) => meter.meterDeviceId === formData.meterId && meter.rpId === formData.rpId);
+
+    if (foundMeter === undefined) {
+      setMeterFound(false);
+    } else {
+      const userMeterDto = {
+        "meterId":        foundMeter.id,
+        "rpId":           formData.rpId,
+        "meterDeviceId":  formData.meterId,
+        "userId":         userData.userId,
+        "address":        formData.address,
+      }
+      console.log(userMeterDto);
+
+      const resp = await axios.put(process.env.REACT_APP_API_URL + "UserMeter/" + formData.id, userMeterDto);
+      // TODO: Set data of index to put response.
+    }
+
+    setEditing(false);
+  }
+
+  function triggerEdit(index) {
+    setFormData(metersList[index]);
+
     setCreating(false);
     setEditing(true);
     setIndexBeingEdited(index);
@@ -73,20 +102,6 @@ function MeterList() {
     await axios.delete(process.env.REACT_APP_API_URL + "UserMeter/" + removalId);
 
     setMetersList(newList);
-  }
-
-  function handleSubmit(event) {
-    event.preventDefault();
-    const newData = [...metersList];
-
-    newData[indexBeingEdited] = {
-      RpId: event.target.RpId.value,
-      MeterId: event.target.MeterId.value,
-      address: event.target.address.value
-    };
-
-    // setData(newData);
-    setEditing(false);
   }
 
   async function handleCreate(event) {
@@ -112,7 +127,6 @@ function MeterList() {
       if (meterInList === undefined) {
         // Add user to userMeter table
         const userMeterDto = {
-          meterId: foundMeter.id,
           rpId: newData.rpId,
           meterDeviceId: newData.meterId,
           userId: userData.userId,
@@ -132,6 +146,7 @@ function MeterList() {
 
           setMeterExists(false);
           setMetersList(newMetersList);
+          setCreating(false);
         });
       } else {
         setMeterExists(true);
@@ -149,75 +164,64 @@ function MeterList() {
 
   return (
     <div className="w-full">
-      <table className="min-w-full">
-        <thead className="border-b bg-gray-600">
-          <tr>
-            <th className="text-md font-bold text-white px-6 py-6 text-left">Raspberry ID</th>
-            <th className="text-md font-bold text-white px-6 py-6 text-left">Meter ID</th>
-            <th className="text-md font-bold text-white px-6 py-6 text-left">Address</th>
-            <th className="text-md font-bold text-white px-6 py-6 text-left">Actions</th>
-          </tr>
-        </thead>
-        <tbody >
-          {metersList.map((row, index) => (
-            <tr key={row.rpId} className="bg-white border-b">
+      <form onSubmit={handleEdit}>
+        <table className="border-collapse">
+          <thead className="border-b bg-gray-600">
+            <tr className="w-full">
+              <th className="text-md font-bold text-white px-6 py-6 text-left w-[40%]">Raspberry ID</th>
+              <th className="text-md font-bold text-white px-6 py-6 text-left w-[30%]">Meter ID</th>
+              <th className="text-md font-bold text-white px-6 py-6 text-left w-[30%]">Address</th>
+              <th className="text-md font-bold text-white px-6 py-6 text-left w-[10%]">Actions</th>
+            </tr>
+          </thead>
+          <tbody >
+            {metersList.map((row, index) => (
+              <tr key={row.rpId} className="bg-white border-b w-full">
 
-              {editing && indexBeingEdited === index ? (
-                <>
-                  <td>
-                    <input
-                      type="text"
-                      name="RpId"
-                      placeholder="Raspberry ID"
-                      defaultValue={formData.rpId}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      
-                        type="text"
-                        name="MeterId"
-                        placeholder="Meter ID"
-                        defaultValue={formData.meterId}
-                      />
-                  </td>
-                  <td>
-                    <input
-                        type="text"
-                        name="address"
-                        placeholder="Address"
-                        defaultValue={formData.address}
-                      />
-                  </td>
-                  <td>
-                    <div className="self-end mt-2 mr-4 flex gap-2">
-                      <button className="bg-delete text-uiLight rounded-md w-[4rem] h-[2.5rem]" type="button" onClick={(event) => setEditing(false)}>Cancel</button>
-                      <button className="bg-save text-uiLight rounded-md w-[4rem] h-[2.5rem]" type="submit">Save</button>
-                    </div>
-                  </td>
-                </>
-              ) : (
-                <>
-                  <td className="text-md text-gray-900 font-light px-6 py-4 whitespace-nowrap">{row.rpId}</td>
-                  <td className="text-md text-gray-900 font-light px-6 py-4 whitespace-nowrap">{row.meterId}</td>
-                  <td className="text-md text-gray-900 font-light px-6 py-4 whitespace-nowrap">{row.address}</td>
-                </>
-              )}
-
-              <td className="text-md text-gray-900 font-light px-6 py-4">
-                {!editing && (
+                {editing && indexBeingEdited === index ? (
                   <>
-                    <button className="text-edit" onClick={() => handleEdit(index)}>{icons[icons.findIndex(i => i.name === "edit")].icon}</button>
-                    <button className="text-delete" onClick={() => handleDelete(index)}>{icons[icons.findIndex(i => i.name === "delete")].icon}</button>
+                      <td className="text-md text-gray-900 font-light px-6 py-4 w-[40%]">
+                        <input className="w-full" type="text" name="RpId" placeholder="Raspberry ID" defaultValue={formData.rpId}/>
+                      </td>
+                      <td className="text-md text-gray-900 font-light px-6 py-4 w-[30%]">
+                        <input className="w-full" type="text" name="MeterId" placeholder="Meter ID" defaultValue={formData.meterId} />
+                      </td>
+                      <td className="text-md text-gray-900 font-light px-6 py-4 w-[30%]">
+                        <input className="w-full" type="text" name="address" placeholder="Address" defaultValue={formData.address} />
+                      </td>
+                      <td className="text-md text-gray-900 font-light px-6 py-4 w-[10%]">
+                        <div className="flex gap-4">
+                          <button className="text-delete hover:text-deleteHover" onClick={(event) => {
+                            event.preventDefault(); setEditing(false)}}
+                          >{icons[icons.findIndex(i => i.name === "cancel")].icon}</button>
+                          <button className="text-save hover:text-saveHover" type="submit">{icons[icons.findIndex(i => i.name === "save")].icon}</button>
+                        </div>
+                      </td>
+                  </>
+                ) : (
+                  <>
+                    <td className="text-md text-gray-900 font-light px-6 py-4 w-[40%]">{row.rpId}</td>
+                    <td className="text-md text-gray-900 font-light px-6 py-4 w-[30%]">{row.meterId}</td>
+                    <td className="text-md text-gray-900 font-light px-6 py-4 w-[30%]">{row.address}</td>
+                    <td className="text-md text-gray-900 font-light px-6 py-4 w-[10%]">
+                      <div className="flex gap-4">
+                        <button className="text-save hover:text-saveHover" onClick={(event) => {
+                          event.preventDefault(); triggerEdit(index)}}>{icons[icons.findIndex(i => i.name === "edit")].icon}</button>
+                        <button className="text-delete hover:text-deleteHover" onClick={(event) => {
+                          event.preventDefault(); handleDelete(index)}}>{icons[icons.findIndex(i => i.name === "delete")].icon}</button>
+                      </div>
+                    </td>
                   </>
                 )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </form>          
+
+
       {!creating && !editing && (
-        <div className="flex flex-col w-full">
+        <div className="flex flex-col w-full mt-2">
           <button className="bg-create text-uiLight rounded-md p-2 self-end mr-4" onClick={() => setCreating(true)}>Create New</button>
         </div>
       )}
