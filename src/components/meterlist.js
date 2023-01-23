@@ -1,48 +1,75 @@
 import React, { useEffect, useState } from "react";
 import {icons} from "../icons";
 import axios from 'axios';
-// import './table.css';
 
+// Recoil
+import { useRecoilValue } from "recoil";
+import { userDataState } from "../store";
 
 function MeterList() {
 
-  
-  useEffect(() => {
-    const fetchData = async () => {
-      const result = await axios.get(process.env.REACT_APP_API_URL + "Meter" );
-      console.log(result.data)
-    }
-
-    fetchData();
-
-   }, []);
- 
-
-  
-  const [data, setData] = useState([
-    { RpId: 1, MeterId: 1001, address: '123 Main St' },
-    { RpId: 2, MeterId: 1002, address: '456 Park Ave' },
-    { RpId: 3, MeterId: 1003, address: '789 Elm St' }
-  ]);
-
+  const userData = useRecoilValue(userDataState);
   const [editing, setEditing] = useState(false);
   const [indexBeingEdited, setIndexBeingEdited] = useState(-1);
   const [creating, setCreating] = useState(false)
+  const [metersList, setMetersList] = useState([
+  ]);
+
+  const [meterFound, setMeterFound] = useState(false);
+  const [meterExists, setMeterExists] = useState(false);
+
+  const [formData, setFormData] = useState({
+    rpId: "",
+    meterId: "",
+    addres: ""
+  });
+
+
+  // Effect for getting data from API
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const result = await axios.get(process.env.REACT_APP_API_URL + "User/" + userData.userId);
+
+      let meterData = []
+
+      result.data.userMeters.map((meter) => {
+          const meterObject = {
+            id:       meter.id,
+            rpId:     meter.rpId,
+            meterId:  meter.meterDeviceId,
+            address:  meter.address
+          }
+
+          meterData.push(meterObject);
+      });
+
+      setMetersList(meterData);
+    }
+
+    if (userData.userId !== -1 && userData.userId !== undefined) {      
+      fetchUserData();
+    }
+  }, [userData]);
+
 
   function handleEdit(index) {
     setEditing(true);
     setIndexBeingEdited(index);
   }
 
-  function handleDelete(index) {
-    const newData = [...data];
-    newData.splice(index, 1);
-    setData(newData);
+  async function handleDelete(index) {
+    const newList = [...metersList];
+    const removalId = newList[index].id;
+    newList.splice(index, 1)
+
+    await axios.delete(process.env.REACT_APP_API_URL + "UserMeter/" + removalId);
+
+    setMetersList(newList);
   }
 
   function handleSubmit(event) {
     event.preventDefault();
-    const newData = [...data];
+    const newData = [...metersList];
 
     newData[indexBeingEdited] = {
       RpId: event.target.RpId.value,
@@ -50,48 +77,87 @@ function MeterList() {
       address: event.target.address.value
     };
 
-    setData(newData);
+    // setData(newData);
     setEditing(false);
   }
 
-  function handleCreate(event) {
+  async function handleCreate(event) {
     event.preventDefault();
-    const newData = [...data];
-    newData.push({
-        RpId: event.target.RpId.value,
-        MeterId: event.target.MeterId.value,
-        address: event.target.address.value
-    });
+    const newData = {
+      rpId: event.target.RpId.value.trim(),
+      meterId: event.target.MeterId.value.trim(),
+      address: event.target.address.value
+    };
 
-    
+    // Try to find meter with RpId and MeterId
+    const meterResponse = await axios.get(process.env.REACT_APP_API_URL + "Meter");
 
-    setData(newData);
+    const foundMeter = meterResponse.data.find((meter) => meter.meterDeviceId === newData.meterId && meter.rpId === newData.rpId);
+
+    if (foundMeter === undefined) {
+      setMeterFound(false);
+    } else {
+      // Meter was found check if already in list
+      var meterInList = metersList.find((meter) => meter.rpId === newData.rpId && meter.meterDeviceId === newData.meterId);
+
+      meterInList = undefined;
+      if (meterInList === undefined) {
+        // Add user to userMeter table
+        const userMeterDto = {
+          meterId: foundMeter.id,
+          rpId: newData.rpId,
+          meterDeviceId: newData.meterId,
+          userId: userData.userId,
+          address: newData.address,
+        }
+
+        await axios.post(process.env.REACT_APP_API_URL + "UserMeter",  userMeterDto)
+        .then(res => {
+          const newMetersList = [...metersList];
+
+          const newMeter = {
+            rpId: res.data.rpId,
+            meterId: res.data.meterDeviceId,
+            address: res.data.address
+          }
+          newMetersList.push(newMeter);
+
+          setMeterExists(false);
+          setMetersList(newMetersList);
+        });
+      } else {
+        setMeterExists(true);
+      }
+    }
   }
 
+  // Cancel creation
   function handleCancel(event){
-    setCreating(false)
-    setEditing(false)
-    setIndexBeingEdited(-1)
+    event.preventDefault();
+    setCreating(false);
+    setEditing(false);
+    setIndexBeingEdited(-1);
   }
 
   return (
-    <div className="m-10 flex flex-col items-center">
-      <table className="w-[90%]">
-        <thead className="bg-uiNav text-uiLight">
-          <tr className="border border-uiNav">
-            <th >RpId</th>
-            <th>MeterId</th>
-            <th>Address</th>
-            <th>Actions</th>
+    
+    <div className="w-full">
+      <table className="min-w-full">
+        <thead className="border-b bg-uiSecondaryLight">
+          <tr>
+            <th className="text-sm font-medium text-white px-6 py-4 text-left">RpId</th>
+            <th className="text-sm font-medium text-white px-6 py-4 text-left">MeterId</th>
+            <th className="text-sm font-medium text-white px-6 py-4 text-left">Address</th>
+            <th className="text-sm font-medium text-white px-6 py-4 text-left">Actions</th>
           </tr>
         </thead>
         <tbody >
-          {data.map((row, index) => (
-            <tr key={row.RpId} className="border border-uiNav">
-              <td className="text-center">{row.RpId}</td>
-              <td className="text-center">{row.MeterId}</td>
-              <td className="text-center">{row.address}</td>
-              <td className="text-center">
+          {metersList.map((row, index) => (
+            <tr key={row.rpId} className="bg-white border-b">
+              <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">{row.rpId}</td>
+              <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">{row.meterId}</td>
+              <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">{row.address}</td>
+              <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                 {editing && indexBeingEdited === index ? (
                   <form onSubmit={handleSubmit}>
                     <input
@@ -119,8 +185,8 @@ function MeterList() {
                   </form>
                 ) : (
                   <>
-                    <button className="text-edit" onClick={() => handleEdit(index)}>{icons[8].icon}</button>
-                    <button className="text-delete" onClick={() => handleDelete(index)}>{icons[9].icon}</button>
+                    <button className="text-edit" onClick={() => handleEdit(index)}>{icons[icons.findIndex(i => i.name === "edit")].icon}</button>
+                    <button className="text-delete" onClick={() => handleDelete(index)}>{icons[icons.findIndex(i => i.name === "delete")].icon}</button>
                   </>
                 )}
               </td>
@@ -128,14 +194,14 @@ function MeterList() {
           ))}
         </tbody>
       </table>
-      <button className="bg-uiNav text-uiLight rounded-3xl  p-3 my-4 mx-auto" onClick={() => setCreating(true)}>Create New</button>
+      <button className="bg-uiPrimary text-uiLight rounded-md  p-3 my-4 mx-auto" onClick={() => setCreating(true)}>Create New</button>
       {creating && (
         <form className="create-form" onSubmit={handleCreate}>
-          <input type="number" name="RpId" placeholder="RpId" />
-          <input type="number" name="MeterId" placeholder="MeterId" />
-          <input type="text" name="address" placeholder="Address" />
+          <input type="text" name="RpId" placeholder="RpId" defaultValue={formData.rpId}/>
+          <input type="text" name="MeterId" placeholder="MeterId" defaultValue={formData.meterId} />
+          <input type="text" name="address" placeholder="Address" defaultValue={formData.addres} />
           <button type="submit">Save</button>
-          <button type="button" onClick={() => handleCancel()}>Cancel</button>
+          <button type="button" onClick={(event) => handleCancel(event)}>Cancel</button>
         </form>
       )}
     </div>
