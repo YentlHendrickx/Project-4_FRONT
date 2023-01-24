@@ -165,11 +165,11 @@ function MeterList() {
       // Meter was found check if already in list
       var meterInList = metersList.find((meter) => meter.rpId === newData.rpId && meter.meterDeviceId === newData.meterId);
 
-      meterInList = undefined;
       if (meterInList === undefined) {
         // Add user to userMeter table
         const userMeterDto = {
           rpId: newData.rpId,
+          meterId: foundMeter.id,
           meterDeviceId: newData.meterId,
           userId: userData.userId,
           address: newData.address,

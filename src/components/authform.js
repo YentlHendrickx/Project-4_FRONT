@@ -17,7 +17,7 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
   const [initials, setInitials] = useRecoilState(initialsState)
   const [userData, setUserData] = useRecoilState(userDataState);
 
-  const [verificationRequired, setVerificationRequired] = useState(true);
+  const [verificationRequired, setVerificationRequired] = useState(false);
   // const [setVer]
   const [showVerifyForm, setShowVerifyForm] = useState(false);
   
@@ -179,6 +179,7 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
         localStorage.setItem('initialsState', JSON.stringify(uInitials));
 
         setIsLoggedIn(true);
+        navigate('/');
       }).catch(err => {
           if(err.response.data === "Email not verified.") {
             setVerificationRequired(true);
@@ -187,13 +188,6 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
           }
       });
   }
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      navigate('/login')
-    }
-  }, [isLoggedIn, navigate])
-
 
   // Handle registration of user
   async function handleRegister() {
@@ -233,18 +227,26 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
   function backToLogin() {
     setShowVerifyForm(false);
     setVerificationRequired(false);
+
     setVerifyForm(({
       email: "",
     }));
+
     setVerifyFormErrors({
       email: ""
     });
-
+      
     navigate('/login');
   }
 
-  function sendVerification() {
+  function sendVerification(event) {
+    event.preventDefault();
 
+    sendVerifyMail();
+  }
+
+  async function sendVerifyMail() {
+    await axios.post(process.env.REACT_APP_API_URL + "User/verify?email=" + verifyForm.email);
   }
 
   return (
@@ -287,7 +289,7 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
                     <button onClick={() => setShowVerifyForm(true)} className="font-medium underline">Click&nbsp;Here</button></p>
                   </>
                 )}
-                  <button className="mt-3 ml-1 text-2xl text-slate-600 hover:text-slate-400" onClick={backToLogin()}>
+                  <button className="mt-3 ml-1 text-2xl text-slate-600 hover:text-slate-400" onClick={() => backToLogin()}>
                       Back to Login
                   </button>
               </>
