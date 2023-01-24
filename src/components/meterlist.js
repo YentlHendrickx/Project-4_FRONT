@@ -28,14 +28,8 @@ function MeterList() {
   // Effect for getting data from API
   useEffect(() => {
     const fetchUserData = async () => {
-      // const client = axios.create({
-      //   baseURL: process.env.REACT_APP_API_URL,
-      //   headers: {
-      //     Authorization: `Bearer ${localStorage.getItem('token')}`
-      //   }
-      // })
-
       const result = await axios.get(process.env.REACT_APP_API_URL + "User/" + userData.userId);
+      // const result = await axios.get(process.env.REACT_APP_API_URL + "User/" + userData.userId);
 
       let meterData = []
 
