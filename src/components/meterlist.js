@@ -59,13 +59,32 @@ function MeterList() {
   }, [userData]);
 
 
+  function onChange(event) {
+    const newFormData = {...formData};
+    switch (event.target.name) {
+      case "address":
+        newFormData.address = event.target.value;
+        break;
+      case "RpId":
+        newFormData.rpId = event.target.value;
+        break;
+      case "MeterId":
+        newFormData.meterId = event.target.value;
+        break;
+      default:
+        break;
+    }
+
+    setFormData(newFormData);
+  }
+
   async function handleEdit(event) {
     event.preventDefault();
-
     // Check if meter with these id's exists
     const meterResponse = await axios.get(process.env.REACT_APP_API_URL + "Meter");
 
     const foundMeter = meterResponse.data.find((meter) => meter.meterDeviceId === formData.meterId && meter.rpId === formData.rpId);
+
 
     if (foundMeter === undefined) {
       setMeterFound(false);
@@ -77,24 +96,53 @@ function MeterList() {
         "userId":         userData.userId,
         "address":        formData.address,
       }
-      console.log(userMeterDto);
-
       const resp = await axios.put(process.env.REACT_APP_API_URL + "UserMeter/" + formData.id, userMeterDto);
       // TODO: Set data of index to put response.
+      if (resp.status === 204) {
+        const meterIndex = metersList.findIndex((meter) => meter.meterId === formData.meterId && meter.rpId === formData.rpId);
+        if (meterIndex !== -1) {
+          const newMetersList = [...metersList];
+
+          userMeterDto.meterId = userMeterDto.meterDeviceId;
+          delete userMeterDto.meterDeviceId;
+
+          newMetersList[meterIndex] = userMeterDto;
+
+          setMetersList(newMetersList);
+        }
+      }
     }
 
     setEditing(false);
   }
 
-  function triggerEdit(index) {
-    setFormData(metersList[index]);
+  function cancelEdit(event) {
+    event.preventDefault();
 
+    setFormData({
+      rpId: "",
+      meterId: "",
+      address: "",
+      id: ""
+    });
+
+    setEditing(false);
+  }
+
+  function triggerEdit(index) {
+    const meterData = [...metersList][index];
+
+    setFormData(meterData);
     setCreating(false);
     setEditing(true);
     setIndexBeingEdited(index);
   }
 
   async function handleDelete(index) {
+    if (!window.confirm("Are you sure you want to remove this meter?")) {
+      return;
+    }
+
     const newList = [...metersList];
     const removalId = newList[index].id;
     newList.splice(index, 1)
@@ -181,18 +229,17 @@ function MeterList() {
                 {editing && indexBeingEdited === index ? (
                   <>
                       <td className="text-md text-gray-900 font-light px-6 py-4 w-[40%]">
-                        <input className="w-full" type="text" name="RpId" placeholder="Raspberry ID" defaultValue={formData.rpId}/>
+                        <input className="w-full" type="text" name="RpId" placeholder="Raspberry ID" defaultValue={formData.rpId} onChange={(event) => onChange(event)}/>
                       </td>
                       <td className="text-md text-gray-900 font-light px-6 py-4 w-[30%]">
-                        <input className="w-full" type="text" name="MeterId" placeholder="Meter ID" defaultValue={formData.meterId} />
+                        <input className="w-full" type="text" name="MeterId" placeholder="Meter ID" defaultValue={formData.meterId} onChange={(event) => onChange(event)} />
                       </td>
                       <td className="text-md text-gray-900 font-light px-6 py-4 w-[30%]">
-                        <input className="w-full" type="text" name="address" placeholder="Address" defaultValue={formData.address} />
+                        <input className="w-full" type="text" name="address" placeholder="Address" defaultValue={formData.address}  onChange={(event) => onChange(event)}/>
                       </td>
                       <td className="text-md text-gray-900 font-light px-6 py-4 w-[10%]">
                         <div className="flex gap-4">
-                          <button className="text-delete hover:text-deleteHover" onClick={(event) => {
-                            event.preventDefault(); setEditing(false)}}
+                          <button className="text-delete hover:text-deleteHover" onClick={(event) => cancelEdit(event)}
                           >{icons[icons.findIndex(i => i.name === "cancel")].icon}</button>
                           <button className="text-save hover:text-saveHover" type="submit">{icons[icons.findIndex(i => i.name === "save")].icon}</button>
                         </div>
