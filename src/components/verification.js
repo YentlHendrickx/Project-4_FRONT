@@ -42,25 +42,15 @@ export default function Verification(){
     
     useEffect(() => {
         const fetchData = async () => {
-             await axios.get(process.env.REACT_APP_API_URL + "User/verify/" + token ).then(respons => setResp(respons.data) ).catch(respons => setResp(respons.response.data))
+            axios.get(process.env.REACT_APP_API_URL + "User/verify/" + token ).then(response => setResp(response.data) ).catch(error => setResp(error.response.data))
             
         }
     
         fetchData();
     
        }, []);
+       console.log(resp)
        
-       if (token == null){
-            return(
-                <div className=" bg-red-100 flex flex-col items-center justify-center h-screen">
-                    <span className=" text-uiPrimary scale-[10] mb-10">{icons[icons.findIndex(i => i.name === 'error')].icon}</span>
-                    <p className="mt-10 pt-10 text-4xl">Invalid Token</p>
-                    <NavLink to={'/login'} >
-                        <p>Back to login</p>
-                    </NavLink>
-                </div>
-        ) 
-       }
        if (resp === "Email verified"){
        return(<>
         <Conefttti/>
@@ -73,5 +63,30 @@ export default function Verification(){
             </NavLink>
         </div>
         </>)}
+
+        if(token == null){
+            return(
+                <div className=" bg-red-100 flex flex-col items-center justify-center h-screen">
+                    <span className=" text-uiPrimary scale-[10] mb-10">{icons[icons.findIndex(i => i.name === 'error')].icon}</span>
+                    <p className="mt-10 pt-10 text-4xl">No token</p>
+                    <NavLink to={'/login'} >
+                        <p>Back to login</p>
+                    </NavLink>
+                </div>
+        ) 
+           }
+           
+         if(resp === 'Email already verified' || resp === 'Invalid token'){
+            return(
+                <div className=" bg-red-100 flex flex-col items-center justify-center h-screen">
+                    <span className=" text-uiPrimary scale-[10] mb-10">{icons[icons.findIndex(i => i.name === 'error')].icon}</span>
+                    <p className="mt-10 pt-10 text-4xl">{resp}</p>
+                    <NavLink to={'/login'} >
+                        <p>Back to login</p>
+                    </NavLink>
+                </div>
+        ) 
+       }
+       
     
 }
