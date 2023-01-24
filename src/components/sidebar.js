@@ -40,9 +40,9 @@ export function SideBar({handleLogout}){
                 <AccountCirkel initials={initals} handleLogout={handleLogout}/>
 
                 <div className="flex flex-col text-uiLight">
-                    <Link link={'/meters'} icon={'handyman'}/>
                     <Link link={'/'} icon={'home'}/>
                     <Link link={'/graphs'} icon={'monitoring'}/>
+                    <Link link={'/meters'} icon={'build'}/>
                 </div>
 
                 <IconButton color="secondary" className="scale-[1.75]" onClick={handleLogout}>

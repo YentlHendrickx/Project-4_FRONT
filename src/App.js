@@ -54,7 +54,6 @@ function App() {
         localStorage.removeItem('isLoggedIn');
         localStorage.removeItem('initialsState');
         localStorage.removeItem('userDataState');
-    
         navigate('/login');
       }
     }
@@ -117,7 +116,7 @@ function App() {
 
               <Route path={'/login'} element={ <AuthForm forLogin={true} setIsLoggedIn={setIsLoggedIn} isLoggedIn={isLoggedIn}/> }/>
               <Route path={'/register'} element={ <AuthForm forLogin={false} setIsLoggedIn={setIsLoggedIn} isLoggedIn={isLoggedIn}/> }/>
-              <Route path={'/verify'} element={<Verification/>}/>
+              <Route path={'/verify'} element={<Verification  setIsLoggedIn={setIsLoggedIn} />}/>
               <Route path={'/forgot'} element={<Forgotpassword/>}/>
           </Routes>
         </div>
