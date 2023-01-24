@@ -116,7 +116,7 @@ function App() {
 
               <Route path={'/login'} element={ <AuthForm forLogin={true} setIsLoggedIn={setIsLoggedIn} isLoggedIn={isLoggedIn}/> }/>
               <Route path={'/register'} element={ <AuthForm forLogin={false} setIsLoggedIn={setIsLoggedIn} isLoggedIn={isLoggedIn}/> }/>
-              <Route path={'/verify'} element={<Verification/>}/>
+              <Route path={'/verify'} element={<Verification  setIsLoggedIn={setIsLoggedIn} />}/>
           </Routes>
         </div>
       </div>
