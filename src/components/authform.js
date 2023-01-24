@@ -245,7 +245,7 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
                   />
 
                   {forLogin && (         
-                    <button className="underline font-light text-slate-500 hover:text-slate-300 text-right">Forgot Password</button>
+                    <button className="underline font-light text-slate-500 hover:text-slate-300 text-right" onClick={()=>navigate('/forgot')}>Forgot Password</button>
                   )}
 
                   {!forLogin && (
