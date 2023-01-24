@@ -63,6 +63,13 @@ function App() {
       const initialsState = localStorage.getItem('initialsState');
       const userDataState = localStorage.getItem('userDataState');
 
+      const token = localStorage.getItem('token');
+
+      if (token) {
+        localStorage.setItem('isLoggedIn', true);
+        setIsLoggedIn(true);
+      }
+
       if (initialsState) {
         setInitials(JSON.parse(initialsState));
       }
