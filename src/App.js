@@ -53,7 +53,6 @@ function App() {
         localStorage.removeItem('isLoggedIn');
         localStorage.removeItem('initialsState');
         localStorage.removeItem('userDataState');
-    
         navigate('/login');
       }
     }

@@ -18,6 +18,7 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
   const [userData, setUserData] = useRecoilState(userDataState);
 
   const [verificationRequired, setVerificationRequired] = useState(true);
+  // const [setVer]
   const [showVerifyForm, setShowVerifyForm] = useState(false);
   
   const [image, setImage] = useState(process.env.PUBLIC_URL + getAuthImage());
@@ -65,7 +66,7 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
     const { name, value } = event.target;
     let errors = formErrors;
 
-    if (event.target.name === 'verifyEmail') {
+    if (name === 'verifyEmail') {
       errors = verifyFormErrors;
     }
 
@@ -178,15 +179,21 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
         localStorage.setItem('initialsState', JSON.stringify(uInitials));
 
         setIsLoggedIn(true);
-        navigate('/');
       }).catch(err => {
-        if (err.response.data === "Email not verified.") {
-          setVerificationRequired(true);
-        } else { 
-          setFormErrors({...formErrors, login: 'Invalid email or password'});
-        }
+          if(err.response.data === "Email not verified.") {
+            setVerificationRequired(true);
+          } else {
+            setFormErrors({...formErrors, login: 'Invalid email or password'});
+          }
       });
   }
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate('/login')
+    }
+  }, [isLoggedIn, navigate])
+
 
   // Handle registration of user
   async function handleRegister() {
@@ -236,6 +243,10 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
     navigate('/login');
   }
 
+  function sendVerification() {
+
+  }
+
   return (
     <div className="w-screen h-screen bg-[#eee] flex">
       <div className="w-[55%] h-full flex justify-center">
@@ -248,7 +259,7 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
                   <>
                     <p className="font-light text-slate-500 text-left max-w-[24rem]">Fill in your mail address. 
                     If an account with this email exists a new verification mail will be sent.</p>
-                    <form className="mt-2 ml-1 flex justify-between">
+                    <form className="mt-2 ml-1 flex justify-between" onSubmit={sendVerification}>
                       <input
                         className={`mt-0 mb-0 pb-0 h-8 pl-2 focus:outline-none border-[1px] w-[80%] border-slate-400 rounded-md`}
                         type="email"
