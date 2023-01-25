@@ -10,6 +10,8 @@ import { userDataState } from "../store";
 
 import { getAuthImage } from "../authImages";
 
+const image = process.env.PUBLIC_URL + getAuthImage();
+
 function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
   const navigate = useNavigate();
 
@@ -21,7 +23,6 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
   // const [setVer]
   const [showVerifyForm, setShowVerifyForm] = useState(false);
   
-  const [image, setImage] = useState(process.env.PUBLIC_URL + getAuthImage());
 
   const [formErrors, setFormErrors] = useState({
     email: "",
@@ -222,7 +223,7 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
       // Registration
       handleRegister();
     }
-  };
+  }
 
   function backToLogin() {
     setShowVerifyForm(false);
@@ -347,7 +348,10 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
                     />
   
                     {forLogin && (         
-                      <button className="underline font-light text-slate-500 hover:text-slate-300 text-right">Forgot Password</button>
+                      <button onClick={(event) => {
+                        event.preventDefault();
+                        navigate('/forgot')
+                      }} className="underline font-light text-slate-500 hover:text-slate-300 text-right">Forgot Password</button>
                     )}
   
                     {!forLogin && (
@@ -399,7 +403,7 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
             )}
           </div>
       </div>
-      <img className="w-[45%] object-cover" src={image} alt="Electricity"/> 
+      <img className="w-[45%] object-cover" src={image} alt="Elek3city"/> 
     </div>
   );
 }
