@@ -1,6 +1,8 @@
 # Project 4 Frontend
 
 TODO:
-- Get JWT from localstorage on init
-- PUT for crud
-- Verify email, reset pw
+- Implement Top notification for Crud actions
+- Make styling coherent
+- Make authform.js less messy
+- Finish profile page
+- Mobile styling
