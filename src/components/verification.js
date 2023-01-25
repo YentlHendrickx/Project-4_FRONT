@@ -1,4 +1,3 @@
-import { CheckCircle} from "@mui/icons-material";
 import axios from "axios";
 import React, { useEffect, useState} from "react";
 import ReactConfetti from "react-confetti";
@@ -35,11 +34,9 @@ function Confetti() {
 export default function Verification({setIsLoggedIn}){
     const [searchParams] = useSearchParams();
     const [resp, setResp] = useState("");
-    
-    const token = searchParams.get('token')
+    const [token] = useState(searchParams.get('token'));
     
     useEffect(() => {
-        
         const fetchData = async () => {
             axios.get(process.env.REACT_APP_API_URL + "User/verify/" + token )
             .then (response => {
@@ -48,16 +45,15 @@ export default function Verification({setIsLoggedIn}){
             })
             .catch (error => setResp(error.response.data));
         }
-    
+        
         // Make sure user is logged out
         localStorage.removeItem('token');
         setIsLoggedIn(false);
 
         if (token !== null) {
-            
             fetchData();
         }
-       }, [token]);
+    }, []);
        
        if (resp === "Email verified" || resp === "Email already verified") {
             return (

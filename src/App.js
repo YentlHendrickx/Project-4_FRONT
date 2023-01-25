@@ -86,6 +86,17 @@ function App() {
       return loggedIn ? children :  <Navigate to="/login" />;
     };
 
+    const LogoutRoute = ({children}) => {
+      localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('token');
+
+      useEffect(() => {
+        setIsLoggedIn(false);
+      }, [])
+
+      return children;
+    };
+
     return (
       <div>
         {isLoggedIn && 
@@ -115,11 +126,42 @@ function App() {
                   </PrivateRoute> 
                 }/>
 
-              <Route path={'/login'} element={ <AuthForm forLogin={true} setIsLoggedIn={setIsLoggedIn} isLoggedIn={isLoggedIn}/> }/>
-              <Route path={'/register'} element={ <AuthForm forLogin={false} setIsLoggedIn={setIsLoggedIn} isLoggedIn={isLoggedIn}/> }/>
-              <Route path={'/verify'} element={<Verification  setIsLoggedIn={setIsLoggedIn} />}/>
-              <Route path={'/forgot'} element={<Forgotpassword/>}/>
-              <Route path={'/resetpassword'} element={<Forgotpassword/>}/>
+            
+              <Route 
+                path={'/login'} 
+                element={ 
+                  <AuthForm forLogin={true} setIsLoggedIn={setIsLoggedIn} isLoggedIn={isLoggedIn}/> 
+                }/>
+              
+              <Route 
+                path={'/register'} 
+                element={ 
+                    <AuthForm forLogin={false} setIsLoggedIn={setIsLoggedIn} isLoggedIn={isLoggedIn}/>
+                }/>
+              
+              <Route 
+                path={'/verify'} 
+                element={ 
+                  <LogoutRoute>
+                    <Verification  setIsLoggedIn={setIsLoggedIn} />
+                  </LogoutRoute>
+                }/>
+
+              <Route 
+                path={'/forgot'} 
+                element={ 
+                  <LogoutRoute>
+                    <Forgotpassword/>
+                  </LogoutRoute>
+                }/>
+              
+              <Route 
+                path={'/resetpassword'} 
+                element={ 
+                  <LogoutRoute>
+                    <Forgotpassword/>
+                  </LogoutRoute>
+                }/>
           </Routes>
         </div>
       </div>
