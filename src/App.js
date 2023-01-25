@@ -6,6 +6,7 @@ import Home from './components/home';
 import MeterList from './components/meterlist';
 import Verification from './components/verification';
 import Forgotpassword from './components/forgotpassword';
+import Profile from './components/profile'
 
 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -112,6 +113,13 @@ function App() {
                 element={ 
                   <PrivateRoute>
                     <Graphs />
+                  </PrivateRoute> 
+                }/>
+                <Route
+                path={'/profile'} 
+                element={ 
+                  <PrivateRoute>
+                    <Profile />
                   </PrivateRoute> 
                 }/>
 

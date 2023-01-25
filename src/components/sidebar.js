@@ -37,7 +37,7 @@ export function SideBar({handleLogout}){
     return(
         <div className="w-[7rem] h-full fixed left-0 top-0 bg-uiNav">
             <div className="flex flex-col h-full w-full justify-between items-center mt-2 pb-8">
-                <AccountCirkel initials={initals} handleLogout={handleLogout}/>
+                <NavLink to={'/profile'}><AccountCirkel initials={initals} handleLogout={handleLogout}/></NavLink>
 
                 <div className="flex flex-col text-uiLight">
                     <Link link={'/'} icon={'home'}/>
