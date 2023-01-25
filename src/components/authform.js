@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import axios from 'axios';
 
 // Recoil
-import { useRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { initialsState } from "../store";
 import { userDataState } from "../store";
 
@@ -16,8 +16,8 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
   const navigate = useNavigate();
 
   // Set initials
-  const [initials, setInitials] = useRecoilState(initialsState)
-  const [userData, setUserData] = useRecoilState(userDataState);
+  const setInitials = useSetRecoilState(initialsState)
+  const setUserData = useSetRecoilState(userDataState);
 
   const [verificationRequired, setVerificationRequired] = useState(false);
   // const [setVer]
