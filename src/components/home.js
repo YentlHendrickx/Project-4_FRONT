@@ -27,6 +27,7 @@ function Home() {
             <h1 className="p-5 text-4xl">Uw Verbruik</h1>
             <h2 className="px-5 text-2xl">Deze week</h2>
             <div className="grid sm:grid-cols-1  lg:grid-cols-2 gap-6 p-10">
+            <div id="qv01" class="qvobject"></div>
                 <Card color={'#477998'} line1={'Dag verbruik'} line2={'3,5'} line3={'kWh'}/>
                 <Card color={'#785964'} line1={'Nacht verbruik'} line2={'6,9'} line3={'kWh'}/>
                 <Card color={'#FA7E61'} line1={'Hoogste dag verbruik'} line2={'15 kWh'} line3={'17/01/2023'}/>
