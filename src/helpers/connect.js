@@ -4,8 +4,9 @@ import schema from 'enigma.js/schemas/12.170.2.json';
 
 import {Auth, AuthType, Config} from '@qlik/sdk';
 
-async function isLoggedIn(webIntegrationId, url) {
-    await fetch(`https://${url}/api/v1/users/me`, {
+async function login(webIntegrationId, url) {
+  function isLoggedIn(webIntegrationId, url) {
+      fetch(`https://${url}/api/v1/users/me`, {
         method: 'GET',
         mode: 'cors',
         credentials: 'include',
@@ -14,21 +15,29 @@ async function isLoggedIn(webIntegrationId, url) {
             'qlik-web-integration-id': webIntegrationId,
         },
     }).then(response => {
-        console.log(response);
-       return response.status === 200;
+      console.log("GOT RESPONSE", response);
+      return response.status === 200;
     }).catch(err => {
-      console.warn(err);
+      console.warn("GOT ERROR", err);
       return false;
     });
+  }
+
+    return isLoggedIn(webIntegrationId, url).then(loggedIn => {
+      if (loggedIn === false) {
+        window.location.href = `https://${url}/login?qlik-web-integration=id=${webIntegrationId}&returnto=https://127.0.1:3000/graphs`;
+      }
+    })
 }
 
 async function getQCSHeaders({ webIntegrationId, url }) {
 
-    isLoggedIn(webIntegrationId, url).then(loggedIn => {
-        if (!loggedIn) {
-            window.location.href = `https://${url}/login?qlik-web-integration=id=${webIntegrationId}&returnto=${window.location.href}`;
-        }
-    });
+    login(webIntegrationId, url);
+    // await isLoggedIn(webIntegrationId, url).then(loggedIn => {
+    //   console.log(loggedIn);
+    //     if (loggedIn === false) {
+    //     }
+    // });
 
     // const config = {
     //     authType: AuthType.WebIntegration,
