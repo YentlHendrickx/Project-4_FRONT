@@ -16,15 +16,17 @@ async function isLoggedIn(webIntegrationId, url) {
     }).then(response => {
         console.log(response);
        return response.status === 200;
+    }).catch(err => {
+      console.warn(err);
+      return false;
     });
 }
 
 async function getQCSHeaders({ webIntegrationId, url }) {
 
     isLoggedIn(webIntegrationId, url).then(loggedIn => {
-        console.warn("LOGGED", loggedIn);
         if (!loggedIn) {
-            window.location.href = `https://${url}/login?qlik-web-integration=id=` + webIntegrationId + "&returnto=" + window.location.href;
+            window.location.href = `https://${url}/login?qlik-web-integration=id=${webIntegrationId}&returnto=${window.location.href}`;
         }
     });
 
