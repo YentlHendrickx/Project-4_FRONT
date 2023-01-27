@@ -133,7 +133,7 @@ function App() {
                 path={'/profile'} 
                 element={ 
                   <PrivateRoute>
-                    <Profile handleLogout={handleLogout}/>
+                    <Profile handleLogout={handleLogout} />
                   </PrivateRoute> 
                 }/>
 
