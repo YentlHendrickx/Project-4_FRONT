@@ -5,34 +5,36 @@ import schema from 'enigma.js/schemas/12.170.2.json';
 import {Auth, AuthType, Config} from '@qlik/sdk';
 
 async function login(webIntegrationId, url) {
-  function isLoggedIn(webIntegrationId, url) {
-      fetch(`https://${url}/api/v1/users/me`, {
-        method: 'GET',
-        mode: 'cors',
-        credentials: 'include',
-        headers: {
-            'Content-Type': 'application/json',
-            'qlik-web-integration-id': webIntegrationId,
-        },
-    }).then(response => {
-      console.log("GOT RESPONSE", response);
-      return response.status === 200;
-    }).catch(err => {
-      console.warn("GOT ERROR", err);
-      return false;
-    });
-  }
+    async function isLoggedIn() {
+        fetch(`https://${url}/api/v1/users/me`, {
+          method: 'GET',
+          mode: 'cors',
+          credentials: 'include',
+          headers: {
+              'Content-Type': 'application/json',
+              'qlik-web-integration-id': webIntegrationId,
+          },
+      }).then(response => {
+        console.log("GOT RESPONSE", response);
+        console.log(response.status);
+        if (response.status === 200) {
+          return true;
+        } else {
+          window.location.href = `https://${url}/login?qlik-web-integration-id=${webIntegrationId}&returnto=${window.location.href}`;
+        }
+        // return response.status === 200;
+      }).catch(err => {
+        console.warn("GOT ERROR", err);
+        return false;
+      });
+    }
 
-    return isLoggedIn(webIntegrationId, url).then(loggedIn => {
-      if (loggedIn === false) {
-        window.location.href = `https://${url}/login?qlik-web-integration=id=${webIntegrationId}&returnto=https://127.0.1:3000/graphs`;
-      }
-    })
+    isLoggedIn();
 }
 
 async function getQCSHeaders({ webIntegrationId, url }) {
 
-    login(webIntegrationId, url);
+    await login(webIntegrationId, url);
     // await isLoggedIn(webIntegrationId, url).then(loggedIn => {
     //   console.log(loggedIn);
     //     if (loggedIn === false) {
