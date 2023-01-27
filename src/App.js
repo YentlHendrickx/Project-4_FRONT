@@ -8,7 +8,6 @@ import Verification from './components/verification';
 import Forgotpassword from './components/forgotpassword';
 import Profile from './components/profile'
 
-
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 // Navigation
@@ -18,6 +17,8 @@ import { useState, useEffect } from 'react';
 import { SideBar } from './components/sidebar';
 import Graphs from './components/graphs';
 
+
+import GlobalValuesProvider from './helpers/Provider';
 
 // Recoil 
 import { RecoilRoot } from 'recoil';
@@ -123,7 +124,9 @@ function App() {
                 path={'/graphs'} 
                 element={ 
                   <PrivateRoute>
+                    <GlobalValuesProvider>
                     <Graphs />
+                    </GlobalValuesProvider>
                   </PrivateRoute> 
                 }/>
                 <Route
