@@ -1,5 +1,5 @@
 import { IconButton } from "@mui/material";
-import { NavLink } from "react-router-dom"
+import { NavLink } from "react-router-dom";
 import { icons } from "../icons";
 
 // Recoil
@@ -37,12 +37,12 @@ export function SideBar({handleLogout}){
     return(
         <div className="w-[7rem] h-full fixed left-0 top-0 bg-uiNav">
             <div className="flex flex-col h-full w-full justify-between items-center mt-2 pb-8">
-                <AccountCirkel initials={initals} handleLogout={handleLogout}/>
+                <NavLink to={'/profile'}><AccountCirkel initials={initals} handleLogout={handleLogout}/></NavLink>
 
                 <div className="flex flex-col text-uiLight">
-                    <Link link={'/meters'} icon={'handyman'}/>
                     <Link link={'/'} icon={'home'}/>
                     <Link link={'/graphs'} icon={'monitoring'}/>
+                    <Link link={'/meters'} icon={'build'}/>
                 </div>
 
                 <IconButton color="secondary" className="scale-[1.75]" onClick={handleLogout}>
