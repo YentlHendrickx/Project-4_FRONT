@@ -9,3 +9,8 @@ export const initialsState = atom({
     key: 'initialsState',
     default: 'U',
 });
+
+export const enigmaUrlState = atom({
+    key: 'enigmaUrlState',
+    default: null,
+});

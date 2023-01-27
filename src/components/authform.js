@@ -224,8 +224,7 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
       // Registration
       handleRegister();
     }
-  }
-
+  };
   function backToLogin() {
     setShowVerifyForm(false);
     setVerificationRequired(false);

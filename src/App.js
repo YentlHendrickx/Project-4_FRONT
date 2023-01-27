@@ -8,6 +8,7 @@ import Verification from './components/verification';
 import Forgotpassword from './components/forgotpassword';
 import Profile from './components/profile'
 
+
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 // Navigation
@@ -18,13 +19,12 @@ import { SideBar } from './components/sidebar';
 import Graphs from './components/graphs';
 
 
-import GlobalValuesProvider from './helpers/Provider';
-
 // Recoil 
 import { RecoilRoot } from 'recoil';
 import { useRecoilState } from 'recoil';
 import { initialsState } from './store';
 import { userDataState } from './store';
+import QlikConnect from './helpers/qlikConnect';
 
 const theme = createTheme({
   palette: {
@@ -124,10 +124,10 @@ function App() {
                 path={'/graphs'} 
                 element={ 
                   <PrivateRoute>
-                    <GlobalValuesProvider>
-                    <Graphs />
-                    </GlobalValuesProvider>
-                  </PrivateRoute> 
+                    <QlikConnect>
+                      <Graphs />
+                    </QlikConnect> 
+                  </PrivateRoute>
                 }/>
                 <Route
                 path={'/profile'} 
@@ -137,7 +137,6 @@ function App() {
                   </PrivateRoute> 
                 }/>
 
-            
               <Route 
                 path={'/login'} 
                 element={ 
