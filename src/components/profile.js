@@ -1,6 +1,8 @@
 import { Email } from "@mui/icons-material"
 import axios from "axios"
 import { useState } from "react"
+import { useRecoilValue } from "recoil"
+import { userDataState } from "../store"
 
 export default function Profile(){
     const [changeEmail, setChangeEmail] = useState(false)
@@ -15,27 +17,29 @@ export default function Profile(){
         oldPassword: '',
         email: ''
     })
+    const userState = useRecoilValue(userDataState);
 
 
-    function handleChangeEmail(event){
+    async function handleChangeEmail(event){
         event.preventDefault();
-        setChangeEmail(true)
-        setChangePassword(false)
+        // setChangeEmail(true)
+        // setChangePassword(false)
         if(event){
             const newEmail = {
                 newEmail: emailFormData.newEmail,
-                oldEmail: emailFormData.oldEmail,
+                oldEmail: userState.email,
                 password: emailFormData.password
             }
-            const result = axios.put(process.env.REACT_APP_API_URL + 'User/changeemail'+ newEmail)
+            console.log(process.env.REACT_APP_API_URL + 'User/changeemail', newEmail);
+            const result =  await axios.put(process.env.REACT_APP_API_URL + 'User/changeemail/', newEmail);
             console.log(result)
             console.log(newEmail)
         }
     }
 
     function handleChangePassword(event){
-        setChangeEmail(false)
-        setChangePassword(true)
+        // setChangeEmail(false)
+        // setChangePassword(true)
         if(event){
             const newPassword = {
                 newPassword: passwordFormData.newPassword,
@@ -55,7 +59,7 @@ export default function Profile(){
         })
         console.log(emailFormData)
     }
-    function onChangeEmail(event){
+    function onChangePassword(event){
         setPasswordFormData({
             ...passwordFormData,
             [event.target.name]: event.target.value
@@ -74,24 +78,23 @@ export default function Profile(){
                     { changeEmail ? (
                         <div className="grid grid-cols-1 gap-3 w-[50%] mx-auto">
 
-                            <h1 className="text-4xl text-center">Change password</h1>
+                            <h1 className="text-4xl text-center">Change email</h1>
 
-                            <form className=" grid grid-cols-4 gap-3 mx-[8vh]"  onSubmit={handleChangePassword}>
-                                <input className=" text-center col-span-2" type='email' name={"oldEmail"} placeholder={"Old email"} value={emailFormData.oldEmail} onChange={onChangeEmail}/>
-                                <input className=" text-center col-span-2" type='email' name={"newEmail"}placeholder={"New email"} value={emailFormData.newEmail} onChange={onChangeEmail}/>
-                                <input className=" text-center col-span-4" type='password' name={"password"}placeholder={"Password"} value={emailFormData.password} onChange={onChangeEmail}/>
+                            <form className=" grid grid-cols-4 gap-3 mx-[8vh]"  onSubmit={handleChangeEmail}>
+                                <input className=" text-center col-span-4" type='email' name={"newEmail"} placeholder={"New email"} value={emailFormData.newEmail} onChange={onChangeEmail}/>
+                                <input className=" text-center col-span-4" type='password' name={"password"} placeholder={"Password"} value={emailFormData.password} onChange={onChangeEmail}/>
                                 <button className="bg-green-500 text-uiLight rounded-xl col-start-2 col-span-2" type="submit">Change email</button>
                             </form>
                         </div>
                     ):(
                         <div className="grid grid-cols-1 gap-3 w-[50%] mx-auto">
                                 
-                            <h1 className="text-4xl text-center">Change email</h1>
+                            <h1 className="text-4xl text-center">Change password</h1>
 
-                            <form className=" grid grid-cols-4 gap-3 mx-[8vh]"  onSubmit={handleChangeEmail}>
-                                <input className=" text-center col-span-2" type='password' name={"oldPassword"} placeholder={"Old password"} value={emailFormData.oldEmail} onChange={onChangeEmail}/>
-                                <input className=" text-center col-span-2" type='password' name={"newPassword"}placeholder={"New password"} value={emailFormData.newEmail} onChange={onChangeEmail}/>
-                                <input className=" text-center col-span-4" type='email' name={"email"}placeholder={"Email"} value={emailFormData.password} onChange={onChangeEmail}/>
+                            <form className=" grid grid-cols-4 gap-3 mx-[8vh]"  onSubmit={handleChangePassword}>
+                                <input className=" text-center col-span-2" type='password' name={"oldPassword"} placeholder={"Old password"} value={emailFormData.oldEmail} onChange={onChangePassword}/>
+                                <input className=" text-center col-span-2" type='password' name={"newPassword"}placeholder={"New password"} value={emailFormData.newEmail} onChange={onChangePassword}/>
+                                <input className=" text-center col-span-4" type='email' name={"email"}placeholder={"Email"} value={emailFormData.password} onChange={onChangePassword}/>
                                 <button className="bg-green-500 text-uiLight rounded-xl col-start-2 col-span-2" type="submit">Change email</button>
                             </form>
                         </div>

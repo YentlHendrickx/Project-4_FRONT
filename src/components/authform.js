@@ -171,7 +171,8 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
         const userDataDto = {
           firstName: res.data.userDto.firstName,
           lastName: res.data.userDto.lastName,
-          userId: res.data.userDto.id
+          userId: res.data.userDto.id,
+          email: res.data.userDto.email
         }
         setUserData(userDataDto);
 
