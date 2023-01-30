@@ -1,9 +1,9 @@
-import { 
-    Handyman, HandymanOutlined, Home, 
+import {
+    Handyman, HandymanOutlined, Home,
     HomeOutlined, InsertChart, InsertChartOutlined,
     Logout, LogoutOutlined, Edit, Delete, Save,
-    Cancel, CheckCircle, Error, Build, BuildOutlined
- } from '@mui/icons-material';
+    Cancel, CheckCircle, Error, Build, BuildOutlined, Info, InfoOutlined
+} from '@mui/icons-material';
 
 export const icons = [
     {icon: <Handyman                />,     name: "handyman"},
@@ -22,4 +22,8 @@ export const icons = [
     {icon: <Cancel                  />,     name: "cancel"},
     {icon: <Build                   />,     name: "build"},
     {icon: <BuildOutlined           />,     name: "buildOutlined"},
+    {icon: <Info                    />,     name: "Info"},
+    {icon: <InfoOutlined                    />,     name: "InfoOutlined"}
+
+
 ]
