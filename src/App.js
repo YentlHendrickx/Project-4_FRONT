@@ -153,7 +153,15 @@ function App() {
                 path={'/verify'} 
                 element={ 
                   <LogoutRoute>
-                    <Verification  setIsLoggedIn={setIsLoggedIn} />
+                    <Verification  setIsLoggedIn={setIsLoggedIn} changeEmail={false}/>
+                  </LogoutRoute>
+                }/>
+
+              <Route 
+                path={'/verifyEmailChangeToken'} 
+                element={ 
+                  <LogoutRoute>
+                    <Verification  setIsLoggedIn={setIsLoggedIn} changeEmail={true}/>
                   </LogoutRoute>
                 }/>
 

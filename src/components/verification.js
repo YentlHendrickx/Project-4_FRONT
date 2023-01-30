@@ -31,19 +31,28 @@ function Confetti() {
             />
     );
 }
-export default function Verification({setIsLoggedIn}){
+export default function Verification({setIsLoggedIn, changeEmail=false}){
     const [searchParams] = useSearchParams();
     const [resp, setResp] = useState("");
     const [token] = useState(searchParams.get('token'));
+    const [email] = useState(searchParams.get('email'));
     
     useEffect(() => {
-        const fetchData = async () => {
-            axios.get(process.env.REACT_APP_API_URL + "User/verify/" + token )
-            .then (response => {
-                // Set response
-                setResp(response.data) 
-            })
-            .catch (error => setResp(error.response.data));
+        const fetchData = async () => {  
+
+            let query = `${process.env.REACT_APP_API_URL}User/verify/${token}`;
+
+            if (changeEmail){
+                query = `${process.env.REACT_APP_API_URL}User/verifyEmailChangeToken/${token}?newMail=${email}`;
+            }
+            
+                axios.get(query)
+                .then (response => {
+                    // Set response
+                    setResp(response.data) 
+                })
+                .catch (error => setResp(error.response.data));    
+            
         }
         
         // Make sure user is logged out
