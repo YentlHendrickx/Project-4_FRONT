@@ -1,14 +1,17 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+
+// Nebula
 import { embed } from "@nebula.js/stardust";
 
-import barchart from '@nebula.js/sn-bar-chart';
-
-
+// Recoil
 import { useRecoilValue } from "recoil";
 import { enigmaUrlState } from "../store";
 
+import nebulaConfiguration from "../helpers/configure";
+
+// Enigma
 const enigma = require('enigma.js');
-const schema = require('enigma.js/schemas/12.1306.0.json');
+const schema = require('enigma.js/schemas/12.936.0.json');
 
 
 const config = {
@@ -16,44 +19,49 @@ const config = {
     prefix              : process.env.REACT_APP_QLIK_PREFIX,
     port                : process.env.REACT_APP_QLIK_PORT,
     webIntegrationId    : process.env.REACT_APP_QLIK_INTEGRATION_ID,
+    appId               : process.env.REACT_APP_QLIK_APP_ID,
     isSecure            : true,
 }
 
-
-function Graphs() {
-    const [graph, setGraph] = useState(null);
-    const ref = useRef(null);
+const Graphs = () =>  {
+    // Different graphs
+    const perHourRef = useRef(null);
     const enigmaUrl = useRecoilValue(enigmaUrlState);
-    
+
     useEffect(() => {
-        const getEnigma = async () => {
-            const session = await enigma.create({
-                schema,
-                url: enigmaUrl
-            });
-
-            const app = await (await session.open()).openDoc('c16d3353-ee3a-457e-9de8-66f1b0f55c0e');
-
-            return app;
-        }
-
         const runEnigma = async () => {
             if (enigmaUrl) {
-                const newEnigmaApp = await getEnigma();
-    
-                const n = embed(newEnigmaApp, {
-                    types: [
-                        {
-                            name: "barchart",
-                            load: () => Promise.resolve(barchart)
-                        }
-                    ]
+                const session = await enigma.create({
+                    schema,
+                    url: enigmaUrl,
+
                 });
 
-                const element = ref.current;
+                const newEnigmaApp = await (await session.open()).openDoc(config.appId);
+
+                const field = await newEnigmaApp.getField("MeterId");
+
+                await field.selectValues({
+                "qFieldValues": [
+                    {
+                        "qText": "3",
+                        "qIsNumeric": true,
+                        "qNumber": 3
+                    }
+                    ],
+                    "qToggleMode": false,
+                    "qSoftLock": true
+                });
                 
+                const n = await nebulaConfiguration(newEnigmaApp);
+                
+                if (perHourRef.current.children[0]) {
+                    perHourRef.current.removeChild(perHourRef.current.children[0]);
+                }
+
+                const perHourElement = perHourRef.current;
                 n.render({
-                    element,
+                    element: perHourElement,
                     id: 'mGxVj',
                 });
             }
@@ -61,12 +69,12 @@ function Graphs() {
 
         runEnigma();
 
-    }, [enigmaUrl])
+    }, [enigmaUrl]);
 
 
     return (
         <div className="w-screen h-screen">
-           <div className="w-[50%] h-[50%]" ref={ref}>
+           <div className="w-[70%] h-[50%]" ref={perHourRef}>
 
             </div>
         </div>
@@ -74,3 +82,4 @@ function Graphs() {
 }
 
 export default Graphs;
+

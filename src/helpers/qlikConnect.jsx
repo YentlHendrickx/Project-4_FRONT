@@ -4,7 +4,7 @@ import { enigmaUrlState } from '../store';
 import { Auth, AuthType } from '@qlik/sdk';
 
 const enigma = require('enigma.js');
-const schema = require('enigma.js/schemas/12.612.0.json');
+const schema = require('enigma.js/schemas/12.936.0.json');
 
 const config = {
     host                : process.env.REACT_APP_QLIK_HOST,
@@ -12,7 +12,6 @@ const config = {
     port                : process.env.REACT_APP_QLIK_PORT,
     webIntegrationId    : process.env.REACT_APP_QLIK_INTEGRATION_ID,
     appId               : process.env.REACT_APP_QLIK_APP_ID,
-    apiKey              : process.env.REACT_APP_QLIK_API_KEY,
     isSecure            : true,
 }
 
@@ -63,7 +62,7 @@ const QlikConnect = ({ children }) => {
 
                     if (!authInstance.isAuthenticated()) {
                         authInstance.authenticate();
-                        return "UWU"
+                        return -1;
                     } else {
                         const wssUrl = await authInstance.generateWebsocketUrl(appId);
                         return wssUrl;
@@ -89,6 +88,5 @@ const QlikConnect = ({ children }) => {
        </>
     );
 }
-
 
 export default QlikConnect;
