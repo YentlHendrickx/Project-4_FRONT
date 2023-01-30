@@ -45,7 +45,7 @@ export function SideBar({handleLogout}){
                     <Link link={'/meters'} icon={'build'}/>
                 </div>
 
-                <IconButton color="secondary" className="scale-[1.75]" onClick={handleLogout}>
+                <IconButton color="secondary" className=" scale-[1.75]" onClick={handleLogout}>
                     {icons[icons.findIndex(i => i.name === "logout")].icon}
                 </IconButton>
             </div>
