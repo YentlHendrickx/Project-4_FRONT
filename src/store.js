@@ -14,3 +14,8 @@ export const enigmaUrlState = atom({
     key: 'enigmaUrlState',
     default: null,
 });
+
+export const userMetersState = atom({
+    key: 'userMetersState',
+    default: []
+});
