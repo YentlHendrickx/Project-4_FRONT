@@ -124,9 +124,9 @@ function App() {
                 path={'/graphs'} 
                 element={ 
                   <PrivateRoute>
-                    {/* <QlikConnect>
+                    <QlikConnect>
                       <Graphs />
-                    </QlikConnect>  */}
+                    </QlikConnect> 
                   </PrivateRoute>
                 }/>
                 <Route
