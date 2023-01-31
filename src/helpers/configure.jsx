@@ -1,3 +1,5 @@
+// Configuration file for all graphs, if another graph is need add import, name and load: function
+
 import { embed } from '@nebula.js/stardust';
 import barchart from '@nebula.js/sn-bar-chart';
 import linechart from '@nebula.js/sn-line-chart';
@@ -6,6 +8,8 @@ import sankeychart from '@nebula.js/sn-sankey-chart';
 import funnechart from '@nebula.js/sn-funnel-chart';
 import mekkochart from '@nebula.js/sn-mekko-chart';
 
+
+// Create config for all charts
 const nebulaConfiguration = embed.createConfiguration({
     types: [
         {
