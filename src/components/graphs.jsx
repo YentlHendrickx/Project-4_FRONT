@@ -96,7 +96,7 @@ const Graphs = () =>  {
     const [updatedAddress, setUpdatedAddress] = useState(false);
 
     const [selectOptions, setSelectOptions] = useState(null);
-    const [meterNumbers, setMeterNumbers] = useState('');
+    const [meterNumbers, setMeterNumbers] = useState(-1);
 
     // References to components for rendering the graphs
     const perHourRef        = useRef(null);
@@ -139,13 +139,7 @@ const Graphs = () =>  {
         let newMeterNumbers = '';
 
         if (userMeters.length) {
-            if (selectedAddress === -1) {
-                userMeters.forEach(meter => {
-                    newMeterNumbers += `${meter},`
-                });
-            } else {
-                newMeterNumbers = selectedAddress
-            }
+            newMeterNumbers = selectedAddress
         }
 
         setMeterNumbers(newMeterNumbers);
@@ -180,18 +174,36 @@ const Graphs = () =>  {
 
                 // Set filtering so that user can only see their own Meters
                 const field = await newEnigmaApp.getField("MeterId");
-
-                await field.selectValues({
+                
+                let qFielValuesDict = {
                     "qFieldValues": [
-                        {
-                            "qText": "3",
-                            "qIsNumeric": true,
-                            "qNumber": meterNumbers
-                        }
+
                     ],
                     "qToggleMode": false,
                     "qSoftLock": true
-                });
+                }
+
+                if (parseInt(meterNumbers) === -1) {
+                    userMeters.forEach(meter => {
+                        qFielValuesDict["qFieldValues"].push( 
+                            {
+                                "qText": String(meter),
+                                "qIsNumeric": true,
+                                "qNumber": parseInt(meter),
+                            },
+                        );
+                    });
+                } else {
+                    qFielValuesDict["qFieldValues"].push( 
+                        {
+                            "qText": String(meterNumbers),
+                            "qIsNumeric": true,
+                            "qNumber": parseInt(meterNumbers),
+                        },
+                    );
+                }
+
+                await field.selectValues(qFielValuesDict);
                 
                 // Create the app using the configuration from configure.jsx
                 const n = await nebulaConfiguration(newEnigmaApp);
