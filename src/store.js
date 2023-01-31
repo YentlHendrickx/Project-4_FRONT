@@ -15,6 +15,7 @@ export const enigmaUrlState = atom({
     default: null,
 });
 
+// For saving meters and displaying graphs
 export const userMetersState = atom({
     key: 'userMetersState',
     default: []
