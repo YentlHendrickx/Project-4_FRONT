@@ -28,8 +28,10 @@ const config = {
 }
 
 
+// Dropdown for selecting graph source
 const DropdownSelector = ({userMeters, setUserMeters, selectOptions, setSelectOptions, onValueChange}) => {
 
+    // Get user data for getting associated meters
     const userData = useRecoilValue(userDataState);
 
     // Get user meters
@@ -135,7 +137,6 @@ const Graphs = () =>  {
     }, []);
 
     function updateMeterNumbers(selectedAddress) {
-
         let newMeterNumbers = '';
 
         if (userMeters.length) {
@@ -255,4 +256,3 @@ const Graphs = () =>  {
 }
 
 export default Graphs;
-
