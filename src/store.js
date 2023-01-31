@@ -10,6 +10,7 @@ export const initialsState = atom({
     default: 'U',
 });
 
+// For saving enimga url
 export const enigmaUrlState = atom({
     key: 'enigmaUrlState',
     default: null,
