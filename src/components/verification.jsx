@@ -66,6 +66,7 @@ export default function Verification({setIsLoggedIn, changeEmail=false}){
         if (token !== null) {
             fetchData();
         }
+        // eslint-disable-next-line
     }, []);
        
        if (resp === "Email verified" || resp === "Email already verified") {

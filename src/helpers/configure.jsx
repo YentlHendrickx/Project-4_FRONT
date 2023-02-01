@@ -41,7 +41,7 @@ const nebulaConfiguration = embed.createConfiguration({
             name: 'kpi',
             load: () => Promise.resolve(kpi)
         }
-    ]
+    ],
 });
 
 export default nebulaConfiguration;
