@@ -1,12 +1,16 @@
-import { Email } from "@mui/icons-material"
-import axios from "axios"
+// React
 import { useState } from "react"
+
+// Recoil
 import { useRecoilValue } from "recoil"
 import { userDataState } from "../store"
 
-import { ReactNotifications } from 'react-notifications-component';
+// Axios
+import axios from "axios"
+
+// Notifications
+import { ReactNotifications, Store } from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
-import { Store } from 'react-notifications-component';
 
 export default function Profile({handleLogout}){
     const [changeEmail, setChangeEmail] = useState(false)
@@ -34,10 +38,10 @@ export default function Profile({handleLogout}){
                 oldEmail: userState.email,
                 password: emailFormData.password
             }
-            console.log(process.env.REACT_APP_API_URL + 'User/changeemail', newEmail);
+            // console.log(process.env.REACT_APP_API_URL + 'User/changeemail', newEmail);
             const result =  await axios.put(process.env.REACT_APP_API_URL + 'User/changeemail/', newEmail);
-            console.log(result)
-            console.log(newEmail)
+            // console.log(result)
+            // console.log(newEmail)
 
             Store.addNotification({
                 title: "Email Sent!",
@@ -59,19 +63,15 @@ export default function Profile({handleLogout}){
 
     async function handleChangePassword(event){
         event.preventDefault();
-        // setChangeEmail(false)
-        // setChangePassword(true)
-        if(event){
+
+        if(event) {
             const newPassword = {
                 newPassword: passwordFormData.newPassword,
                 oldPassword: passwordFormData.oldPassword,
                 email: passwordFormData.email
             }
-            console.log(newPassword)
-            console.log(process.env.REACT_APP_API_URL + 'User/changepassword/', newPassword)
+
             const result = await axios.post(process.env.REACT_APP_API_URL + 'User/changepassword/', newPassword)
-            console.log(result)
-            console.log(newPassword)
 
             Store.addNotification({
                 title: "Password Changed!",
@@ -96,19 +96,19 @@ export default function Profile({handleLogout}){
             ...emailFormData,
             [event.target.name]: event.target.value
         })
-        console.log(emailFormData)
+        // console.log(emailFormData)
     }
     function onChangePassword(event){
         setPasswordFormData({
             ...passwordFormData,
             [event.target.name]: event.target.value
         })
-        console.log(passwordFormData)
+        // console.log(passwordFormData)
     }
 
 
     return(<div>
-        <ReactNotifications/>
+        <ReactNotifications className="!relative"/>
                 { !changeEmail && !changePassword?(
                 <div className=" flex justify-center gap-8 m-[6vh]">
                     <button className=" bg-green-500 rounded-lg text-uiLight w-[50rem]" onClick={()=> setChangeEmail(!changeEmail)}>Change email</button>

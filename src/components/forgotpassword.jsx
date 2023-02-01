@@ -9,8 +9,7 @@ import axios from "axios";
 import { getAuthImage } from "../authImages";
 
 // Notification
-import { ReactNotifications } from 'react-notifications-component';
-import { Store } from 'react-notifications-component';
+import { ReactNotifications, Store } from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
 
 // Get specific image
@@ -212,7 +211,7 @@ export default function ForgotPassword() {
 
   return(
     <div className="w-screen h-screen bg-[#eee] flex">
-      <ReactNotifications />
+      <ReactNotifications className="!relative"/>
       <div className="w-[55%] h-full flex justify-center">
         <div className="mt-[15%]">
           <h3 className="text-3xl text-left font-bold">Elek3city Monitor</h3>

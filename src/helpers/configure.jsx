@@ -1,4 +1,4 @@
-// Configuration file for all graphs, if another graph is need add import, name and load: function
+// Configuration file for all graphs, if another graph is needed add import, name and load: function
 
 import { embed }    from '@nebula.js/stardust';
 import barchart     from '@nebula.js/sn-bar-chart';

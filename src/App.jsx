@@ -82,6 +82,7 @@ function App() {
         setUserData(JSON.parse(userDataState));
       }
       
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     
     // Private routes will return child routes if logged in, else redirect to login page
