@@ -36,12 +36,16 @@ const DropdownSelector = ({userMeters, setUserMeters, selectOptions, setSelectOp
 
     // Get user meters
     useEffect(() => {
+        // Get meters and options
         if (userMeters.length === 0 || selectOptions == null) {
 
+            // Valid userId
             if (userData.userId !== -1 && userData.userId !== undefined) {
+                // Get user specific data (meters)
                 const getUserData = async () => {
                     let result = -1;
                     await axios.get(process.env.REACT_APP_API_URL + "User/" + userData.userId)
+
                     .then(resp => {
                         result = resp;
                     }).catch(error => {
@@ -52,10 +56,12 @@ const DropdownSelector = ({userMeters, setUserMeters, selectOptions, setSelectOp
                         return;
                     }
 
+                    // Add select and meter values
                     const data = result.data;
                     let meters = [];
                     let select = [{label: 'All Meters', value: -1}];
 
+                    // Add select options
                     if (data.userMeters.length) {
                         data.userMeters.forEach(meter => {
                             meters.push(meter.meterId);
@@ -72,6 +78,7 @@ const DropdownSelector = ({userMeters, setUserMeters, selectOptions, setSelectOp
     }, [userMeters, selectOptions]);
 
 
+    // Return loading if no select options, otherwise return true
     if (selectOptions) {
         return (
             <div>
@@ -129,13 +136,14 @@ const Graphs = () =>  {
     const enigmaUrl = useRecoilValue(enigmaUrlState);
 
 
+    // On startup automatically show all meter graphs
     useEffect(() => {
         if (userMeters) {
-            // console.log("YEET");
             updateMeterNumbers(-1);
         }
     }, []);
 
+    // Based on input set meter numbers for showing specific graph
     function updateMeterNumbers(selectedAddress) {
         let newMeterNumbers = '';
 
@@ -144,9 +152,12 @@ const Graphs = () =>  {
         }
 
         setMeterNumbers(newMeterNumbers);
+
+        // Updated is true, the charts will be re-rendered
         setUpdatedAddress(true);
     }
 
+    // Update chart if selection was changed
     function onValueChange(event) {
         event.preventDefault();
         updateMeterNumbers(event.target.value);
@@ -155,27 +166,30 @@ const Graphs = () =>  {
     useEffect(() => {
         const runEnigma = async () => {
 
+            // Check run conditions, enigmaUrl needs to be set and engine can't already be running
             if (enigmaUrl && (!running || updatedAddress === true)) {
                 setRunning(true);
                 setUpdatedAddress(false);
 
+                // Remove any nebulae tags still present, upon engine creation new one will be created (prevents mem leak)
                 const results = document.querySelectorAll('[data-app-id]');
                 results.forEach(memoryLeak => {
                     memoryLeak.remove();
                 });
 
-                // Create enigma engine
+                // Create enigma engine based on schema specfied in require
                 const session = await enigma.create({
                     schema,
                     url: enigmaUrl,
                 });
 
-                // Create enigma app and open correct qlik app
+                // Use engine to create a new app based on the app document
                 const newEnigmaApp = await (await session.open()).openDoc(config.appId);
 
-                // Set filtering so that user can only see their own Meters
+                // Get MeterId field for filtering
                 const field = await newEnigmaApp.getField("MeterId");
                 
+                // Base dictionary for filtering
                 let qFielValuesDict = {
                     "qFieldValues": [
 
@@ -184,7 +198,9 @@ const Graphs = () =>  {
                     "qSoftLock": true
                 }
 
+                // All meters or just one?
                 if (parseInt(meterNumbers) === -1) {
+                    // Update dictionary by adding all meters
                     userMeters.forEach(meter => {
                         qFielValuesDict["qFieldValues"].push( 
                             {
@@ -195,6 +211,7 @@ const Graphs = () =>  {
                         );
                     });
                 } else {
+                    // Update dictionary by adding specific meter
                     qFielValuesDict["qFieldValues"].push( 
                         {
                             "qText": String(meterNumbers),
@@ -204,27 +221,32 @@ const Graphs = () =>  {
                     );
                 }
 
+                // Select the values specified in the dict
                 await field.selectValues(qFielValuesDict);
                 
-                // Create the app using the configuration from configure.jsx
+                // Set app configuration and create embeddable object
                 const n = await nebulaConfiguration(newEnigmaApp);
 
                 // Loop over every Reference and ID combo
                 objectReferences.forEach(ref => {
+
+                    // Get reference
                     const reference = ref.Reference.current;
-                    const id = ref.ID;
 
-                    // Remove children if they already exist (on re-render)
-                    if (reference.children[0]) {
-                        reference.removeChild(reference.children[0]);
-                        // console.warn(reference.children);
+                    if (reference != null) {
+                        const id = ref.ID;
+
+                        // Remove children if they already exist (on re-render)
+                        if (reference.children[0]) {
+                            reference.removeChild(reference.children[0]);
+                        }
+
+                        // Render chart with id
+                        n.render({
+                            element: reference,
+                            id: id,
+                        });
                     }
-
-                    // Render chart with id
-                    n.render({
-                        element: reference,
-                        id: id,
-                    });
                 });
             }
         }
