@@ -7,6 +7,7 @@ import MeterList from './components/meterlist';
 import Verification from './components/verification';
 import Forgotpassword from './components/forgotpassword';
 import Profile from './components/profile'
+import Help from './components/help'
 
 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -180,6 +181,14 @@ function App() {
                     <Forgotpassword/>
                   </LogoutRoute>
                 }/>
+
+                <Route
+                  path={'/help'}
+                  element={
+                    <PrivateRoute>
+                      <Help/>
+                    </PrivateRoute>
+                  }/>
           </Routes>
         </div>
       </div>
