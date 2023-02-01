@@ -1,11 +1,14 @@
+// React
 import { useState } from "react";
+
+// Import accordion component
 import {
   Accordion,
   AccordionHeader,
   AccordionBody,
 } from "@material-tailwind/react";
  
-export default function Example() {
+export default function Help() {
   const [open, setOpen] = useState(1);
  
   const handleOpen = (value) => {
@@ -14,7 +17,7 @@ export default function Example() {
  
   return (
     <div className="w-full h-full">
-      <div className="w-[100%] flex flex-col justify-center items-center mt-4">
+      <div className="w-[100%] flex flex-col items-center mt-4">
         <div className="w-[80%] p-4 rounded-md">
           <h2 className="text-4xl underline text-center">FAQ</h2>
           <Accordion open={open === 1} >

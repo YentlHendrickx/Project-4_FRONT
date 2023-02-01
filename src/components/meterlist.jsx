@@ -11,6 +11,10 @@ import axios from 'axios';
 import {useRecoilValue} from "recoil";
 import {userDataState} from "../store";
 
+// Notification
+import { ReactNotifications, Store } from "react-notifications-component";
+import 'react-notifications-component/dist/theme.css';
+
 function MeterList() {
     // All states used for editing, crceating, etc.
     const userData = useRecoilValue(userDataState);
@@ -18,9 +22,6 @@ function MeterList() {
     const [indexBeingEdited, setIndexBeingEdited] = useState(-1);
     const [creating, setCreating] = useState(false)
     const [metersList, setMetersList] = useState([]);
-
-    const [meterFound, setMeterFound] = useState(false);
-    const [meterExists, setMeterExists] = useState(false);
 
     // Form values
     const [formData, setFormData] = useState({
@@ -39,7 +40,7 @@ function MeterList() {
             let meterData = []
 
             // Add meters to list
-            result.data.userMeters.map((meter) => {
+            result.data.userMeters.forEach((meter) => {
                 const meterObject = {
                     id: meter.id,
                     rpId: meter.rpId,
@@ -88,8 +89,21 @@ function MeterList() {
         const foundMeter = meterResponse.data.find((meter) => meter.meterDeviceId === formData.meterId && meter.rpId === formData.rpId);
 
         if (foundMeter === undefined) {
-            // No metere was found
-            setMeterFound(false);
+            // No meter was found
+            Store.addNotification({
+                title: "Meter not found.",
+                message: `The combination ${formData.meterId}, ${formData.rpId} doesn't exist.`,
+                type: "danger",
+                insert: "top",
+                container: "top-right",
+                animationIn: ["animate__animated", "animate__fadeIn"],
+                animationOut: ["animate__animated", "animate__fadeOut"],
+                dismiss: {
+                  duration: 500000,
+                  onScreen: true,
+                  pauseOnHover: true
+                }    
+            });
         } else {
             // Construct dto for PUT action
             const userMeterDto = {
@@ -175,7 +189,20 @@ function MeterList() {
         const foundMeter = meterResponse.data.find((meter) => meter.meterDeviceId === newData.meterId && meter.rpId === newData.rpId);
 
         if (foundMeter === undefined) {
-            setMeterFound(false);
+            Store.addNotification({
+                title: "Meter not found.",
+                message: `The combination ${formData.meterId}, ${formData.rpId} does not exist.`,
+                type: "danger",
+                insert: "top",
+                container: "top-right",
+                animationIn: ["animate__animated", "animate__fadeIn"],
+                animationOut: ["animate__animated", "animate__fadeOut"],
+                dismiss: {
+                  duration: 5000,
+                  onScreen: true,
+                  pauseOnHover: false
+                }    
+            });
         } else {
             // Meter was found check if already in list
             var meterInList = metersList.find((meter) => meter.rpId === newData.rpId && meter.meterDeviceId === newData.meterId);
@@ -201,12 +228,40 @@ function MeterList() {
                         }
                         newMetersList.push(newMeter);
 
-                        setMeterExists(false);
                         setMetersList(newMetersList);
                         setCreating(false);
+
+                        Store.addNotification({
+                            title: "Meter was added!",
+                            message: `Your meter has been successfully configured.`,
+                            type: "success",
+                            insert: "top",
+                            container: "top-right",
+                            animationIn: ["animate__animated", "animate__fadeIn"],
+                            animationOut: ["animate__animated", "animate__fadeOut"],
+                            dismiss: {
+                              duration: 5000,
+                              onScreen: true,
+                              pauseOnHover: false
+                            }
+                            
+                        });
                     });
             } else {
-                setMeterExists(true);
+                Store.addNotification({
+                    title: "Meter already exists.",
+                    message: `This meter has already been added.`,
+                    type: "danger",
+                    insert: "top",
+                    container: "top-right",
+                    animationIn: ["animate__animated", "animate__fadeIn"],
+                    animationOut: ["animate__animated", "animate__fadeOut"],
+                    dismiss: {
+                      duration: 5000,
+                      onScreen: true,
+                      pauseOnHover: false
+                    }    
+                });
             }
         }
     }
@@ -220,7 +275,8 @@ function MeterList() {
     }
 
     return (
-        <div className="w-full">
+        <div className="w-full relative">
+            <ReactNotifications className="!relative"/>
             <form onSubmit={handleEdit}>
                 <table className="border-collapse">
                     <thead className="border-b bg-gray-600">
@@ -229,8 +285,6 @@ function MeterList() {
                         <th className="text-md font-bold text-white px-6 py-6 text-left w-[40%]">
                             <div className="flex ">
                                 Raspberry ID
-
-
                                 <div className="scale-[0.7] -mt-2 ml-1 cursor-pointer ">
                              <span style={{ marginTop: '-100px' }} title="Fill in the code that was provided to you (sticker)"  >
                                 {icons[icons.findIndex(i => i.name === "InfoOutlined")].icon}
@@ -238,20 +292,14 @@ function MeterList() {
 
                                 </div>
                             </div>
-
-
                         </th>
                         <th className="text-md font-bold text-white px-6 py-6 text-left w-[30%]">
-
                             <div className="flex ">
                                 Meter ID
-
-
                                 <div className="scale-[0.7] -mt-2 ml-1 cursor-pointer ">
                              <span style={{ marginTop: '-100px' }} title="Fill in the id of the digital meter where you plugged the raspberry pi in. You can find this on the front of your meter. Example: 1SAGXXXXXXXXXX"  >
                                 {icons[icons.findIndex(i => i.name === "InfoOutlined")].icon}
                             </span>
-
                                 </div>
                             </div>
 
