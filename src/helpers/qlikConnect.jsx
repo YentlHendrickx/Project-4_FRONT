@@ -55,7 +55,7 @@ const QlikConnect = ({ children }) => {
         }
 
         // Only try getting wss url if not already present
-        if (isLoggedIn === false || enigmaUrlState === null) {
+        if (isLoggedIn === false || enigmaUrl === null) {
             const loginState = async () => {
                 // Try login and redirect
                 const state = await login();
@@ -77,7 +77,13 @@ const QlikConnect = ({ children }) => {
 
                     // Check authentication and try to authenticate
                     if (!authInstance.isAuthenticated()) {
+                        console.error("NOT AUTHENTICATED TRYING TO AUTH")
                         authInstance.authenticate();
+
+                        if (authInstance.isAuthenticated()) {
+                            console.error("STILL NOT AUTHENTICATED");
+                        }
+
                         return -1;
                     } else {
                         // Generate a wss url used in creating the engine

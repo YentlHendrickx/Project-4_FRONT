@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+// React
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+// Axios
 import axios from 'axios';
 
 // Recoil
@@ -8,10 +10,13 @@ import { useSetRecoilState } from "recoil";
 import { initialsState } from "../store";
 import { userDataState } from "../store";
 
+// Custom
 import { getAuthImage } from "../authImages";
 
+// Get random image from authentication images
 const image = process.env.PUBLIC_URL + getAuthImage();
 
+// Authform entry point
 function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
   const navigate = useNavigate();
 
@@ -20,10 +25,9 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
   const setUserData = useSetRecoilState(userDataState);
 
   const [verificationRequired, setVerificationRequired] = useState(false);
-  // const [setVer]
   const [showVerifyForm, setShowVerifyForm] = useState(false);
   
-
+  // Form data
   const [formErrors, setFormErrors] = useState({
     email: "",
     password: "",
@@ -47,6 +51,15 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
   const [verifyFormErrors, setVerifyFormErrors] = useState({
     email: "",
   });
+
+  // Redirect to home if logged in
+  useEffect(() => {
+    if (localStorage.getItem('token') && localStorage.getItem('isLoggedIn') === 'true') {
+      navigate('/');
+    }
+    
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function switchLoginRegister(event) {
     event.preventDefault();

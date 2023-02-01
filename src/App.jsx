@@ -84,11 +84,14 @@ function App() {
       
     }, []);
     
+    // Private routes will return child routes if logged in, else redirect to login page
     const PrivateRoute = ({ children }) => {
       const loggedIn = localStorage.getItem('isLoggedIn');
       return loggedIn ? children :  <Navigate to="/login" />;
     };
 
+
+    // A logout route will automatically make sure the user is logged out before going on
     const LogoutRoute = ({children}) => {
       localStorage.removeItem('isLoggedIn');
       localStorage.removeItem('token');
@@ -111,15 +114,10 @@ function App() {
                 path={'/'} 
                 element={ 
                   <PrivateRoute>
-                    <Home />
+                    <QlikConnect>
+                      <Home />
+                    </QlikConnect>
                   </PrivateRoute> 
-                }/>
-              <Route 
-                path={'/meters'} 
-                element={ 
-                  <PrivateRoute>
-                    <MeterList />
-                 </PrivateRoute> 
                 }/>
               <Route 
                 path={'/graphs'} 
@@ -130,6 +128,13 @@ function App() {
                     </QlikConnect> 
                   </PrivateRoute>
                 }/>
+                <Route 
+                  path={'/meters'} 
+                  element={ 
+                    <PrivateRoute>
+                      <MeterList />
+                   </PrivateRoute> 
+                  }/>
                 <Route
                 path={'/profile'} 
                 element={ 

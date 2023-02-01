@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { useState } from "react";
 import {
   Accordion,
   AccordionHeader,
@@ -13,52 +13,47 @@ export default function Example() {
   };
  
   return (
-  <div className="flex flex-col justify-center items-center w-full">
-    <h1 className="text-4xl">FAQ</h1>
-    
-    <div className="w-[50%]">
-      <Accordion open={open === 1} >
-        <AccordionHeader onClick={() => handleOpen(1)}>
-          Wat doet onze app?
-        </AccordionHeader>
-        <AccordionBody>
-          Onze app monitort jou verbruik aan de hand van de meters 
-          die je meegeeft. Zo kan jij jouw actueel verbruik beter in 
-          beeld brengen.
-        </AccordionBody>
-      </Accordion>
-      <Accordion open={open === 2} >
-        <AccordionHeader onClick={() => handleOpen(2)}>
-          Hoe begin je met monitoren?
-        </AccordionHeader>
-        <AccordionBody>
-          Eerst voeg je jou meter toe, daarna log je in via 
-          qlik &#40;indien nodig &#41; en de rest gaat vanzelf.
-        </AccordionBody>
-      </Accordion>
-      <Accordion open={open === 3}>
-        <AccordionHeader onClick={() => handleOpen(3)}>
-          Hoe voeg ik een meter toe?
-        </AccordionHeader>
-        <AccordionBody>
-          Klik op de moersleutel links net boven de log uit knop en druk dan op de blauwe Creëer knop.
-          Vervolgens geef je jou Raspberry ID mee, dit is de ID 
-          die je terugvind op de sticker van de meegeleverde Raspberry Pi.
-          Daarna geef je de Meter ID van jou digitale meter mee, dit is de 
-          meter waar je de Raspberry Pi hebt insteken. Als laatste vul je 
-          het address in waar de meter/raspberry zich bevindt. Druk nu op de 
-          Creëer knop. Nu heb je een meter toegevoegd!
-        </AccordionBody>
-      </Accordion>
-      <Accordion open={open === 4}>
-        <AccordionHeader onClick={() => handleOpen(4)}>
-          Hoe sluit ik mijn raspberry pi aan?
-        </AccordionHeader>
-        <AccordionBody>
-            Steek je raspberry pi in poort P1 met een RJ11 naar usb kabel. Opgelet dit is enkel 
-            mogelijk met een digitale meter.
-        </AccordionBody>
-      </Accordion>
+    <div className="w-full h-full">
+      <div className="w-[100%] flex flex-col justify-center items-center mt-4">
+        <div className="w-[80%] p-4 rounded-md">
+          <h2 className="text-4xl underline text-center">FAQ</h2>
+          <Accordion open={open === 1} >
+            <AccordionHeader onClick={() => handleOpen(1)}>
+              What is the purpose of this app?
+            </AccordionHeader>
+            <AccordionBody>
+              Our app is capable of giving you an elegant way to follow up
+              on your electricity usage. Doing this you can monitor your usage
+              and make changes to save energy. 
+            </AccordionBody>
+          </Accordion>
+          <Accordion open={open === 2} >
+            <AccordionHeader onClick={() => handleOpen(2)}>
+              How do you start monitoring?
+            </AccordionHeader>
+            <AccordionBody>
+              After setting up the elek3city monitoring device there 
+              are a few steps:
+              
+              1. Got to meter setup (Wrench icon), and create a new meter.
+              2. Fill in the details, Raspberry ID and MeterId as well as a name
+              for your meter (address or anything you choose)
+              3. DONE! You can now follow up on your elektricity usage.
+            </AccordionBody>
+          </Accordion>
+          <Accordion open={open === 3}>
+            <AccordionHeader onClick={() => handleOpen(3)}>
+              How do I connect the monitoring device?
+            </AccordionHeader>
+            <AccordionBody>
+              First you have to make sure to enable the P1 port on your meter. Steps for this
+              can be found on the Fluvius website.
+
+              After the P1 port is open you setting up the device is really simple. Just plug in the included
+              cable into the P1 port, setup the meter in the application... and you're done!
+            </AccordionBody>
+          </Accordion>
+        </div>
       </div>
     </div>
   );

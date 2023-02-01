@@ -27,7 +27,6 @@ const config = {
     isSecure            : true,
 }
 
-
 // Dropdown for selecting graph source
 const DropdownSelector = ({userMeters, setUserMeters, selectOptions, setSelectOptions, onValueChange}) => {
 
@@ -75,6 +74,7 @@ const DropdownSelector = ({userMeters, setUserMeters, selectOptions, setSelectOp
                 getUserData();
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userMeters, selectOptions]);
 
 
@@ -141,6 +141,7 @@ const Graphs = () =>  {
         if (userMeters) {
             updateMeterNumbers(-1);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // Based on input set meter numbers for showing specific graph
@@ -167,7 +168,7 @@ const Graphs = () =>  {
         const runEnigma = async () => {
 
             // Check run conditions, enigmaUrl needs to be set and engine can't already be running
-            if (enigmaUrl && (!running || updatedAddress === true)) {
+            if (enigmaUrl !== null && (!running || updatedAddress === true)) {
                 setRunning(true);
                 setUpdatedAddress(false);
 
@@ -251,9 +252,13 @@ const Graphs = () =>  {
             }
         }
 
-        // Run main function
-        runEnigma();
+        // Only run when valid arguments are found
+        if (enigmaUrl !== null && userMeters.length > 0) {
+            // Run main function
+            runEnigma();
+        }
 
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [enigmaUrl, updatedAddress]);
 
     return (
