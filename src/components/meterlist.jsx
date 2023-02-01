@@ -39,7 +39,7 @@ function MeterList() {
             let meterData = []
 
             // Add meters to list
-            result.data.userMeters.foreach((meter) => {
+            result.data.userMeters.map((meter) => {
                 const meterObject = {
                     id: meter.id,
                     rpId: meter.rpId,
