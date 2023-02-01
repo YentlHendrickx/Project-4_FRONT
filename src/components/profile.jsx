@@ -39,7 +39,7 @@ export default function Profile({handleLogout}){
                 password: emailFormData.password
             }
             // console.log(process.env.REACT_APP_API_URL + 'User/changeemail', newEmail);
-            const result =  await axios.put(process.env.REACT_APP_API_URL + 'User/changeemail/', newEmail);
+            await axios.put(process.env.REACT_APP_API_URL + 'User/changeemail/', newEmail);
             // console.log(result)
             // console.log(newEmail)
 
@@ -71,7 +71,7 @@ export default function Profile({handleLogout}){
                 email: passwordFormData.email
             }
 
-            const result = await axios.post(process.env.REACT_APP_API_URL + 'User/changepassword/', newPassword)
+            await axios.post(process.env.REACT_APP_API_URL + 'User/changepassword/', newPassword)
 
             Store.addNotification({
                 title: "Password Changed!",

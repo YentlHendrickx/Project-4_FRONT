@@ -1,0 +1,119 @@
+{
+  "_inherit": true,
+  "_variables": {
+    "@TitleSize": "20px",
+    "@SubtitleSize": "4px",
+    "@TextSize": "12px",
+    "@FooterSize": "10px",
+    "@TitleColor": "#000000",
+    "@SubtitleColor": "#000000",
+    "@TextColor": "#000000",
+    "@FooterColor": "#000000",
+    "@BackgroundColor": "#00000",
+    "@AxisMajorColor": "#000000",
+    "@AxisMinorColor": "#000000"
+  },
+  "customStyles": [
+    {
+      "cssRef": "theme.css",
+      "classRef": "sense-theme"
+    }
+  ],
+  "color": "@TextColor",
+  "fontSize": "@TextSize",
+  "backgroundColor": "@BackgroundColor",
+  "dataColors": {
+    "primaryColor": "#000000",
+    "othersColor": "#000000",
+    "errorColor": "#000000",
+    "nullColor": "#000000"
+  },
+  "object": {
+    "title": {
+      "main": {
+        "color": "@TitleColor",
+        "fontSize": "@TitleSize"
+      },
+      "subTitle": {
+        "color": "@SubtitleColor",
+        "fontSize": "@SubtitleSize"
+      },
+      "footer": {
+        "color": "@FooterColor",
+        "fontSize": "@FooterSize",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "label": {
+      "name": {
+        "color": "@TextColor",
+        "fontSize": "@TextSize"
+      },
+      "value": {
+        "color": "@TextColor",
+        "fontSize": "@TextSize"
+      }
+    },
+    "axis": {
+      "title": {
+        "color": "@TextColor",
+        "fontSize": "@TextSize"
+      },
+      "label": {
+        "name": {
+          "color": "@TextColor",
+          "fontSize": "@TextSize"
+        }
+      },
+      "line": {
+        "major": {
+          "color": "#000000"
+        },
+        "minor": {
+          "color": "#000000"
+        }
+      }
+    },
+    "grid": {
+      "line": {
+        "highContrast": {
+          "color": "#000000"
+        },
+        "major": {
+          "color": "#000000"
+        },
+        "minor": {
+          "color": "#000000"
+        }
+      }
+    },
+    "referenceLine": {
+      "label": {
+        "name": {
+          "color": "@TextColor",
+          "fontSize": "@TextSize"
+        }
+      },
+      "outOfBounds": {
+        "color": "@TextColor",
+        "backgroundColor": "#ffffff",
+        "fontSize": "@TextSize"
+      }
+    },
+    "legend": {
+      "title": {
+        "color": "@TextColor",
+        "fontSize": "@TextSize"
+      },
+      "label": {
+        "color": "@TextColor",
+        "fontSize": "@TextSize"
+      }
+    }
+  },
+  "palettes": {
+    "data": [],
+    "ui": []
+  },
+  "scales": []
+}

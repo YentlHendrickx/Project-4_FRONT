@@ -21,10 +21,8 @@ import Graphs from './components/graphs';
 
 
 // Recoil 
-import { RecoilRoot } from 'recoil';
-import { useRecoilState } from 'recoil';
-import { initialsState } from './store';
-import { userDataState } from './store';
+import { RecoilRoot, useSetRecoilState } from 'recoil';
+import { initialsState, userDataState } from './store';
 import QlikConnect from './helpers/qlikConnect';
 
 const theme = createTheme({
@@ -47,8 +45,8 @@ function App() {
   
   function Main() {
     const navigate = useNavigate();
-    const [initals, setInitials] = useRecoilState(initialsState);
-    const [userData, setUserData] = useRecoilState(userDataState);
+    const setInitials = useSetRecoilState(initialsState);
+    const setUserData = useSetRecoilState(userDataState);
 
     const handleLogout = () => {
       if (isLoggedIn) {

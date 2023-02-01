@@ -1,8 +1,9 @@
 # Project 4 Frontend
 
 TODO:
-- Implement Top notification for Crud actions
-- Make styling coherent
-- Make authform.js less messy
-- Finish profile page
+
+- Home page styling
+- Finish styling profile page
 - Mobile styling
+- Make authform.js less messy
+- KPI data totals vs daily (both)?
