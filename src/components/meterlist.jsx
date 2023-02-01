@@ -1,18 +1,18 @@
+// React
 import React, {useEffect, useState} from "react";
 
+// Icons
 import {icons} from "../icons";
 
+// Axios
 import axios from 'axios';
 
 // Recoil
 import {useRecoilValue} from "recoil";
 import {userDataState} from "../store";
-import {Tooltip} from "react-tooltip";
-import {Info} from "@mui/icons-material";
-
 
 function MeterList() {
-
+    // All states used for editing, crceating, etc.
     const userData = useRecoilValue(userDataState);
     const [editing, setEditing] = useState(false);
     const [indexBeingEdited, setIndexBeingEdited] = useState(-1);
@@ -22,6 +22,7 @@ function MeterList() {
     const [meterFound, setMeterFound] = useState(false);
     const [meterExists, setMeterExists] = useState(false);
 
+    // Form values
     const [formData, setFormData] = useState({
         rpId: "",
         meterId: "",
@@ -32,12 +33,13 @@ function MeterList() {
     // Effect for getting data from API
     useEffect(() => {
         const fetchUserData = async () => {
+            // Try getting user 
             const result = await axios.get(process.env.REACT_APP_API_URL + "User/" + userData.userId);
-            // const result = await axios.get(process.env.REACT_APP_API_URL + "User/" + userData.userId);
 
             let meterData = []
 
-            result.data.userMeters.map((meter) => {
+            // Add meters to list
+            result.data.userMeters.foreach((meter) => {
                 const meterObject = {
                     id: meter.id,
                     rpId: meter.rpId,
@@ -51,12 +53,13 @@ function MeterList() {
             setMetersList(meterData);
         }
 
+        // Fetch the data when id is valid
         if (userData.userId !== -1 && userData.userId !== undefined) {
             fetchUserData();
         }
     }, [userData]);
 
-
+    // Update forms
     function onChange(event) {
         const newFormData = {...formData};
         switch (event.target.name) {
@@ -76,6 +79,7 @@ function MeterList() {
         setFormData(newFormData);
     }
 
+    // Handle form edit
     async function handleEdit(event) {
         event.preventDefault();
         // Check if meter with these id's exists
@@ -83,10 +87,11 @@ function MeterList() {
 
         const foundMeter = meterResponse.data.find((meter) => meter.meterDeviceId === formData.meterId && meter.rpId === formData.rpId);
 
-
         if (foundMeter === undefined) {
+            // No metere was found
             setMeterFound(false);
         } else {
+            // Construct dto for PUT action
             const userMeterDto = {
                 "meterId": foundMeter.id,
                 "rpId": formData.rpId,
@@ -95,10 +100,13 @@ function MeterList() {
                 "address": formData.address,
             }
             const resp = await axios.put(process.env.REACT_APP_API_URL + "UserMeter/" + formData.id, userMeterDto);
-            // TODO: Set data of index to put response.
+            
+            // Good put?
             if (resp.status === 204) {
+                // Try to find meter in current list
                 const meterIndex = metersList.findIndex((meter) => meter.meterId === formData.meterId && meter.rpId === formData.rpId);
                 if (meterIndex !== -1) {
+                    // Uppdate meter
                     const newMetersList = [...metersList];
 
                     userMeterDto.meterId = userMeterDto.meterDeviceId;
@@ -114,6 +122,7 @@ function MeterList() {
         setEditing(false);
     }
 
+    // Cancel edit and clear form
     function cancelEdit(event) {
         event.preventDefault();
 
@@ -127,6 +136,7 @@ function MeterList() {
         setEditing(false);
     }
 
+    // Set form data
     function triggerEdit(index) {
         const meterData = [...metersList][index];
 
@@ -136,6 +146,7 @@ function MeterList() {
         setIndexBeingEdited(index);
     }
 
+    // Handle delete, show error and stuff
     async function handleDelete(index) {
         if (!window.confirm("Are you sure you want to remove this meter?")) {
             return;
