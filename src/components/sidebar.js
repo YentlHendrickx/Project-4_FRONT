@@ -43,6 +43,7 @@ export function SideBar({handleLogout}){
                     <Link link={'/'} icon={'home'}/>
                     <Link link={'/graphs'} icon={'monitoring'}/>
                     <Link link={'/meters'} icon={'build'}/>
+                    <Link link={'/help'} icon={'Info'}/>
                 </div>
 
                 <IconButton color="secondary" className=" scale-[1.75]" onClick={handleLogout}>
