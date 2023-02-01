@@ -290,7 +290,7 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
                     <button onClick={() => setShowVerifyForm(true)} className="font-medium underline">Click&nbsp;Here</button></p>
                   </>
                 )}
-                  <button className="mt-3 ml-1 text-2xl text-slate-600 hover:text-slate-400" onClick={() => backToLogin()}>
+                  <button className="mt-3 ml-1 text-2xl text-slate-600 hover:text-slate-400" type="button" onClick={() => backToLogin()}>
                       Back to Login
                   </button>
               </>
@@ -348,7 +348,7 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
                     />
   
                     {forLogin && (         
-                      <button onClick={(event) => {
+                      <button type="button" onClick={(event) => {
                         event.preventDefault();
                         navigate('/forgot')
                       }} className="underline font-light text-slate-500 hover:text-slate-300 text-right">Forgot Password</button>
@@ -370,7 +370,7 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
                     )}
   
                     <div>
-                      <span className="text-slate-500">{forLogin ? "Don't have an account? " : "Already have an account? "}<button onClick={(event) => switchLoginRegister(event)} 
+                      <span className="text-slate-500">{forLogin ? "Don't have an account? " : "Already have an account? "}<button type="button" onClick={(event) => switchLoginRegister(event)} 
                         className="text-blue-400 hover:text-blue-500">{forLogin ? "Sign Up" : "Sign In"}</button></span>
                     </div>
   

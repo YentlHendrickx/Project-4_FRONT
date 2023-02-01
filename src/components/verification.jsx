@@ -6,6 +6,7 @@ import { useSearchParams } from "react-router-dom";
 import { icons } from "../icons";
 
 
+// Show confetti :yey:
 function Confetti() {
     const [windowDimension, setDimension] = useState({width: window.innerWidth, height: window.innerHeight})
 
@@ -31,6 +32,8 @@ function Confetti() {
             />
     );
 }
+
+// Verification
 export default function Verification({setIsLoggedIn, changeEmail=false}){
     const [searchParams] = useSearchParams();
     const [resp, setResp] = useState("");
@@ -39,26 +42,27 @@ export default function Verification({setIsLoggedIn, changeEmail=false}){
     
     useEffect(() => {
         const fetchData = async () => {  
-
+            // If change email, query is different (passed from route)
             let query = `${process.env.REACT_APP_API_URL}User/verify/${token}`;
 
             if (changeEmail){
                 query = `${process.env.REACT_APP_API_URL}User/verifyEmailChangeToken/${token}?newMail=${email}`;
             }
             
-                axios.get(query)
-                .then (response => {
-                    // Set response
-                    setResp(response.data) 
-                })
-                .catch (error => setResp(error.response.data));    
-            
+            // Get reponse, catch error
+            axios.get(query)
+            .then (response => {
+                // Set response
+                setResp(response.data) 
+            })
+            .catch (error => setResp(error.response.data));    
         }
         
         // Make sure user is logged out
         localStorage.removeItem('token');
         setIsLoggedIn(false);
 
+        // Check for token in url
         if (token !== null) {
             fetchData();
         }
