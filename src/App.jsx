@@ -111,15 +111,10 @@ function App() {
                 path={'/'} 
                 element={ 
                   <PrivateRoute>
-                    <Home />
+                    <QlikConnect>
+                      <Home />
+                    </QlikConnect>
                   </PrivateRoute> 
-                }/>
-              <Route 
-                path={'/meters'} 
-                element={ 
-                  <PrivateRoute>
-                    <MeterList />
-                 </PrivateRoute> 
                 }/>
               <Route 
                 path={'/graphs'} 
@@ -130,6 +125,13 @@ function App() {
                     </QlikConnect> 
                   </PrivateRoute>
                 }/>
+                <Route 
+                  path={'/meters'} 
+                  element={ 
+                    <PrivateRoute>
+                      <MeterList />
+                   </PrivateRoute> 
+                  }/>
                 <Route
                 path={'/profile'} 
                 element={ 

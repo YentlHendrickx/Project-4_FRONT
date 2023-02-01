@@ -167,7 +167,7 @@ const Graphs = () =>  {
         const runEnigma = async () => {
 
             // Check run conditions, enigmaUrl needs to be set and engine can't already be running
-            if (enigmaUrl && (!running || updatedAddress === true)) {
+            if (enigmaUrl !== null && (!running || updatedAddress === true)) {
                 setRunning(true);
                 setUpdatedAddress(false);
 
