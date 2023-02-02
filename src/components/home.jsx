@@ -29,10 +29,7 @@ const config = {
     isSecure            : true,
 }
 
-const testImage = `url('${process.env.PUBLIC_URL}kdisknav.svg')`;
-
 const Home = () =>  {
-    console.warn(testImage);
     // States for the meters
     const [userMeters, setUserMeters]       = useRecoilState(userMetersState);
     const [running, setRunning]             = useState(false);
