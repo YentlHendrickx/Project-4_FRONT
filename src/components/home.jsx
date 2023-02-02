@@ -13,6 +13,7 @@ import theme from '../myTheme.json';
 
 // Axios
 import axios from "axios";
+import { NavLink } from "react-router-dom";
 
 // Enigma
 const enigma = require('enigma.js');
@@ -28,7 +29,10 @@ const config = {
     isSecure            : true,
 }
 
+const testImage = `url('${process.env.PUBLIC_URL}kdisknav.svg')`;
+
 const Home = () =>  {
+    console.warn(testImage);
     // States for the meters
     const [userMeters, setUserMeters]       = useRecoilState(userMetersState);
     const [running, setRunning]             = useState(false);
@@ -151,7 +155,12 @@ const Home = () =>  {
 
                 const themeConfig = await nebulaConfiguration.createConfiguration({
                     context: {
-                        theme: 'kpiTheme'
+                        theme: 'kpiTheme',
+                        constraints: {
+                            active: true,
+                            passive: true,
+                            select: true,
+                        },
                     },
                     themes: [
                         {
@@ -197,15 +206,24 @@ const Home = () =>  {
     }, [enigmaUrl, userMeters]);
 
     return (
-        <div className="w-full h-screen">
-            <div className="w-full h-[50%] md:flex justify-around items-around mt-4">
-                <div className="border-2 border-[#FFEB11] bg-[#FEDA00] rounded-lg md:w-[45%] md:h-auto w-[80%] h-[10rem] drop-shadow-lg mx-auto" ref={elcKpiRef}>
-                    
-                </div>
-                <div className="border-2 border-[#22A6D2] bg-[#1195C1] rounded-lg md:w-[45%] md:h-auto w-[80%] h-[10rem] drop-shadow-lg md:mr-2 mx-auto mt-2" ref={gasKpiRef}>
+        <div className="w-full h-full">
+            <p className="text-4xl mt-4 ml-2 max-w-[90%]">Hello, {userData.firstName} {userData.lastName}!</p>
+            <p className="text-md ml-2 text-light max-w-[80%]">Don't see any data, or want to add another meter? Visit the <NavLink to="/meters" className="text-uiSecondary hover:text-uiSecondaryLight">Meter Config Page.</NavLink></p>
+            <p className="text-md mt-1 ml-2 text-light max-w-[80%]">Want to get a closer look at the data? Visit the <NavLink to="/graphs" className="text-uiSecondary hover:text-uiSecondaryLight">Details Page.</NavLink></p>
+
+            <p className="w-full text-3xl text-center mt-2 font-bold">Usage Today</p>
+            <div className="w-full h-[20%] md:grid md:grid-cols-2 mt-4">
+                <div className="border-2 border-kpiElectricBorder bg-kpiElectric rounded-lg w-[80%] md:w-[90%] md:max-h-[20rem] md:h-auto h-[10rem] drop-shadow-lg mx-auto bg-repeat bg-2rem bg-blend-soft-light bg-electric-pattern" ref={elcKpiDayRef}>
 
                 </div>
-                <div className="border-2 border-[#22A6D2] bg-[#1195C1] rounded-lg md:w-[45%] md:h-auto w-[80%] h-[10rem] drop-shadow-lg md:mr-2 mx-auto mt-2" ref={elcKpiDayRef}>
+            </div>
+
+            <p className="w-full text-3xl text-center mt-8 font-bold">Usage this Year</p>
+            <div className="w-full h-[20%] md:grid md:grid-cols-2 mt-4">
+                <div className="border-2 border-kpiElectricBorder bg-kpiElectric rounded-lg w-[80%] md:w-[90%] md:max-h-[20rem] md:h-auto h-[10rem] drop-shadow-lg mx-auto bg-repeat bg-2rem bg-blend-soft-light bg-electric-pattern" ref={elcKpiRef}>
+                    
+                </div>
+                <div className="border-2 border-kpiGasBorder bg-kpiGas rounded-lg w-[80%] md:w-[90%] md:max-h-[20rem] md:h-auto h-[10rem] drop-shadow-lg mx-auto mt-4 md:mt-0 bg-repeat bg-2rem bg-blend-soft-light bg-gas-pattern" ref={gasKpiRef}>
 
                 </div>
             </div>

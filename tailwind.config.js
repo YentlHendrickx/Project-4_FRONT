@@ -19,7 +19,20 @@ module.exports = {
         'create'            : '#3b83f6',
         'save'              : '#00ab66',
         'saveHover'         : '#00cd88',
+        'kpiElectric'       : '#EDC900',
+        'kpiElectricBorder' : '#FFEB11',
+        'kpiGas'            : '#0084B0',
+        'kpiGasBorder'      : '#22A6D2',
       },
+      backgroundSize: {
+        '4rem': '4rem',
+        '2rem': '2rem',
+        '1rem': '1rem',
+      },
+      backgroundImage: {
+        'electric-pattern': `url('/public/kpiBackgrounds/bolt.svg')`,
+        'gas-pattern': `url('/public/kpiBackgrounds/gas.svg')`,
+      }
     },
   },
   plugins: [],

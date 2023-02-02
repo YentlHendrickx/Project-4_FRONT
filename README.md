@@ -2,6 +2,4 @@
 
 TODO:
 
-- Mobile styling
-- Make authform.js less messy
-- KPI data totals vs daily (both)?
+- Mobile styling for meters crud, login, register, forgot password, verifcation,
