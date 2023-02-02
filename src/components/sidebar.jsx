@@ -1,11 +1,14 @@
+//this is the component for the side navigation bar
 import { IconButton } from "@mui/material";
 import { NavLink } from "react-router-dom";
+//here we import our icons file to get icons from material icons
 import { icons } from "../icons";
 
 // Recoil
 import { useRecoilValue } from "recoil";
 import { initialsState } from "../store";
 
+//function for account cirkel top left of the sidebar
 function AccountCirkel({initials, handleLogout}){
     return(
         <div className="flex rounded-full bg-uiLight min-w-[5rem] min-h-[5rem] justify-center items-center font-bold">
@@ -13,14 +16,14 @@ function AccountCirkel({initials, handleLogout}){
         </div>
     )
 }
-
+//function for making links
 function Link({link, icon}){
     return (
         <NavLink to={link} className="my-8 scale-[2]">
         {({isActive}) => isActive ?
         (
             <span className="w-fit h-fit">    
-                {icons[icons.findIndex(i => i.name === icon)].icon}
+                {icons[icons.findIndex(i => i.name === icon)].icon} 
             </span>
         ) : (
             <span>
@@ -30,7 +33,7 @@ function Link({link, icon}){
         </NavLink>
     );
 }
-
+//export standard function sidebar where we use the profile cirkel and link component
 export function SideBar({handleLogout}){
     const initals = useRecoilValue(initialsState);
 
