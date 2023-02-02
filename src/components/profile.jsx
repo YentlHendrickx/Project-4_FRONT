@@ -220,10 +220,10 @@ export default function Profile ({ handleLogout }) {
     }
 
     return (
-        <div className="w-full h-full">
+        <div className="w-screen h-screen">
             <ReactNotifications className="!relative"/>
-
             <div className="w-full h-full flex flex-col items-center mt-4">
+
                 <p className="text-4xl">{userState.firstName} {userState.lastName}</p>
                 <p className="text-xl font-light italic">{userState.email}</p>
 
@@ -233,7 +233,7 @@ export default function Profile ({ handleLogout }) {
                         <form className="flex flex-col mx-2 items-center mt-2 gap-4"  onSubmit={handleChangeEmail}>
                             <input className="pl-2 w-[40%]" type='email' name={"email"} placeholder={"New email"} value={emailFormData.email} onChange={onChangeEmail}/>
                             <input className="pl-2 w-[40%]" type='password' name={"password"} placeholder={"Current password"} value={emailFormData.password} onChange={onChangeEmail}/>
-                            <button className="bg-save hover:bg-saveHover text-uiLight rounded-md w-[20%]" type="submit">Change email</button>
+                            <button className="bg-save hover:bg-saveHover text-uiLight rounded-md w-[80%] md:w-[20%] " type="submit">Change email</button>
                         </form>
                     </div>
 
@@ -244,11 +244,11 @@ export default function Profile ({ handleLogout }) {
                             <input className="pl-2 w-[40%]" type='password' name={"oldPassword"} placeholder={"Current password"} value={passwordFormData.oldPassword} onChange={onChangePassword}/>
                             <input className="pl-2 w-[40%]" type='password' name={"newPassword"} placeholder={"New password"} value={passwordFormData.newPassword} onChange={onChangePassword}/>
                             <input className="pl-2 w-[40%]" type='password' name={"newPasswordConfirm"} placeholder={"Confirm password"} value={passwordFormData.newPasswordConfirm} onChange={onChangePassword}/>
-                            <button className="bg-save hover:bg-saveHover text-uiLight rounded-md w-[20%]" type="submit">Change password</button>
+                            <button className="bg-save hover:bg-saveHover text-uiLight rounded-md w-[80%] md:w-[20%]" type="submit">Change password</button>
                         </form>
                     </div>
                 </div>
-            </div>
         </div>
+        </div>      
     );
 }

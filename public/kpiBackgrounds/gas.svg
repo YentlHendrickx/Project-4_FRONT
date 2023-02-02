@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 15 15"
+   height="15"
+   width="15"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="flame.svg">
+  <metadata
+     id="metadata14">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>fire-station-11.svg</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs12" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     id="namedview10"
+     showgrid="false"
+     inkscape:zoom="5.5625733"
+     inkscape:cx="-39.707783"
+     inkscape:cy="-2.007328"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2" />
+  <title
+     id="title4">fire-station-11.svg</title>
+  <path
+     inkscape:connector-curvature="0"
+     style="fill:#ffffff"
+     d="m 7.7245645,14.934183 c 2.113777,-1.460021 4.8673865,-4.489927 3.9230705,-7.5580075 -0.834559,-2.712099 -4.7498835,-4.160511 -3.7127625,-6.211458 -1.655541,1.143515 -2.640644,2.240163 -3.086185,3.086102 -0.879658,1.183208 -1.736809,2.688224 -1.974303,3.891994 -1.010422,3.0579755 2.244932,4.6734335 2.953245,6.6310025 -0.558293,-1.340261 -0.67435,-1.264918 0.02271,-3.046549 0.409131,-0.840334 0.847618,-1.8862755 1.010267,-1.661248 1.694131,2.343879 2.18882,3.467482 0.863624,4.868149 z"
+     id="path10"
+     sodipodi:nodetypes="cccccccscc" />
+</svg>
