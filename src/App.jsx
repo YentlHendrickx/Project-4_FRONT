@@ -103,11 +103,11 @@ function App() {
     };
 
     return (
-      <div>
+      <div className='h-screen'>
         {isLoggedIn && 
           <SideBar handleLogout={handleLogout}/>
         }
-        <div className={`${isLoggedIn ? "ml-[7rem]" : ''}`}>
+        <div className={`h-full ${isLoggedIn ? "md:ml-[7rem]" : ''}`}>
           <Routes>
               <Route 
                 path={'/'} 

@@ -37,6 +37,7 @@ const Home = () =>  {
     // References to components for rendering the graphs
     const elcKpiRef = useRef(null);
     const gasKpiRef = useRef(null);
+    const elcKpiDayRef = useRef(null);
 
     const objectReferences = [
         {
@@ -46,6 +47,10 @@ const Home = () =>  {
         {
             "Reference" : gasKpiRef,
             "ID"        : 'VEzxP'
+        },
+        {
+            "Reference" : elcKpiDayRef,
+            "ID"        : 'ssCJDVk'
         }
     ];
 
@@ -193,11 +198,14 @@ const Home = () =>  {
 
     return (
         <div className="w-full h-screen">
-            <div className="w-full h-[50%] flex justify-around items-around mt-4">
-                <div className="border-2 border-[#FFEB11] bg-[#FEDA00] rounded-lg w-[45%] h-auto drop-shadow-lg" ref={elcKpiRef}>
+            <div className="w-full h-[50%] md:flex justify-around items-around mt-4">
+                <div className="border-2 border-[#FFEB11] bg-[#FEDA00] rounded-lg md:w-[45%] md:h-auto w-[80%] h-[10rem] drop-shadow-lg mx-auto" ref={elcKpiRef}>
                     
                 </div>
-                <div className="border-2 border-[#22A6D2] bg-[#1195C1] rounded-lg w-[45%] h-auto drop-shadow-lg mr-2 " ref={gasKpiRef}>
+                <div className="border-2 border-[#22A6D2] bg-[#1195C1] rounded-lg md:w-[45%] md:h-auto w-[80%] h-[10rem] drop-shadow-lg md:mr-2 mx-auto mt-2" ref={gasKpiRef}>
+
+                </div>
+                <div className="border-2 border-[#22A6D2] bg-[#1195C1] rounded-lg md:w-[45%] md:h-auto w-[80%] h-[10rem] drop-shadow-lg md:mr-2 mx-auto mt-2" ref={elcKpiDayRef}>
 
                 </div>
             </div>
