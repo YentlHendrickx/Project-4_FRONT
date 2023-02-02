@@ -223,7 +223,7 @@ export default function Profile ({ handleLogout }) {
         <div className="w-full h-full">
             <ReactNotifications className="!relative"/>
 
-            <div className="flex flex-col items-center mt-4">
+            <div className="w-full h-full flex flex-col items-center mt-4">
                 <p className="text-4xl">{userState.firstName} {userState.lastName}</p>
                 <p className="text-xl font-light italic">{userState.email}</p>
 
