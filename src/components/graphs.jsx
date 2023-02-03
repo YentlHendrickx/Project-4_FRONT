@@ -81,13 +81,11 @@ const DropdownSelector = ({userMeters, setUserMeters, selectOptions, setSelectOp
     // Return loading if no select options, otherwise return true
     if (selectOptions) {
         return (
-            <div>
-                <select onChange={(event) => onValueChange(event)}>
-                    {selectOptions.map((option) => (
-                        <option key={option.value} value={option.value}>{option.label}</option>
-                    ))}
-                </select>
-            </div>
+            <select className="w-[60%] ml-1" onChange={(event) => onValueChange(event)}>
+                {selectOptions.map((option) => (
+                    <option className="p-2" key={option.value} value={option.value}>{option.label}</option>
+                ))}
+            </select>
         );
     } else {
         return (
@@ -97,6 +95,14 @@ const DropdownSelector = ({userMeters, setUserMeters, selectOptions, setSelectOp
         );
     }
 }
+
+const ResetFilter = ({resetFiltering}) => {
+
+    return (
+        <button onClick={resetFiltering} type="button" className="mr-2 w-[30%] bg-save hover:bg-saveHover text-uiLight rounded-sm">Reset Filter</button>
+    );
+}
+
 
 const Graphs = () =>  {
     // States for the meters
@@ -110,7 +116,7 @@ const Graphs = () =>  {
     // References to components for rendering the graphs
     const perHourRef        = useRef(null);
     const perDayRef         = useRef(null);
-    const lastHourRef       = useRef(null);
+    const liveElectricityRef       = useRef(null);
     const perHourGasRef     = useRef(null);
 
     const objectReferences = [
@@ -123,13 +129,13 @@ const Graphs = () =>  {
             "ID"        : 'GJKGGP'
         },
         {
-            "Reference" : lastHourRef,
+            "Reference" : liveElectricityRef,
             "ID"        : 'tXAsbem'
         },
-        {
-            "Reference" : perHourGasRef,
-            "ID"        : 'kNxMkjJ'
-        }
+        // {
+        //     "Reference" : perHourGasRef,
+        //     "ID"        : 'kNxMkjJ'
+        // }
     ];
 
     // WSS url from qlikConnect.jsx
@@ -146,7 +152,7 @@ const Graphs = () =>  {
 
     // Based on input set meter numbers for showing specific graph
     function updateMeterNumbers(selectedAddress) {
-        let newMeterNumbers = '';
+        let newMeterNumbers = -1;
 
         if (userMeters.length) {
             newMeterNumbers = selectedAddress
@@ -187,6 +193,11 @@ const Graphs = () =>  {
                 // Use engine to create a new app based on the app document
                 const newEnigmaApp = await (await session.open()).openDoc(config.appId);
 
+                // Make sure app is in standard mode
+                await newEnigmaApp.abortModal(true);
+                // Clear all selections
+                await newEnigmaApp.clearAll();
+
                 // Get MeterId field for filtering
                 const field = await newEnigmaApp.getField("MeterId");
                 
@@ -199,6 +210,7 @@ const Graphs = () =>  {
                     "qSoftLock": true
                 }
 
+                
                 // All meters or just one?
                 if (parseInt(meterNumbers) === -1) {
                     // Update dictionary by adding all meters
@@ -256,27 +268,39 @@ const Graphs = () =>  {
         if (enigmaUrl !== null && userMeters.length > 0) {
             // Run main function
             runEnigma();
+
+            setUpdatedAddress(false);
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [enigmaUrl, updatedAddress]);
+    }, [enigmaUrl, updatedAddress, userMeters]);
+    
+
+    function resetFiltering() {
+        setUpdatedAddress(true);
+    }
 
     return (
         <div className="w-full h-screen">
-            <DropdownSelector userMeters={userMeters} setUserMeters={setUserMeters} selectOptions={selectOptions} setSelectOptions={setSelectOptions} onValueChange={onValueChange}/>
-            <div className="w-full h-[50%] grid grid-cols-2 gap-4 justify-around">
-                <div className="w-full" ref={perHourRef}>
+            <div className="w-full flex justify-between mt-4">
+                <DropdownSelector userMeters={userMeters} setUserMeters={setUserMeters} selectOptions={selectOptions} setSelectOptions={setSelectOptions} onValueChange={onValueChange}/>
+            
+                <ResetFilter resetFiltering={resetFiltering}/>
+            </div>
+
+            <div className="w-full h-[50%] grid grid-cols-1 gap-4 justify-around">
+                <div className="w-full h-[20rem]" ref={liveElectricityRef}>
 
                 </div>
-                <div className="w-full" ref={perDayRef}>
+                <div className="w-full h-[20rem]" ref={perDayRef}>
 
                 </div>
-                <div className="w-full" ref={lastHourRef}>
+                <div className="w-full h-[20rem]" ref={perHourRef}>
 
                 </div>
-                <div className="w-full" ref={perHourGasRef}>
+                {/* <div className="w-full h-[20rem]" ref={perHourGasRef}>
 
-                </div>
+                </div> */}
             </div>
         </div>
     );

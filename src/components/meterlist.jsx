@@ -12,7 +12,7 @@ import {useRecoilValue} from "recoil";
 import {userDataState} from "../store";
 
 // Notification
-import { ReactNotifications, Store } from "react-notifications-component";
+import { Store } from "react-notifications-component";
 import 'react-notifications-component/dist/theme.css';
 
 function MeterList() {
@@ -276,7 +276,6 @@ function MeterList() {
 
     return (
         <div className="w-full relative">
-            <ReactNotifications className="!relative"/>
             <form onSubmit={handleEdit}>
                 <table className="border-collapse">
                     <thead className="border-b bg-gray-600">

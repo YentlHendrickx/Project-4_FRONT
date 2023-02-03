@@ -9,6 +9,7 @@
     "@nebula.js/cli": "^3.1.1",
     "@nebula.js/sn-bar-chart": "^1.29.1",
     "@nebula.js/sn-funnel-chart": "^1.5.3",
+    "@nebula.js/sn-histogram": "^0.32.2",
     "@nebula.js/sn-kpi": "^0.12.1",
     "@nebula.js/sn-line-chart": "^1.21.11",
     "@nebula.js/sn-mekko-chart": "^1.1.1",
