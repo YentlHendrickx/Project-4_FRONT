@@ -211,7 +211,7 @@ export default function Profile ({ handleLogout }) {
     }
 
     return (
-        <div className="w-screen h-max">
+        <div className="w-full h-full">
             
             <div className="w-full h-full flex flex-col items-center mt-4">
 
