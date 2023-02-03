@@ -39,6 +39,7 @@ const Home = () => {
   const elcKpiRef = useRef(null);
   const gasKpiRef = useRef(null);
   const elcKpiDayRef = useRef(null);
+  const gasKpiDayRef = useRef(null);
 
   const objectReferences = [
     {
@@ -52,6 +53,10 @@ const Home = () => {
     {
       Reference: elcKpiDayRef,
       ID: "ssCJDVk",
+    },
+    {
+      Reference: gasKpiDayRef,
+      ID: "ZRmScb",
     },
   ];
 
@@ -231,6 +236,10 @@ const Home = () => {
         <div
           className="border-2 border-kpiElectricBorder bg-kpiElectric rounded-lg w-[80%] md:w-[90%] md:max-h-[20rem] md:h-auto h-[10rem] drop-shadow-lg mx-auto bg-repeat bg-2rem bg-blend-soft-light bg-electric-pattern"
           ref={elcKpiDayRef}
+        ></div>
+        <div
+          className="border-2 border-kpiGasBorder bg-kpiGas rounded-lg w-[80%] md:w-[90%] md:max-h-[20rem] md:h-auto h-[10rem] drop-shadow-lg mx-auto bg-repeat bg-2rem bg-blend-soft-light bg-gas-pattern"
+          ref={gasKpiDayRef}
         ></div>
       </div>
 

@@ -9,7 +9,7 @@ import Forgotpassword from "./components/forgotpassword";
 import Profile from "./components/profile";
 import Help from "./components/help";
 
-import { ReactNotifications, Store } from "react-notifications-component";
+import { ReactNotifications } from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
