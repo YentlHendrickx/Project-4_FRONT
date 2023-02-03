@@ -265,7 +265,7 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
 
   return (
     <div className="w-screen h-screen bg-[#eee] flex">
-      <div className="w-[55%] h-full flex justify-center">
+      <div className="w-full md:w-[55%] h-full flex justify-center">
         <div className="mt-[15%]">
           <h3 className="text-3xl text-left font-bold">Elek3city Monitor</h3>
 
@@ -416,7 +416,7 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
             )}
           </div>
       </div>
-      <img className="w-[45%] object-cover" src={image} alt="Elek3city"/> 
+      <img className="hidden md:block md:w-[45%] object-cover" src={image} alt="Elek3city"/> 
     </div>
   );
 }
