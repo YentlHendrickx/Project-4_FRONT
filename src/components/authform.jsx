@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 // Axios
-import axios from 'axios';
+import axios from "axios";
 
 // Recoil
 import { useSetRecoilState } from "recoil";
@@ -21,12 +21,12 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
   const navigate = useNavigate();
 
   // Set initials
-  const setInitials = useSetRecoilState(initialsState)
+  const setInitials = useSetRecoilState(initialsState);
   const setUserData = useSetRecoilState(userDataState);
 
   const [verificationRequired, setVerificationRequired] = useState(false);
   const [showVerifyForm, setShowVerifyForm] = useState(false);
-  
+
   // Form data
   const [formErrors, setFormErrors] = useState({
     email: "",
@@ -54,17 +54,20 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
 
   // Redirect to home if logged in
   useEffect(() => {
-    if (localStorage.getItem('token') && localStorage.getItem('isLoggedIn') === 'true') {
-      navigate('/');
+    if (
+      localStorage.getItem("token") &&
+      localStorage.getItem("isLoggedIn") === "true"
+    ) {
+      navigate("/");
     }
-    
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function switchLoginRegister(event) {
     event.preventDefault();
     if (forLogin) {
-      navigate('/register');
+      navigate("/register");
     } else {
       let errors = formErrors;
       errors.passwordConfirm = "";
@@ -72,7 +75,7 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
       errors.lastName = "";
 
       setFormErrors(errors);
-      navigate('/login');
+      navigate("/login");
     }
   }
 
@@ -80,54 +83,59 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
     const { name, value } = event.target;
     let errors = formErrors;
 
-    if (name === 'verifyEmail') {
+    if (name === "verifyEmail") {
       errors = verifyFormErrors;
     }
 
     // Add errors when needed
     switch (name) {
-      case 'email':
+      case "email":
         // Regex for email validation
         errors.email = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)
-        ? ''
-        : 'Invalid email address';
+          ? ""
+          : "Invalid email address";
         break;
-      case 'password':
-
+      case "password":
         if (!forLogin) {
-          errors.passwordConfirm = value !== formData.passwordConfirm  ? 'Passwords do not match' : '';
+          errors.passwordConfirm =
+            value !== formData.passwordConfirm ? "Passwords do not match" : "";
         }
 
-        errors.password = value.length < 8 ? 'Password must be at least 8 characters long' : '';
+        errors.password =
+          value.length < 8 ? "Password must be at least 8 characters long" : "";
         break;
-      case 'passwordConfirm':
-        errors.passwordConfirm = formData.password !== value ? 'Passwords do not match' : '';
-        if (errors.passwordConfirm === '') {
-          errors.passwordConfirm = value.length < 8 ? 'Password must be at least 8 characters long' : '';
+      case "passwordConfirm":
+        errors.passwordConfirm =
+          formData.password !== value ? "Passwords do not match" : "";
+        if (errors.passwordConfirm === "") {
+          errors.passwordConfirm =
+            value.length < 8
+              ? "Password must be at least 8 characters long"
+              : "";
         }
         break;
-      case 'firstName':
-        errors.firstName = value.length === 0 ? 'First name is required' : '';
+      case "firstName":
+        errors.firstName = value.length === 0 ? "First name is required" : "";
         break;
-      case 'lastName':
-        errors.lastName = value.length === 0 ? 'Last name is required' : '';
+      case "lastName":
+        errors.lastName = value.length === 0 ? "Last name is required" : "";
         break;
-      case 'verifyEmail':
+      case "verifyEmail":
         errors.verifyEmail = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)
-        ? ''
-        : 'Invalid email address';
+          ? ""
+          : "Invalid email address";
         break;
       default:
         break;
     }
 
-    if (name === 'verifyEmail') {
+    if (name === "verifyEmail") {
       setVerifyFormErrors({
         email: errors.verifyEmail,
       });
 
       setVerifyForm({
-        email: event.target.value
+        email: event.target.value,
       });
     } else {
       setFormErrors({
@@ -137,17 +145,17 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
         firstName: errors.firstName,
         lastName: errors.lastName,
       });
-  
+
       setFormData({
         ...formData,
         [event.target.name]: event.target.value,
       });
     }
-  }
+  };
 
   function validate() {
     let valid = true;
-    let errors = formErrors; 
+    let errors = formErrors;
 
     // When login we don't need passwordConfirm, firstname or lastname
     if (forLogin) {
@@ -155,10 +163,10 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
       delete errors.firstName;
       delete errors.lastName;
     }
-  
+
     // Check for any errors strings
-    Object.values(errors).forEach(val => val.length > 0 && (valid = false));
-    
+    Object.values(errors).forEach((val) => val.length > 0 && (valid = false));
+
     return valid;
   }
 
@@ -172,35 +180,39 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
 
     // Handle login with azure
 
-    const { email, password } =  formData;
+    const { email, password } = formData;
 
-    axios.post(process.env.REACT_APP_API_URL + 'User/login', {email, password})
-      .then(res => {
-        localStorage.setItem('token', res.data.token);
-        localStorage.setItem('isLoggedIn', true);
+    axios
+      .post(process.env.REACT_APP_API_URL + "User/login", { email, password })
+      .then((res) => {
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("isLoggedIn", true);
 
-        const uInitials = res.data.userDto.firstName.charAt(0) + res.data.userDto.lastName.charAt(0);
+        const uInitials =
+          res.data.userDto.firstName.charAt(0) +
+          res.data.userDto.lastName.charAt(0);
         setInitials(uInitials);
 
         const userDataDto = {
           firstName: res.data.userDto.firstName,
           lastName: res.data.userDto.lastName,
           userId: res.data.userDto.id,
-          email: res.data.userDto.email
-        }
+          email: res.data.userDto.email,
+        };
         setUserData(userDataDto);
 
-        localStorage.setItem('userDataState', JSON.stringify(userDataDto));
-        localStorage.setItem('initialsState', JSON.stringify(uInitials));
+        localStorage.setItem("userDataState", JSON.stringify(userDataDto));
+        localStorage.setItem("initialsState", JSON.stringify(uInitials));
 
         setIsLoggedIn(true);
-        navigate('/');
-      }).catch(err => {
-          if(err.response.data === "Email not verified.") {
-            setVerificationRequired(true);
-          } else {
-            setFormErrors({...formErrors, login: 'Invalid email or password'});
-          }
+        navigate("/");
+      })
+      .catch((err) => {
+        if (err.response.data === "Email not verified.") {
+          setVerificationRequired(true);
+        } else {
+          setFormErrors({ ...formErrors, login: "Invalid email or password" });
+        }
       });
   }
 
@@ -213,20 +225,27 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
       return;
     }
 
-    const { email, password, firstName, lastName } =  formData;
+    const { email, password, firstName, lastName } = formData;
 
     // Handle registration with azure
-    axios.post(process.env.REACT_APP_API_URL + 'User', {email, password, firstName, lastName})
-      .then(res => {
+    axios
+      .post(process.env.REACT_APP_API_URL + "User", {
+        email,
+        password,
+        firstName,
+        lastName,
+      })
+      .then((res) => {
         // Require verification
         setVerificationRequired(true);
         // navigate('/login');
-      }).catch(err => {
-        setFormErrors({...formErrors, login: 'Invalid email or password'});
+      })
+      .catch((err) => {
+        setFormErrors({ ...formErrors, login: "Invalid email or password" });
       });
   }
 
-  function handleSubmit (event) {
+  function handleSubmit(event) {
     event.preventDefault();
 
     // Perform login or registration here, depending on the value of `isLogin`
@@ -237,20 +256,20 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
       // Registration
       handleRegister();
     }
-  };
+  }
   function backToLogin() {
     setShowVerifyForm(false);
     setVerificationRequired(false);
 
-    setVerifyForm(({
+    setVerifyForm({
       email: "",
-    }));
+    });
 
     setVerifyFormErrors({
-      email: ""
+      email: "",
     });
-      
-    navigate('/login');
+
+    navigate("/login");
   }
 
   function sendVerification(event) {
@@ -260,86 +279,113 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
   }
 
   async function sendVerifyMail() {
-    await axios.post(process.env.REACT_APP_API_URL + "User/verify?email=" + verifyForm.email);
+    await axios.post(
+      process.env.REACT_APP_API_URL + "User/verify?email=" + verifyForm.email
+    );
   }
 
   return (
     <div className="w-screen h-screen bg-[#eee] flex">
       <div className="w-full md:w-[55%] h-full flex justify-center">
-        <div className="mt-[15%]">
+        <div className="mt-[15%] w-[90%] md:full">
           <h3 className="text-3xl text-left font-bold">Elek3city Monitor</h3>
 
           {verificationRequired ? (
-              <>
-                {showVerifyForm ? (
-                  <>
-                    <p className="font-light text-slate-500 text-left max-w-[24rem]">Fill in your mail address. 
-                    If an account with this email exists a new verification mail will be sent.</p>
-                    <form className="mt-2 ml-1 flex justify-between" onSubmit={sendVerification}>
-                      <input
-                        className={`mt-0 mb-0 pb-0 h-8 pl-2 focus:outline-none border-[1px] w-[80%] border-slate-400 rounded-md`}
-                        type="email"
-                        name="verifyEmail"
-                        id="verifyEmail"
-                        value={verifyForm.email}
-                        onChange={handleChange}
-                        placeholder="Email"
-                        required
-                      />
+            <>
+              {showVerifyForm ? (
+                <>
+                  <p className="font-light text-slate-500 text-left max-w-[24rem]">
+                    Fill in your mail address. If an account with this email
+                    exists a new verification mail will be sent.
+                  </p>
+                  <form
+                    className="mt-2 ml-1 flex justify-between"
+                    onSubmit={sendVerification}
+                  >
+                    <input
+                      className={`mt-0 mb-0 pb-0 h-8 pl-2 focus:outline-none border-[1px] w-[80%] border-slate-400 rounded-md`}
+                      type="email"
+                      name="verifyEmail"
+                      id="verifyEmail"
+                      value={verifyForm.email}
+                      onChange={handleChange}
+                      placeholder="Email"
+                      required
+                    />
 
-                      <button className="mt-0 ml-2 text-white font-bold hover:bg-uiSecondaryLight bg-uiSecondary transition-colors rounded-md p-1" type="submit">
-                        Verify
-                      </button>
-                    </form>
-                    {verifyFormErrors.email.length > 0 && (
-                      <div className="bg-red-400 p-2 mt-2 ml-1 rounded-md text-uiLight">
-                        <p className="error-message">{verifyFormErrors.email}</p>
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <>
-                    <p className="font-light text-slate-500 text-left max-w-[24rem]">You need to verify your email address. Didn't&nbsp;get&nbsp;an&nbsp;email?&nbsp;
-                    <button onClick={() => setShowVerifyForm(true)} className="font-medium underline">Click&nbsp;Here</button></p>
-                  </>
-                )}
-                  <button className="mt-3 ml-1 text-2xl text-slate-600 hover:text-slate-400" type="button" onClick={() => backToLogin()}>
-                      Back to Login
-                  </button>
-              </>
+                    <button
+                      className="mt-0 ml-2 text-white font-bold hover:bg-uiSecondaryLight bg-uiSecondary transition-colors rounded-md p-1"
+                      type="submit"
+                    >
+                      Verify
+                    </button>
+                  </form>
+                  {verifyFormErrors.email.length > 0 && (
+                    <div className="bg-red-400 p-2 mt-2 ml-1 rounded-md text-uiLight">
+                      <p className="error-message">{verifyFormErrors.email}</p>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <>
+                  <p className="font-light text-slate-500 text-left max-w-[24rem]">
+                    You need to verify your email address.
+                    Didn't&nbsp;get&nbsp;an&nbsp;email?&nbsp;
+                    <button
+                      onClick={() => setShowVerifyForm(true)}
+                      className="font-medium underline"
+                    >
+                      Click&nbsp;Here
+                    </button>
+                  </p>
+                </>
+              )}
+              <button
+                className="mt-3 ml-1 text-2xl text-slate-600 hover:text-slate-400"
+                type="button"
+                onClick={() => backToLogin()}
+              >
+                Back to Login
+              </button>
+            </>
           ) : (
             <>
-              <p className="font-light text-slate-500 text-left max-w-[24rem]">Want to monitor your electricity usage? You've come to the right place.</p>
+              <p className="font-light text-slate-500 text-left max-w-[24rem]">
+                Want to monitor your electricity usage? You've come to the right
+                place.
+              </p>
               <form className="" onSubmit={handleSubmit}>
                 <div className="flex flex-col max-w-[24rem] mt-2 ml-1 relative">
                   {!forLogin && (
-                      <>
-                          <input
-                            className="mt-0 mb-0 pb-0 pl-2 rounded-t-md h-16 border-[1px] border-slate-400 border-b-0 focus:outline-none"
-                            type="text"
-                            name="firstName"
-                            id="firstName"
-                            value={formData.firstName}
-                            onChange={handleChange}
-                            placeholder="First Name"
-                            required
-                            />
-  
-                          <input
-                            className="mt-0 mb-0 pb-0 pl-2 h-16 border-[1px] border-slate-400 border-b-0 focus:outline-none"
-                            type="text"
-                            name="lastName"
-                            id="lastName"
-                            value={formData.lastName}
-                            onChange={handleChange}
-                            placeholder="Last Name"
-                            required
-                            />
-                      </>
-                    )}
-  
+                    <>
+                      <input
+                        className="mt-0 mb-0 pb-0 pl-2 rounded-t-md h-16 border-[1px] border-slate-400 border-b-0 focus:outline-none"
+                        type="text"
+                        name="firstName"
+                        id="firstName"
+                        value={formData.firstName}
+                        onChange={handleChange}
+                        placeholder="First Name"
+                        required
+                      />
+
+                      <input
+                        className="mt-0 mb-0 pb-0 pl-2 h-16 border-[1px] border-slate-400 border-b-0 focus:outline-none"
+                        type="text"
+                        name="lastName"
+                        id="lastName"
+                        value={formData.lastName}
+                        onChange={handleChange}
+                        placeholder="Last Name"
+                        required
+                      />
+                    </>
+                  )}
+
                   <input
-                    className={`mt-0 mb-0 pb-0 h-16 pl-2 focus:outline-none border-[1px] border-slate-400 border-b-0 ${forLogin ? 'rounded-t-md' : ''}`}
+                    className={`mt-0 mb-0 pb-0 h-16 pl-2 focus:outline-none border-[1px] border-slate-400 border-b-0 ${
+                      forLogin ? "rounded-t-md" : ""
+                    }`}
                     type="email"
                     name="email"
                     id="email"
@@ -347,10 +393,12 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
                     onChange={handleChange}
                     placeholder="Email"
                     required
-                    />
-  
+                  />
+
                   <input
-                    className={`mt-0 pt-0 mb-0 pb-0 h-16  pl-2 focus:outline-none border-[1px] border-slate-400 ${forLogin ? 'rounded-b-md' : 'border-b-0'}`}
+                    className={`mt-0 pt-0 mb-0 pb-0 h-16  pl-2 focus:outline-none border-[1px] border-slate-400 ${
+                      forLogin ? "rounded-b-md" : "border-b-0"
+                    }`}
                     type="password"
                     name="password"
                     id="password"
@@ -358,65 +406,102 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
                     onChange={handleChange}
                     placeholder="Password"
                     required
-                    />
-  
-                    {forLogin && (         
-                      <button type="button" onClick={(event) => {
+                  />
+
+                  {forLogin && (
+                    <button
+                      type="button"
+                      onClick={(event) => {
                         event.preventDefault();
-                        navigate('/forgot')
-                      }} className="underline font-light text-slate-500 hover:text-slate-300 text-right">Forgot Password</button>
-                    )}
-  
-                    {!forLogin && (
-                      <>
-                        <input
-                          className="mt-0 pt-0 pb-0 pl-2 rounded-b-md border-[1px] border-slate-400 h-16 focus:outline-none"
-                          type="password"
-                          name="passwordConfirm"
-                          id="passwordConfirm"
-                          value={formData.passwordConfirm}
-                          onChange={handleChange}
-                          placeholder="Confirm Password"
-                          required
-                          />
-                      </>
-                    )}
-  
-                    <div>
-                      <span className="text-slate-500">{forLogin ? "Don't have an account? " : "Already have an account? "}<button type="button" onClick={(event) => switchLoginRegister(event)} 
-                        className="text-blue-400 hover:text-blue-500">{forLogin ? "Sign Up" : "Sign In"}</button></span>
-                    </div>
-  
-                    
-                    {Object.values(formErrors).every(x => x === undefined || x === '') === false &&
-                      <div className="bg-red-400 p-2 mt-2 rounded-md text-uiLight">
-                          {formErrors.email.length > 0 && <p className="error-message">{formErrors.email}</p>}
-                          {formErrors.password.length         > 0 && <p>{formErrors.password}</p>}
-                        {!forLogin && <>
-                          {formErrors.firstName.length        > 0 && <p>{formErrors.firstName}</p>}
-                          {formErrors.lastName.length         > 0 && <p>{formErrors.lastName}</p>}
-                          {formErrors.passwordConfirm.length  > 0 && <p>{formErrors.passwordConfirm}</p>}
-                        </>}
-                        
-                          {formErrors.login !== undefined && 
-                          <>
-                            {formErrors.login.length > 0 && <p>{formErrors.login}</p>}
-                          </>
-                        }
-                      </div>
-                    }
-  
-  
-                    <button className="mt-4 text-white font-bold hover:bg-uiSecondaryLight bg-uiSecondary transition-colors rounded-md py-2" type="submit">
-                      {forLogin ? "Log In" : "Register"}
+                        navigate("/forgot");
+                      }}
+                      className="underline font-light text-slate-500 hover:text-slate-300 text-right"
+                    >
+                      Forgot Password
                     </button>
+                  )}
+
+                  {!forLogin && (
+                    <>
+                      <input
+                        className="mt-0 pt-0 pb-0 pl-2 rounded-b-md border-[1px] border-slate-400 h-16 focus:outline-none"
+                        type="password"
+                        name="passwordConfirm"
+                        id="passwordConfirm"
+                        value={formData.passwordConfirm}
+                        onChange={handleChange}
+                        placeholder="Confirm Password"
+                        required
+                      />
+                    </>
+                  )}
+
+                  <div>
+                    <span className="text-slate-500">
+                      {forLogin
+                        ? "Don't have an account? "
+                        : "Already have an account? "}
+                      <button
+                        type="button"
+                        onClick={(event) => switchLoginRegister(event)}
+                        className="text-blue-400 hover:text-blue-500"
+                      >
+                        {forLogin ? "Sign Up" : "Sign In"}
+                      </button>
+                    </span>
+                  </div>
+
+                  {Object.values(formErrors).every(
+                    (x) => x === undefined || x === ""
+                  ) === false && (
+                    <div className="bg-red-400 p-2 mt-2 rounded-md text-uiLight">
+                      {formErrors.email.length > 0 && (
+                        <p className="error-message">{formErrors.email}</p>
+                      )}
+                      {formErrors.password.length > 0 && (
+                        <p>{formErrors.password}</p>
+                      )}
+                      {!forLogin && (
+                        <>
+                          {formErrors.firstName.length > 0 && (
+                            <p>{formErrors.firstName}</p>
+                          )}
+                          {formErrors.lastName.length > 0 && (
+                            <p>{formErrors.lastName}</p>
+                          )}
+                          {formErrors.passwordConfirm.length > 0 && (
+                            <p>{formErrors.passwordConfirm}</p>
+                          )}
+                        </>
+                      )}
+
+                      {formErrors.login !== undefined && (
+                        <>
+                          {formErrors.login.length > 0 && (
+                            <p>{formErrors.login}</p>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  )}
+
+                  <button
+                    className="mt-4 text-white font-bold hover:bg-uiSecondaryLight bg-uiSecondary transition-colors rounded-md py-2"
+                    type="submit"
+                  >
+                    {forLogin ? "Log In" : "Register"}
+                  </button>
                 </div>
               </form>
             </>
-            )}
-          </div>
+          )}
+        </div>
       </div>
-      <img className="hidden md:block md:w-[45%] object-cover" src={image} alt="Elek3city"/> 
+      <img
+        className="hidden md:block md:w-[45%] object-cover"
+        src={image}
+        alt="Elek3city"
+      />
     </div>
   );
 }

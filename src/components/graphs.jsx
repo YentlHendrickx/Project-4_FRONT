@@ -12,298 +12,298 @@ import nebulaConfiguration from "../helpers/configure";
 // Axios
 import axios from "axios";
 
-
 // Enigma
-const enigma = require('enigma.js');
-const schema = require('enigma.js/schemas/12.936.0.json');
+const enigma = require("enigma.js");
+const schema = require("enigma.js/schemas/12.936.0.json");
 
 // Config from .env
 const config = {
-    host                : process.env.REACT_APP_QLIK_HOST,
-    prefix              : process.env.REACT_APP_QLIK_PREFIX,
-    port                : process.env.REACT_APP_QLIK_PORT,
-    webIntegrationId    : process.env.REACT_APP_QLIK_INTEGRATION_ID,
-    appId               : process.env.REACT_APP_QLIK_APP_ID,
-    isSecure            : true,
-}
+  host: process.env.REACT_APP_QLIK_HOST,
+  prefix: process.env.REACT_APP_QLIK_PREFIX,
+  port: process.env.REACT_APP_QLIK_PORT,
+  webIntegrationId: process.env.REACT_APP_QLIK_INTEGRATION_ID,
+  appId: process.env.REACT_APP_QLIK_APP_ID,
+  isSecure: true,
+};
 
 // Dropdown for selecting graph source
-const DropdownSelector = ({userMeters, setUserMeters, selectOptions, setSelectOptions, onValueChange}) => {
+const DropdownSelector = ({
+  userMeters,
+  setUserMeters,
+  selectOptions,
+  setSelectOptions,
+  onValueChange,
+}) => {
+  // Get user data for getting associated meters
+  const userData = useRecoilValue(userDataState);
 
-    // Get user data for getting associated meters
-    const userData = useRecoilValue(userDataState);
+  // Get user meters
+  useEffect(() => {
+    // Get meters and options
+    if (userMeters.length === 0 || selectOptions == null) {
+      // Valid userId
+      if (userData.userId !== -1 && userData.userId !== undefined) {
+        // Get user specific data (meters)
+        const getUserData = async () => {
+          let result = -1;
+          await axios
+            .get(process.env.REACT_APP_API_URL + "User/" + userData.userId)
 
-    // Get user meters
-    useEffect(() => {
-        // Get meters and options
-        if (userMeters.length === 0 || selectOptions == null) {
+            .then((resp) => {
+              result = resp;
+            })
+            .catch((error) => {
+              console.error(error);
+            });
 
-            // Valid userId
-            if (userData.userId !== -1 && userData.userId !== undefined) {
-                // Get user specific data (meters)
-                const getUserData = async () => {
-                    let result = -1;
-                    await axios.get(process.env.REACT_APP_API_URL + "User/" + userData.userId)
+          if (result === -1) {
+            return;
+          }
 
-                    .then(resp => {
-                        result = resp;
-                    }).catch(error => {
-                        console.error(error);
-                    });
+          // Add select and meter values
+          const data = result.data;
+          let meters = [];
+          let select = [{ label: "All Meters", value: -1 }];
 
-                    if (result === -1) {
-                        return;
-                    }
+          // Add select options
+          if (data.userMeters.length) {
+            data.userMeters.forEach((meter) => {
+              meters.push(meter.meterId);
+              select.push({ label: meter.address, value: meter.meterId });
+            });
+          }
 
-                    // Add select and meter values
-                    const data = result.data;
-                    let meters = [];
-                    let select = [{label: 'All Meters', value: -1}];
-
-                    // Add select options
-                    if (data.userMeters.length) {
-                        data.userMeters.forEach(meter => {
-                            meters.push(meter.meterId);
-                            select.push({label: meter.address, value: meter.meterId});
-                        });
-                    }
-                    
-                    setUserMeters(meters);
-                    setSelectOptions(select);
-                }
-                getUserData();
-            }
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [userMeters, selectOptions]);
-
-
-    // Return loading if no select options, otherwise return true
-    if (selectOptions) {
-        return (
-            <select className="w-[60%] ml-1" onChange={(event) => onValueChange(event)}>
-                {selectOptions.map((option) => (
-                    <option className="p-2" key={option.value} value={option.value}>{option.label}</option>
-                ))}
-            </select>
-        );
-    } else {
-        return (
-            <div>
-                Loading...
-            </div>
-        );
+          setUserMeters(meters);
+          setSelectOptions(select);
+        };
+        getUserData();
+      }
     }
-}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userMeters, selectOptions]);
 
-const ResetFilter = ({resetFiltering}) => {
-
+  // Return loading if no select options, otherwise return true
+  if (selectOptions) {
     return (
-        <button onClick={resetFiltering} type="button" className="mr-2 w-[30%] bg-save hover:bg-saveHover text-uiLight rounded-sm">Reset Filter</button>
+      <select
+        className="w-[60%] ml-2 p-2 bg-uiLight rounded-md"
+        onChange={(event) => onValueChange(event)}
+      >
+        {selectOptions.map((option) => (
+          <option
+            className="p-2 !hover:bg-uiLight"
+            key={option.value}
+            value={option.value}
+          >
+            {option.label}
+          </option>
+        ))}
+      </select>
     );
-}
+  } else {
+    return <div>Loading...</div>;
+  }
+};
 
+const ResetFilter = ({ resetFiltering }) => {
+  return (
+    <button
+      onClick={resetFiltering}
+      type="button"
+      className="mr-2 w-[30%] bg-save hover:bg-saveHover text-uiLight rounded-sm"
+    >
+      Reset Filter
+    </button>
+  );
+};
 
-const Graphs = () =>  {
-    // States for the meters
-    const [userMeters, setUserMeters] = useRecoilState(userMetersState);
-    const [running, setRunning] = useState(false);
-    const [updatedAddress, setUpdatedAddress] = useState(false);
+const Graphs = () => {
+  // States for the meters
+  const [userMeters, setUserMeters] = useRecoilState(userMetersState);
+  const [running, setRunning] = useState(false);
+  const [updatedAddress, setUpdatedAddress] = useState(false);
 
-    const [selectOptions, setSelectOptions] = useState(null);
-    const [meterNumbers, setMeterNumbers] = useState(-1);
+  const [selectOptions, setSelectOptions] = useState(null);
+  const [meterNumbers, setMeterNumbers] = useState(-1);
 
-    // References to components for rendering the graphs
-    const perHourRef        = useRef(null);
-    const perDayRef         = useRef(null);
-    const liveElectricityRef       = useRef(null);
-    const perHourGasRef     = useRef(null);
+  // References to components for rendering the graphs
+  const perHourRef = useRef(null);
+  const perDayRef = useRef(null);
+  const liveElectricityRef = useRef(null);
+  const perHourGasRef = useRef(null);
 
-    const objectReferences = [
-        {
-            "Reference" : perHourRef,
-            "ID"        : 'mGxVj'       
-        },
-        {
-            "Reference" : perDayRef,
-            "ID"        : 'GJKGGP'
-        },
-        {
-            "Reference" : liveElectricityRef,
-            "ID"        : 'tXAsbem'
-        },
-        // {
-        //     "Reference" : perHourGasRef,
-        //     "ID"        : 'kNxMkjJ'
-        // }
-    ];
+  const objectReferences = [
+    {
+      Reference: perHourRef,
+      ID: "mGxVj",
+    },
+    {
+      Reference: perDayRef,
+      ID: "GJKGGP",
+    },
+    {
+      Reference: liveElectricityRef,
+      ID: "tXAsbem",
+    },
+    {
+      Reference: perHourGasRef,
+      ID: "kNxMkjJ",
+    },
+  ];
 
-    // WSS url from qlikConnect.jsx
-    const enigmaUrl = useRecoilValue(enigmaUrlState);
+  // WSS url from qlikConnect.jsx
+  const enigmaUrl = useRecoilValue(enigmaUrlState);
 
+  // On startup automatically show all meter graphs
+  useEffect(() => {
+    if (userMeters) {
+      updateMeterNumbers(-1);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-    // On startup automatically show all meter graphs
-    useEffect(() => {
-        if (userMeters) {
-            updateMeterNumbers(-1);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+  // Based on input set meter numbers for showing specific graph
+  function updateMeterNumbers(selectedAddress) {
+    let newMeterNumbers = -1;
 
-    // Based on input set meter numbers for showing specific graph
-    function updateMeterNumbers(selectedAddress) {
-        let newMeterNumbers = -1;
-
-        if (userMeters.length) {
-            newMeterNumbers = selectedAddress
-        }
-
-        setMeterNumbers(newMeterNumbers);
-
-        // Updated is true, the charts will be re-rendered
-        setUpdatedAddress(true);
+    if (userMeters.length) {
+      newMeterNumbers = selectedAddress;
     }
 
-    // Update chart if selection was changed
-    function onValueChange(event) {
-        event.preventDefault();
-        updateMeterNumbers(event.target.value);
-    }
+    setMeterNumbers(newMeterNumbers);
 
-    useEffect(() => {
-        const runEnigma = async () => {
+    // Updated is true, the charts will be re-rendered
+    setUpdatedAddress(true);
+  }
 
-            // Check run conditions, enigmaUrl needs to be set and engine can't already be running
-            if (enigmaUrl !== null && (!running || updatedAddress === true)) {
-                setRunning(true);
-                setUpdatedAddress(false);
+  // Update chart if selection was changed
+  function onValueChange(event) {
+    event.preventDefault();
+    updateMeterNumbers(event.target.value);
+  }
 
-                // Remove any nebulae tags still present, upon engine creation new one will be created (prevents mem leak)
-                const results = document.querySelectorAll('[data-app-id]');
-                results.forEach(memoryLeak => {
-                    memoryLeak.remove();
-                });
+  useEffect(() => {
+    const runEnigma = async () => {
+      // Check run conditions, enigmaUrl needs to be set and engine can't already be running
+      if (enigmaUrl !== null && (!running || updatedAddress === true)) {
+        setRunning(true);
+        setUpdatedAddress(false);
 
-                // Create enigma engine based on schema specfied in require
-                const session = await enigma.create({
-                    schema,
-                    url: enigmaUrl,
-                });
+        // Remove any nebulae tags still present, upon engine creation new one will be created (prevents mem leak)
+        const results = document.querySelectorAll("[data-app-id]");
+        results.forEach((memoryLeak) => {
+          memoryLeak.remove();
+        });
 
-                // Use engine to create a new app based on the app document
-                const newEnigmaApp = await (await session.open()).openDoc(config.appId);
+        // Create enigma engine based on schema specfied in require
+        const session = await enigma.create({
+          schema,
+          url: enigmaUrl,
+        });
 
-                // Make sure app is in standard mode
-                await newEnigmaApp.abortModal(true);
-                // Clear all selections
-                await newEnigmaApp.clearAll();
+        // Use engine to create a new app based on the app document
+        const newEnigmaApp = await (await session.open()).openDoc(config.appId);
 
-                // Get MeterId field for filtering
-                const field = await newEnigmaApp.getField("MeterId");
-                
-                // Base dictionary for filtering
-                let qFielValuesDict = {
-                    "qFieldValues": [
+        // Make sure app is in standard mode
+        await newEnigmaApp.abortModal(true);
+        // Clear all selections
+        await newEnigmaApp.clearAll();
 
-                    ],
-                    "qToggleMode": false,
-                    "qSoftLock": true
-                }
+        // Get MeterId field for filtering
+        const field = await newEnigmaApp.getField("MeterId");
 
-                
-                // All meters or just one?
-                if (parseInt(meterNumbers) === -1) {
-                    // Update dictionary by adding all meters
-                    userMeters.forEach(meter => {
-                        qFielValuesDict["qFieldValues"].push( 
-                            {
-                                "qText": String(meter),
-                                "qIsNumeric": true,
-                                "qNumber": parseInt(meter),
-                            },
-                        );
-                    });
-                } else {
-                    // Update dictionary by adding specific meter
-                    qFielValuesDict["qFieldValues"].push( 
-                        {
-                            "qText": String(meterNumbers),
-                            "qIsNumeric": true,
-                            "qNumber": parseInt(meterNumbers),
-                        },
-                    );
-                }
+        // Base dictionary for filtering
+        let qFielValuesDict = {
+          qFieldValues: [],
+          qToggleMode: false,
+          qSoftLock: true,
+        };
 
-                // Select the values specified in the dict
-                await field.selectValues(qFielValuesDict);
-                
-                // Set app configuration and create embeddable object
-                const n = await nebulaConfiguration(newEnigmaApp);
+        // All meters or just one?
+        if (parseInt(meterNumbers) === -1) {
+          // Update dictionary by adding all meters
+          userMeters.forEach((meter) => {
+            qFielValuesDict["qFieldValues"].push({
+              qText: String(meter),
+              qIsNumeric: true,
+              qNumber: parseInt(meter),
+            });
+          });
+        } else {
+          // Update dictionary by adding specific meter
+          qFielValuesDict["qFieldValues"].push({
+            qText: String(meterNumbers),
+            qIsNumeric: true,
+            qNumber: parseInt(meterNumbers),
+          });
+        }
 
-                // Loop over every Reference and ID combo
-                objectReferences.forEach(ref => {
+        // Select the values specified in the dict
+        await field.selectValues(qFielValuesDict);
 
-                    // Get reference
-                    const reference = ref.Reference.current;
+        // Set app configuration and create embeddable object
+        const n = await nebulaConfiguration(newEnigmaApp);
 
-                    if (reference != null) {
-                        const id = ref.ID;
+        // Loop over every Reference and ID combo
+        objectReferences.forEach((ref) => {
+          // Get reference
+          const reference = ref.Reference.current;
 
-                        // Remove children if they already exist (on re-render)
-                        if (reference.children[0]) {
-                            reference.removeChild(reference.children[0]);
-                        }
+          if (reference != null) {
+            const id = ref.ID;
 
-                        // Render chart with id
-                        n.render({
-                            element: reference,
-                            id: id,
-                        });
-                    }
-                });
+            // Remove children if they already exist (on re-render)
+            if (reference.children[0]) {
+              reference.removeChild(reference.children[0]);
             }
-        }
 
-        // Only run when valid arguments are found
-        if (enigmaUrl !== null && userMeters.length > 0) {
-            // Run main function
-            runEnigma();
+            // Render chart with id
+            n.render({
+              element: reference,
+              id: id,
+            });
+          }
+        });
+      }
+    };
 
-            setUpdatedAddress(false);
-        }
+    // Only run when valid arguments are found
+    if (enigmaUrl !== null && userMeters.length > 0) {
+      // Run main function
+      runEnigma();
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [enigmaUrl, updatedAddress, userMeters]);
-    
-
-    function resetFiltering() {
-        setUpdatedAddress(true);
+      setUpdatedAddress(false);
     }
 
-    return (
-        <div className="w-full h-screen">
-            <div className="w-full flex justify-between mt-4">
-                <DropdownSelector userMeters={userMeters} setUserMeters={setUserMeters} selectOptions={selectOptions} setSelectOptions={setSelectOptions} onValueChange={onValueChange}/>
-            
-                <ResetFilter resetFiltering={resetFiltering}/>
-            </div>
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [enigmaUrl, updatedAddress, userMeters]);
 
-            <div className="w-full h-[50%] grid grid-cols-1 gap-4 justify-around">
-                <div className="w-full h-[20rem]" ref={liveElectricityRef}>
+  function resetFiltering() {
+    setUpdatedAddress(true);
+  }
 
-                </div>
-                <div className="w-full h-[20rem]" ref={perDayRef}>
+  return (
+    <div className="w-full h-screen">
+      <div className="w-full flex justify-between mt-4">
+        <DropdownSelector
+          userMeters={userMeters}
+          setUserMeters={setUserMeters}
+          selectOptions={selectOptions}
+          setSelectOptions={setSelectOptions}
+          onValueChange={onValueChange}
+        />
 
-                </div>
-                <div className="w-full h-[20rem]" ref={perHourRef}>
+        <ResetFilter resetFiltering={resetFiltering} />
+      </div>
 
-                </div>
-                {/* <div className="w-full h-[20rem]" ref={perHourGasRef}>
-
-                </div> */}
-            </div>
-        </div>
-    );
-}
+      <div className="w-full h-[50%] grid grid-cols-1 gap-4 justify-around">
+        <div className="w-full h-[20rem]" ref={liveElectricityRef}></div>
+        <div className="w-full h-[20rem]" ref={perDayRef}></div>
+        <div className="w-full h-[20rem]" ref={perHourRef}></div>
+        <div className="w-full h-[20rem]" ref={perHourGasRef}></div>
+      </div>
+    </div>
+  );
+};
 
 export default Graphs;

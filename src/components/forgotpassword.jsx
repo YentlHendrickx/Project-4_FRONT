@@ -9,8 +9,8 @@ import axios from "axios";
 import { getAuthImage } from "../authImages";
 
 // Notification
-import { Store } from 'react-notifications-component';
-import 'react-notifications-component/dist/theme.css';
+import { Store } from "react-notifications-component";
+import "react-notifications-component/dist/theme.css";
 
 // Get specific image
 const image = process.env.PUBLIC_URL + getAuthImage();
@@ -24,73 +24,77 @@ export default function ForgotPassword() {
 
   // Forms
   const [formData, setFormData] = useState({
-      email: '',
-      password: '',
-      passwordConfirm: ''
-  })
+    email: "",
+    password: "",
+    passwordConfirm: "",
+  });
 
   const [formErrors, setFormErrors] = useState({
-      email: "",
-      password: "",
-      passwordConfirm: "",
-    });
+    email: "",
+    password: "",
+    passwordConfirm: "",
+  });
 
-  
   // Storing password reset token
   const [hasToken, setHasToken] = useState(false);
-  const [token, setToken] = useState('');
+  const [token, setToken] = useState("");
 
   // Get token
-  useEffect(()=> {
-    const searchToken = searchParams.get('token')
-    if(searchToken != null){
-        setHasToken(true);
-        setToken(searchToken);
+  useEffect(() => {
+    const searchToken = searchParams.get("token");
+    if (searchToken != null) {
+      setHasToken(true);
+      setToken(searchToken);
     }
-  }, [searchParams])
-
+  }, [searchParams]);
 
   // Add errors to forms
   const handleChange = (event) => {
-      const { name, value } = event.target;
-      let errors = formErrors;
-  
-      // Add errors when needed
-      switch (name) {
-        case 'email':
-          // Regex for email validation
-          errors.email = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)
-          ? ''
-          : 'Invalid email address';
-          break;
+    const { name, value } = event.target;
+    let errors = formErrors;
 
-        case 'password':
-          errors.passwordConfirm = value !== formData.passwordConfirm  ? 'Passwords do not match' : '';
-          errors.password = value.length < 8 ? 'Password must be at least 8 characters long' : '';
-          break;
+    // Add errors when needed
+    switch (name) {
+      case "email":
+        // Regex for email validation
+        errors.email = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)
+          ? ""
+          : "Invalid email address";
+        break;
 
-        case 'passwordConfirm':
-          errors.passwordConfirm = formData.password !== value ? 'Passwords do not match' : '';
-          if (errors.passwordConfirm === '') {
-            errors.passwordConfirm = value.length < 8 ? 'Password must be at least 8 characters long' : '';
-          }
-          break;
+      case "password":
+        errors.passwordConfirm =
+          value !== formData.passwordConfirm ? "Passwords do not match" : "";
+        errors.password =
+          value.length < 8 ? "Password must be at least 8 characters long" : "";
+        break;
 
-        default:
-          break;
-      }
+      case "passwordConfirm":
+        errors.passwordConfirm =
+          formData.password !== value ? "Passwords do not match" : "";
+        if (errors.passwordConfirm === "") {
+          errors.passwordConfirm =
+            value.length < 8
+              ? "Password must be at least 8 characters long"
+              : "";
+        }
+        break;
 
-      setFormErrors({
-          email: errors.email,
-          password: errors.password,
-          passwordConfirm: errors.passwordConfirm,
-        });
-    
-      setFormData({
-        ...formData,
-        [event.target.name]: event.target.value,
-      });
-  }
+      default:
+        break;
+    }
+
+    setFormErrors({
+      email: errors.email,
+      password: errors.password,
+      passwordConfirm: errors.passwordConfirm,
+    });
+
+    setFormData({
+      ...formData,
+      [event.target.name]: event.target.value,
+    });
+  };
 
   // Validate
   function validate() {
@@ -107,59 +111,67 @@ export default function ForgotPassword() {
     }
 
     // Check for errors
-    Object.values(errors).forEach(err => err.length > 0 && (valid = false));
+    Object.values(errors).forEach((err) => err.length > 0 && (valid = false));
 
     return valid;
   }
 
   // Validate and send mail
-  function handleSubmit(event){
+  function handleSubmit(event) {
     event.preventDefault();
 
     let valid = validate();
     if (!valid) return;
 
-    sendEmail();  
+    sendEmail();
   }
 
   // Validate and reset password
-  function resetPassword(event){
-      event.preventDefault();
-      
-      let valid = validate();
-      if (!valid) return;
+  function resetPassword(event) {
+    event.preventDefault();
 
-      sendPassword();
+    let valid = validate();
+    if (!valid) return;
+
+    sendPassword();
   }
-
 
   // Send reset email
   const sendEmail = async () => {
-      await axios.post(process.env.REACT_APP_API_URL + "User/forgotpassword?email=" + formData.email);
-      
-      Store.addNotification({
-        title: "Email Sent!",
-        message: `Email sent to ${formData.email}.`,
-        type: "success",
-        insert: "top",
-        container: "top-right",
-        animationIn: ["animate__animated", "animate__fadeIn"],
-        animationOut: ["animate__animated", "animate__fadeOut"],
-        dismiss: {
-          duration: 5000,
-          onScreen: true,
-          pauseOnHover: true
-        }
-      });
-  }
+    await axios.post(
+      process.env.REACT_APP_API_URL +
+        "User/forgotpassword?email=" +
+        formData.email
+    );
+
+    Store.addNotification({
+      title: "Email Sent!",
+      message: `Email sent to ${formData.email}.`,
+      type: "success",
+      insert: "top",
+      container: "top-right",
+      animationIn: ["animate__animated", "animate__fadeIn"],
+      animationOut: ["animate__animated", "animate__fadeOut"],
+      dismiss: {
+        duration: 5000,
+        onScreen: true,
+        pauseOnHover: true,
+      },
+    });
+  };
 
   // Send the password to API
   const sendPassword = async () => {
-      const newPassword = {
-          newPassword: formData.password
-      }
+    const newPassword = {
+      newPassword: formData.password,
+    };
 
-      await axios.post(process.env.REACT_APP_API_URL + "User/resetpassword/" + token , newPassword).then(res => {
+    await axios
+      .post(
+        process.env.REACT_APP_API_URL + "User/resetpassword/" + token,
+        newPassword
+      )
+      .then((res) => {
         Store.addNotification({
           title: "Password Reset Processed!",
           message: `Password was reset.`,
@@ -171,14 +183,14 @@ export default function ForgotPassword() {
           dismiss: {
             duration: 5000,
             onScreen: true,
-            pauseOnHover: false
-          }
+            pauseOnHover: false,
+          },
         });
 
         // Automatically redirect back
         setTimeout(() => redirectBack(false), 5000);
-
-      }).catch(error => {
+      })
+      .catch((error) => {
         Store.addNotification({
           title: "Error!",
           message: `${error.response.data}`,
@@ -190,67 +202,82 @@ export default function ForgotPassword() {
           dismiss: {
             duration: 5000,
             onScreen: true,
-            pauseOnHover: false
-          }
-          
+            pauseOnHover: false,
+          },
         });
 
         // Automatically redirect back
         setTimeout(() => redirectBack(true), 5000);
       });
-  }
+  };
 
   // Redirect to login or forgot routes
   function redirectBack(gotError) {
     if (gotError) {
-      navigate('/forgot');
+      navigate("/forgot");
     } else {
-      navigate('/login');
+      navigate("/login");
     }
   }
 
-  return(
+  return (
     <div className="w-screen h-screen bg-[#eee] flex">
-      <div className="w-[55%] h-full flex justify-center">
-        <div className="mt-[15%]">
+      <div className="w-full md:w-[55%] h-full flex justify-center">
+        <div className="mt-[15%] w-[95%] md:w-full">
           <h3 className="text-3xl text-left font-bold">Elek3city Monitor</h3>
           {!hasToken ? (
             <>
-              <p className="font-light text-slate-500 text-left max-w-[24rem]">Fill in your mail. If an account 
-              with this email exists a password reset link will be sent.
+              <p className="font-light text-slate-500 text-left max-w-[24rem]">
+                Fill in your mail. If an account with this email exists a
+                password reset link will be sent.
               </p>
-              <form className="mt-2 ml-1 flex flex-col mb-2" onSubmit={handleSubmit}>
-                
+              <form
+                className="mt-2 ml-1 flex flex-col mb-2"
+                onSubmit={handleSubmit}
+              >
                 <div className="flex flex-row justify-between">
                   <input
-                  className="mt-0 mb-0 pb-0 h-8 pl-2 focus:outline-none border-[1px] w-[80%] border-slate-400 rounded-md"
-                  type="email"
-                  name="email"
-                  id="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="Email"
-                  required
+                    className="mt-0 mb-0 pb-0 h-8 pl-2 focus:outline-none border-[1px] w-[80%] border-slate-400 rounded-md"
+                    type="email"
+                    name="email"
+                    id="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="Email"
+                    required
                   />
-                  <button className="mt-0 ml-2 text-white font-bold hover:bg-uiSecondaryLight bg-uiSecondary transition-colors rounded-md p-1 w-[18%]" type='submit'>Reset</button>
+                  <button
+                    className="mt-0 ml-2 text-white font-bold hover:bg-uiSecondaryLight bg-uiSecondary transition-colors rounded-md p-1 w-[18%]"
+                    type="submit"
+                  >
+                    Reset
+                  </button>
                 </div>
-                
-                {Object.values(formErrors).every(x => x === undefined || x === '') === false &&
+
+                {Object.values(formErrors).every(
+                  (x) => x === undefined || x === ""
+                ) === false && (
                   <div className="bg-red-400 p-2 mt-2 w-[80%] rounded-md text-uiLight">
-                      {formErrors.email.length         > 0 && <p>{formErrors.email}</p>}
-                      
+                    {formErrors.email.length > 0 && <p>{formErrors.email}</p>}
                   </div>
-                }
+                )}
               </form>
-              <NavLink className="mt-2 text-xl text-slate-600 hover:text-slate-400" to={'/login'} >
+              <NavLink
+                className="mt-2 text-xl text-slate-600 hover:text-slate-400"
+                to={"/login"}
+              >
                 Back to Login
               </NavLink>
             </>
           ) : (
             <>
-              <p className="font-light text-slate-500 text-left max-w-[24rem]">Fill in your new password. Passwords need atleast 8 characters.
+              <p className="font-light text-slate-500 text-left max-w-[24rem]">
+                Fill in your new password. Passwords need atleast 8 characters.
               </p>
-              <form className="mt-2 ml-1 w-full flex flex-col mb-2" onSubmit={resetPassword}>
+              <form
+                className="mt-2 ml-1 w-full flex flex-col mb-2"
+                onSubmit={resetPassword}
+              >
                 <div className="mb-2 w-full">
                   <input
                     className="w-[80%] mt-0 pt-0 mb-0 pb-0 h-16 pl-2 focus:outline-none border-[1px] border-slate-400 rounded-t-md border-b-0"
@@ -261,7 +288,7 @@ export default function ForgotPassword() {
                     onChange={handleChange}
                     placeholder="Password"
                     required
-                    />
+                  />
 
                   <input
                     className="w-[80%] mt-0 pt-0 mb-0 pb-0 h-16  pl-2 focus:outline-none border-[1px] border-slate-400 rounded-b-md"
@@ -275,23 +302,41 @@ export default function ForgotPassword() {
                   />
                 </div>
 
-                <button className="w-[80%] mt-0 text-white font-bold hover:bg-uiSecondaryLight bg-uiSecondary transition-colors rounded-md p-1" type='submit'>Reset Password</button>
+                <button
+                  className="w-[80%] mt-0 text-white font-bold hover:bg-uiSecondaryLight bg-uiSecondary transition-colors rounded-md p-1"
+                  type="submit"
+                >
+                  Reset Password
+                </button>
 
-                {Object.values(formErrors).every(x => x === undefined || x === '') === false &&
+                {Object.values(formErrors).every(
+                  (x) => x === undefined || x === ""
+                ) === false && (
                   <div className="bg-red-400 p-2 mt-2 w-[80%] rounded-md text-uiLight">
-                      {formErrors.password.length         > 0 && <p>{formErrors.password}</p>}
-                      {formErrors.passwordConfirm.length  > 0 && <p>{formErrors.passwordConfirm}</p>}
+                    {formErrors.password.length > 0 && (
+                      <p>{formErrors.password}</p>
+                    )}
+                    {formErrors.passwordConfirm.length > 0 && (
+                      <p>{formErrors.passwordConfirm}</p>
+                    )}
                   </div>
-                }
+                )}
               </form>
-              <NavLink className="mt-2 text-xl text-slate-600 hover:text-slate-400" to={'/login'} >
+              <NavLink
+                className="mt-2 text-xl text-slate-600 hover:text-slate-400"
+                to={"/login"}
+              >
                 Back to Login
               </NavLink>
-            </>   
+            </>
           )}
-          </div>
         </div>
-      <img className="w-[45%] object-cover" src={image} alt="Elek3city"/>
+      </div>
+      <img
+        className="hidden md:block w-[45%] object-cover"
+        src={image}
+        alt="Elek3city"
+      />
     </div>
-  )
+  );
 }
