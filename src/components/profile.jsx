@@ -32,14 +32,12 @@ export default function Profile ({ handleLogout }) {
         newPasswordConfirm: '',
         newPassword:        '',
         oldPassword:        '',
-        email:              ''
     });
 
     const [passwordFormErrors, setPasswordFormErrors] = useState({
         newPasswordConfirm: '',
         newPassword:        '',
         oldPassword:        '',
-        email:              ''
     });
 
     const setFormErrors = (type, name, value) => {
@@ -91,7 +89,6 @@ export default function Profile ({ handleLogout }) {
     
         if (type === 'password') {
             setPasswordFormErrors({
-                email: errors.email,
                 oldPassword: errors.oldPassword,
                 newPassword: errors.newPassword,
                 newPasswordConfirm: errors.newPasswordConfirm,
@@ -129,7 +126,7 @@ export default function Profile ({ handleLogout }) {
 
         const newEmail = {
             oldEmail: userState.email,
-            newEmail: emailFormData.newEmail,
+            newEmail: emailFormData.email,
             password: emailFormData.password,
         }
 
@@ -167,7 +164,7 @@ export default function Profile ({ handleLogout }) {
         const newPassword = {
             newPassword: passwordFormData.newPassword,
             oldPassword: passwordFormData.oldPassword,
-            email: passwordFormData.email
+            email: userState.email
         }
 
         await axios.post(process.env.REACT_APP_API_URL + 'User/changepassword/', newPassword)
@@ -231,7 +228,6 @@ export default function Profile ({ handleLogout }) {
                     <div className="mt-6">
                         <p className="text-xl text-center">Change password</p>
                         <form className="flex flex-col mx-2 items-center mt-2 gap-4"  onSubmit={handleChangePassword}>
-                            <input className="pl-2 w-[40%]" type='email' name={"email"}placeholder={"Email"} value={passwordFormData.email} onChange={onChangePassword}/>
                             <input className="pl-2 w-[40%]" type='password' name={"oldPassword"} placeholder={"Current password"} value={passwordFormData.oldPassword} onChange={onChangePassword}/>
                             <input className="pl-2 w-[40%]" type='password' name={"newPassword"} placeholder={"New password"} value={passwordFormData.newPassword} onChange={onChangePassword}/>
                             <input className="pl-2 w-[40%]" type='password' name={"newPasswordConfirm"} placeholder={"Confirm password"} value={passwordFormData.newPasswordConfirm} onChange={onChangePassword}/>
