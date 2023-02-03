@@ -1,18 +1,18 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import { jwtInterceptor } from './helpers/jwtInterceptor';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { jwtInterceptor } from "./helpers/jwtInterceptor";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 
 jwtInterceptor();
-require('events').EventEmitter.defaultMaxListeners = 50;
+require("events").EventEmitter.defaultMaxListeners = 50;
 
 root.render(
   //<React.StrictMode>
-      <App />
+  <App />
   //</React.StrictMode>
 );
 
