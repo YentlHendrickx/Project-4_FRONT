@@ -8,6 +8,7 @@ import { jwtInterceptor } from './helpers/jwtInterceptor';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 jwtInterceptor();
+require('events').EventEmitter.defaultMaxListeners = 0;
 
 root.render(
   //<React.StrictMode>

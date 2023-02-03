@@ -11,13 +11,6 @@ import { initialsState } from "../store";
 
 import {useState, useEffect} from 'react';
 
-
-import {
-    MobileNav,
-    Typography,
-    Button,
-  } from "@material-tailwind/react";
-
 // Return profile circle with initials
 function AccountCirkel({initials}){
     return (

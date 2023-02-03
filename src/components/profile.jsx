@@ -8,21 +8,13 @@ import { userDataState } from "../store"
 // Axios
 import axios from "axios"
 
-import {
-    Card,
-    CardHeader,
-    CardBody,
-    CardFooter,
-    Typography,
-} from "@material-tailwind/react";
 
 // Notifications
-import { ReactNotifications, Store } from 'react-notifications-component';
+import { Store } from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
 
 export default function Profile ({ handleLogout }) {
     const userState = useRecoilValue(userDataState);
-    console.warn(userState);
 
     // Form data
     const [emailFormData, setEmailFormData] = useState({
@@ -51,7 +43,6 @@ export default function Profile ({ handleLogout }) {
     });
 
     const setFormErrors = (type, name, value) => {
-        console.warn(type, name, value);
         let errors = emailFormErrors;
 
         if (type === 'password') {
@@ -220,8 +211,8 @@ export default function Profile ({ handleLogout }) {
     }
 
     return (
-        <div className="w-screen h-screen">
-            <ReactNotifications className="!relative"/>
+        <div className="w-screen h-max">
+            
             <div className="w-full h-full flex flex-col items-center mt-4">
 
                 <p className="text-4xl">{userState.firstName} {userState.lastName}</p>

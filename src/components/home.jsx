@@ -60,6 +60,8 @@ const Home = () =>  {
 
     // On startup automatically get user meters
     useEffect(() => {
+
+
         // Get meters and options
         if (userMeters.length === 0) {
 
@@ -123,6 +125,11 @@ const Home = () =>  {
 
                 // Use engine to create a new app based on the app document
                 const newEnigmaApp = await (await session.open()).openDoc(config.appId);
+
+                // Make sure app is in standard mode
+                await newEnigmaApp.abortModal(true);
+                // Clear all selections
+                await newEnigmaApp.clearAll();
 
                 // Get MeterId field for filtering
                 const field = await newEnigmaApp.getField("MeterId");

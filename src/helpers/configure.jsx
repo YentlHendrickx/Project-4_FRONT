@@ -7,6 +7,7 @@ import piechart     from '@nebula.js/sn-pie-chart';
 import sankeychart  from '@nebula.js/sn-sankey-chart';
 import funnechart   from '@nebula.js/sn-funnel-chart';
 import mekkochart   from '@nebula.js/sn-mekko-chart';
+import histogram    from '@nebula.js/sn-histogram';
 import kpi          from '@nebula.js/sn-kpi';
 
 
@@ -40,6 +41,10 @@ const nebulaConfiguration = embed.createConfiguration({
         {
             name: 'kpi',
             load: () => Promise.resolve(kpi)
+        },
+        {
+            name: 'histogram',
+            load: () => Promise.resolve(histogram)
         }
     ],
 });
