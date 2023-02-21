@@ -223,7 +223,7 @@ export default function ForgotPassword() {
   return (
     <div className="w-screen h-screen bg-[#eee] flex">
       <div className="w-full md:w-[55%] h-full flex justify-center">
-        <div className="mt-[15%] w-[95%] md:w-full">
+        <div className="mt-[15%] w-[95%]">
           <h3 className="text-3xl text-left font-bold">Elek3city Monitor</h3>
           {!hasToken ? (
             <>

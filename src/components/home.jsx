@@ -230,15 +230,14 @@ const Home = () => {
           Details Page.
         </NavLink>
       </p>
-
       <p className="w-full text-3xl text-center mt-2 font-bold">Usage Today</p>
-      <div className="w-full h-[20%] md:grid md:grid-cols-2 mt-4">
+      <div className="w-full h-fit md:h-[20%] md:grid md:grid-cols-2 mt-4">
         <div
           className="border-2 border-kpiElectricBorder bg-kpiElectric rounded-lg w-[80%] md:w-[90%] md:max-h-[20rem] md:h-auto h-[10rem] drop-shadow-lg mx-auto bg-repeat bg-2rem bg-blend-soft-light bg-electric-pattern"
           ref={elcKpiDayRef}
         ></div>
         <div
-          className="border-2 border-kpiGasBorder bg-kpiGas rounded-lg w-[80%] md:w-[90%] md:max-h-[20rem] md:h-auto h-[10rem] drop-shadow-lg mx-auto bg-repeat bg-2rem bg-blend-soft-light bg-gas-pattern"
+          className="border-2 border-kpiGasBorder bg-kpiGas rounded-lg w-[80%] md:w-[90%] md:max-h-[20rem] md:h-auto h-[10rem] drop-shadow-lg mx-auto mt-4 md:mt-0 bg-repeat bg-2rem bg-blend-soft-light bg-gas-pattern"
           ref={gasKpiDayRef}
         ></div>
       </div>
@@ -246,7 +245,7 @@ const Home = () => {
       <p className="w-full text-3xl text-center mt-8 font-bold">
         Usage this Year
       </p>
-      <div className="w-full h-[20%] md:grid md:grid-cols-2 mt-4">
+      <div className="w-full h-fit md:h-[20%] md:grid md:grid-cols-2 mt-4">
         <div
           className="border-2 border-kpiElectricBorder bg-kpiElectric rounded-lg w-[80%] md:w-[90%] md:max-h-[20rem] md:h-auto h-[10rem] drop-shadow-lg mx-auto bg-repeat bg-2rem bg-blend-soft-light bg-electric-pattern"
           ref={elcKpiRef}
