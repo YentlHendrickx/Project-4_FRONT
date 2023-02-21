@@ -208,10 +208,15 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
         navigate("/");
       })
       .catch((err) => {
-        if (err.response.data === "Email not verified.") {
-          setVerificationRequired(true);
-        } else {
-          setFormErrors({ ...formErrors, login: "Invalid email or password" });
+        if (err.response !== undefined) {
+          if (err.response.data === "Email not verified.") {
+            setVerificationRequired(true);
+          } else {
+            setFormErrors({
+              ...formErrors,
+              login: "Invalid email or password",
+            });
+          }
         }
       });
   }
@@ -241,7 +246,11 @@ function AuthForm({ forLogin, setIsLoggedIn, isLoggedIn }) {
         // navigate('/login');
       })
       .catch((err) => {
-        setFormErrors({ ...formErrors, login: "Invalid email or password" });
+        if (err.response.data === "User with this email already exists.") {
+          setFormErrors({ ...formErrors, login: err.response.data });
+        } else {
+          setFormErrors({ ...formErrors, login: "Unknown error occurred." });
+        }
       });
   }
 
