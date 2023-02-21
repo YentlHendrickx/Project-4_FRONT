@@ -12,6 +12,13 @@ export function jwtInterceptor() {
       request.headers.Authorization = `Bearer ${token}`;
     }
 
+    request.cors = {
+      origin: process.env.REACT_APP_ORIGIN,
+      methods: ["GET", "POST", "PUT", "DELETE"],
+      allowedHeaders: ["Authorization", "Content-Type"],
+      credentials: true,
+    };
+
     return request;
   });
 }
